@@ -1,6 +1,7 @@
 #include "MainCharacter.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -8,6 +9,18 @@ AMainCharacter::AMainCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
+	PlayerCamera->SetupAttachment(RootComponent);
+	PlayerCamera->SetRelativeLocation(FVector(0.0, 0.0, 70.0));
+	PlayerCamera->bUsePawnControlRotation = true;
+
+	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
+	Mesh1P->SetOnlyOwnerSee(true);
+	Mesh1P->SetupAttachment(PlayerCamera);
+	Mesh1P->bOnlyOwnerSee = true;
+
+	CrouchEyeOffset = FVector(0.0);
+	CrouchSpeed = 12.f;
 }
 
 // Called when the game starts or when spawned
@@ -26,11 +39,48 @@ void AMainCharacter::BeginPlay()
 	}
 }
 
+void AMainCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
+{
+	if (HalfHeightAdjust == 0.f)
+	{
+		return;
+	}
+	
+	float StartBaseEyeHeight = BaseEyeHeight;
+	Super::OnStartCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+	CrouchEyeOffset.Z += StartBaseEyeHeight - BaseEyeHeight + HalfHeightAdjust;
+	PlayerCamera->SetRelativeLocation(FVector(0.0, 0.0, BaseEyeHeight), false);
+}
+
+void AMainCharacter::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
+{
+	if (HalfHeightAdjust == 0.f)
+	{
+		return;
+	}
+
+	float StartBaseEyeHeight = BaseEyeHeight;
+	Super::OnEndCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+	CrouchEyeOffset.Z += StartBaseEyeHeight - BaseEyeHeight - HalfHeightAdjust;
+	PlayerCamera->SetRelativeLocation(FVector(0.0, 0.0, BaseEyeHeight), false);
+}
+
+void AMainCharacter::CalcCamera(float DeltaTime, FMinimalViewInfo & OutResult)
+{
+	if (PlayerCamera)
+	{
+		PlayerCamera->GetCameraView(DeltaTime, OutResult);
+		OutResult.Location += CrouchEyeOffset;
+	}
+}
+
 // Called every frame
 void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	float CrouchInterpTime = FMath::Min(1.f, CrouchSpeed * DeltaTime);
+	CrouchEyeOffset = (1.f - CrouchInterpTime) * CrouchEyeOffset;
 }
 
 // Called to bind functionality to input
@@ -42,7 +92,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMainCharacter::Move);
 	Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
-	Input->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AMainCharacter::Crouch);
+	Input->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMainCharacter::StartCrouch);
+	Input->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMainCharacter::EndCrouch);
 }
 
 void AMainCharacter::Move(const FInputActionValue& Value)
@@ -67,15 +118,13 @@ void AMainCharacter::Look(const FInputActionValue& Value)
 	AddControllerPitchInput(LookAxisVector.Y);
 }
 
-void AMainCharacter::Crouch(const FInputActionValue & Value)
+void AMainCharacter::StartCrouch(const FInputActionValue & Value)
 {
-	if (bIsCrouched)
-	{
-		Super::Crouch();
-	}
-	else
-	{
-		Super::UnCrouch();
-	}
+	Super::Crouch(true);
+}
+
+void AMainCharacter::EndCrouch(const FInputActionValue& Value)
+{
+	Super::UnCrouch(true);
 }
 
