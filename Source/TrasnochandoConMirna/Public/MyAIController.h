@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,7 +5,6 @@
 #include "MyAIController.generated.h"
 
 struct FAIStimulus;
-class UBehaviorTreeComponent;
 
 /**
  * 
@@ -27,6 +24,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	UBehaviorTree* BehaviorTree;
 
+	
+	UFUNCTION()
 	void OnSensed(AActor* Origin, FAIStimulus Stimulus);
 	void HandleSightSense(AActor* Origin, FAIStimulus Stimulus);
 	void HandleSoundSense(AActor* Origin, FAIStimulus Stimulus);

@@ -6,12 +6,10 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/AISense_Sight.h"
 #include "Perception/AISense_Hearing.h"
+#include "Navigation/PathFollowingComponent.h"
 
 AMyAIController::AMyAIController()
 {
-	//BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTree"));
-	//AddOwnedComponent(BehaviorTreeComponent);
-
 	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerception"));
 	AddOwnedComponent(PerceptionComponent);
 }
@@ -70,5 +68,5 @@ void AMyAIController::HandleSoundSense(AActor * Origin, FAIStimulus Stimulus)
 		return;
 	}
 
-	//BehaviorTreeComponent->GetBlackboardComponent()->SetValueAsVector(TEXT("HearingTargetLocation"), Stimulus.StimulusLocation);
+	Blackboard->SetValueAsVector(TEXT("HearingTargetLocation"), Stimulus.StimulusLocation);
 }
