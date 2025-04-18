@@ -14,8 +14,10 @@ class TRASNOCHANDOCONMIRNA_API AMirna : public ACharacter
 
 public:
 	AMirna();
-
+	
 private:
+	friend class UBTTask_Patrol;
+
 	UPROPERTY(EditAnywhere)
 	UAIBehavior* AIBehavior;
 };
