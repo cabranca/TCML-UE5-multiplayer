@@ -18,6 +18,8 @@ public:
 	AAIPatrolPathPoint();
 
 private:
+	friend class UBTTask_Patrol;
+
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* StaticMesh;
 

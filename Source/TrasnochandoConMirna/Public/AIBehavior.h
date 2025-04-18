@@ -19,6 +19,8 @@ public:
 	UAIBehavior();
 
 private:
+	friend class UBTTask_Patrol;
+
 	UPROPERTY(EditAnywhere)
 	TMap<AAIPatrolPathPoint*, float> PatrolPoints;
 
