@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "MyBTTask_ClearBlackboard.generated.h"
+#include "BTTask_ClearBlackboard.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TRASNOCHANDOCONMIRNA_API UMyBTTask_ClearBlackboard : public UBTTask_BlackboardBase
+class TRASNOCHANDOCONMIRNA_API UBTTask_ClearBlackboard : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 	
