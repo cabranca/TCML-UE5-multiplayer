@@ -27,7 +27,7 @@ void AMainCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-	
+
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	if (PlayerController)
 	{
@@ -37,6 +37,31 @@ void AMainCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+}
+
+// Called every frame
+void AMainCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	UpdateStamina(DeltaTime);
+
+	float CrouchInterpTime = FMath::Min(1.f, CrouchSpeed * DeltaTime);
+	CrouchEyeOffset = (1.f - CrouchInterpTime) * CrouchEyeOffset;
+}
+
+// Called to bind functionality to input
+void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+
+	Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMainCharacter::Move);
+	Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
+	Input->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMainCharacter::OnCrouchTriggered);
+	Input->BindAction(RunAction, ETriggerEvent::Started, this, &AMainCharacter::StartRun);
+	Input->BindAction(RunAction, ETriggerEvent::Completed, this, &AMainCharacter::EndRun);
 }
 
 void AMainCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
@@ -72,29 +97,6 @@ void AMainCharacter::CalcCamera(float DeltaTime, FMinimalViewInfo & OutResult)
 		PlayerCamera->GetCameraView(DeltaTime, OutResult);
 		OutResult.Location += CrouchEyeOffset;
 	}
-}
-
-// Called every frame
-void AMainCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	float CrouchInterpTime = FMath::Min(1.f, CrouchSpeed * DeltaTime);
-	CrouchEyeOffset = (1.f - CrouchInterpTime) * CrouchEyeOffset;
-}
-
-// Called to bind functionality to input
-void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-
-	Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMainCharacter::Move);
-	Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
-	Input->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMainCharacter::OnCrouchTriggered);
-	Input->BindAction(RunAction, ETriggerEvent::Started, this, &AMainCharacter::StartRun);
-	Input->BindAction(RunAction, ETriggerEvent::Completed, this, &AMainCharacter::EndRun);
 }
 
 void AMainCharacter::Move(const FInputActionValue& Value)
@@ -133,14 +135,46 @@ void AMainCharacter::OnCrouchTriggered(const FInputActionValue & Value)
 
 void AMainCharacter::StartRun(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Start Run"));
-	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
-	bIsRunning = true;
+	if (!bIsExhausted)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+		bIsRunning = true;
+	}
 }
 
 void AMainCharacter::EndRun(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("End Run"));
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	bIsRunning = false;
+}
+
+void AMainCharacter::UpdateStamina(float DeltaTime)
+{
+	if (CurrentStamina < 0.f)
+	{
+		CurrentStamina = 0.f;
+		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+		bIsRunning = false;
+		bIsExhausted = true;
+	}
+	else if (CurrentStamina > MaxStamina)
+	{
+		CurrentStamina = MaxStamina;
+		bIsExhausted = false;
+	}
+	else
+	{
+		if (bIsRunning)
+		{
+			CurrentStamina -= StaminaLossRate * DeltaTime;
+		}
+		else if (bIsExhausted)
+		{
+			CurrentStamina += StaminExhaustedRecoveryRate * DeltaTime;
+		}
+		else
+		{
+			CurrentStamina += StaminaRecoveryRate * DeltaTime;
+		}
+	}
 }
