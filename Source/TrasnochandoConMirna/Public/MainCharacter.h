@@ -56,17 +56,37 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* CrouchAction;
 
-	UPROPERTY(EditAnywhere, Category = "Crouch")
-	FVector CrouchEyeOffset;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* RunAction;
 
 	UPROPERTY(EditAnywhere, Category = "Crouch")
-	float CrouchSpeed;
+	FVector CrouchEyeOffset = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, Category = "Crouch")
+	float CrouchSpeed = 200.f;
+
+	UPROPERTY(EditAnywhere, Category = "Run")
+	float RunSpeed = 800.f;
+
+	UPROPERTY(EditAnywhere, Category = "Run")
+	float WalkSpeed = 500.f;
+
+	UPROPERTY(EditAnywhere, Category = "Run")
+	float FatigueRate = 1.f;
+
+	bool bIsRunning = false;
+
+	float CurrentStamina = 100.f;
+
+	const float MaxStamina = 100.f;
 
 	void Move(const FInputActionValue& Value);
 	
 	void Look(const FInputActionValue& Value);
 
-	void StartCrouch(const FInputActionValue& Value);
+	void OnCrouchTriggered(const FInputActionValue& Value);
 
-	void EndCrouch(const FInputActionValue& Value);
+	void StartRun(const FInputActionValue& Value);
+
+	void EndRun(const FInputActionValue& Value);
 };

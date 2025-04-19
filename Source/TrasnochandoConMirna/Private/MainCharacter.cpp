@@ -2,6 +2,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -18,15 +19,14 @@ AMainCharacter::AMainCharacter()
 	Mesh1P->SetOnlyOwnerSee(true);
 	Mesh1P->SetupAttachment(PlayerCamera);
 	Mesh1P->bOnlyOwnerSee = true;
-
-	CrouchEyeOffset = FVector(0.0);
-	CrouchSpeed = 12.f;
 }
 
 // Called when the game starts or when spawned
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	if (PlayerController)
@@ -92,8 +92,9 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMainCharacter::Move);
 	Input->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
-	Input->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMainCharacter::StartCrouch);
-	Input->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMainCharacter::EndCrouch);
+	Input->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMainCharacter::OnCrouchTriggered);
+	Input->BindAction(RunAction, ETriggerEvent::Started, this, &AMainCharacter::StartRun);
+	Input->BindAction(RunAction, ETriggerEvent::Completed, this, &AMainCharacter::EndRun);
 }
 
 void AMainCharacter::Move(const FInputActionValue& Value)
@@ -118,13 +119,28 @@ void AMainCharacter::Look(const FInputActionValue& Value)
 	AddControllerPitchInput(LookAxisVector.Y);
 }
 
-void AMainCharacter::StartCrouch(const FInputActionValue & Value)
+void AMainCharacter::OnCrouchTriggered(const FInputActionValue & Value)
 {
-	Super::Crouch(true);
+	if (bIsCrouched)
+	{
+		UnCrouch(true);
+	}
+	else
+	{
+		Crouch(true);
+	}
 }
 
-void AMainCharacter::EndCrouch(const FInputActionValue& Value)
+void AMainCharacter::StartRun(const FInputActionValue& Value)
 {
-	Super::UnCrouch(true);
+	UE_LOG(LogTemp, Warning, TEXT("Start Run"));
+	GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+	bIsRunning = true;
 }
 
+void AMainCharacter::EndRun(const FInputActionValue& Value)
+{
+	UE_LOG(LogTemp, Warning, TEXT("End Run"));
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	bIsRunning = false;
+}
