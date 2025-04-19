@@ -77,5 +77,8 @@ DerivedDataCache/*
 # External
 *External*
 
+# Exports
+Export/*
+
 # Other
 *.bak
