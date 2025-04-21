@@ -74,8 +74,6 @@ Plugins/*/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 
-# External
-*External*
 
 # Exports
 Export/*
