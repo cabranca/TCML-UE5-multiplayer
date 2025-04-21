@@ -1,9 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
-
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Net/UnrealNetwork.h"
+
 #include "MainCharacter.generated.h"
 
 class UInputAction;
@@ -30,6 +28,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION(BlueprintCallable)
+	bool IsRunning();
 
 protected:
 	void OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
@@ -85,6 +86,7 @@ private:
 
 	const float MaxStamina = 100.f;
 
+	UPROPERTY(ReplicatedUsing = OnRep_IsRunning)
 	bool bIsRunning = false;
 
 	bool bIsExhausted = false;
@@ -100,4 +102,10 @@ private:
 	void EndRun(const FInputActionValue& Value);
 
 	void UpdateStamina(float DeltaTime);
+
+	UFUNCTION(Server, Reliable)
+	void ServerSetRunning(bool bShouldRun);
+
+	UFUNCTION()
+	void OnRep_IsRunning();
 };

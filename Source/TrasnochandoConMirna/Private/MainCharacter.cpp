@@ -55,6 +55,11 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	if (!IsLocallyControlled())
+	{
+		return;
+	}
+
 	UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
 	Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMainCharacter::Move);
@@ -62,6 +67,11 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Input->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMainCharacter::OnCrouchTriggered);
 	Input->BindAction(RunAction, ETriggerEvent::Started, this, &AMainCharacter::StartRun);
 	Input->BindAction(RunAction, ETriggerEvent::Completed, this, &AMainCharacter::EndRun);
+}
+
+bool AMainCharacter::IsRunning()
+{
+	return bIsRunning;
 }
 
 void AMainCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
@@ -139,6 +149,9 @@ void AMainCharacter::StartRun(const FInputActionValue& Value)
 	{
 		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 		bIsRunning = true;
+
+		// Notify the server
+		ServerSetRunning(bIsRunning);
 	}
 }
 
@@ -146,6 +159,7 @@ void AMainCharacter::EndRun(const FInputActionValue& Value)
 {
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 	bIsRunning = false;
+	ServerSetRunning(bIsRunning);
 }
 
 void AMainCharacter::UpdateStamina(float DeltaTime)
@@ -177,4 +191,22 @@ void AMainCharacter::UpdateStamina(float DeltaTime)
 			CurrentStamina += StaminaRecoveryRate * DeltaTime;
 		}
 	}
+}
+
+void AMainCharacter::OnRep_IsRunning()
+{
+	GetCharacterMovement()->MaxWalkSpeed = bIsRunning ? RunSpeed : WalkSpeed;
+}
+
+void AMainCharacter::ServerSetRunning_Implementation(bool bInIsRunning)
+{
+	bIsRunning = bInIsRunning;
+	OnRep_IsRunning(); // Also apply on server
+}
+
+void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AMainCharacter, bIsRunning);
 }
