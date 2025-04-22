@@ -74,6 +74,11 @@ bool AMainCharacter::IsRunning()
 	return bIsRunning;
 }
 
+bool AMainCharacter::IsCrouching()
+{
+	return bIsCrouched;
+}
+
 void AMainCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
 {
 	if (HalfHeightAdjust == 0.f)

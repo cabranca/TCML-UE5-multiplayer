@@ -32,6 +32,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsRunning();
 
+	UFUNCTION(BlueprintCallable)
+	bool IsCrouching();
+
 protected:
 	void OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
 	void OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
