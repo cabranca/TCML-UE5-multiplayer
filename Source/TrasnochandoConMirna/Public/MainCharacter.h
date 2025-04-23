@@ -46,7 +46,7 @@ private:
 	USkeletalMeshComponent* Mesh1P;
 
 	// Camera component for the player
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* PlayerCamera;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
