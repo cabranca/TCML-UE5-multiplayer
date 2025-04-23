@@ -27,6 +27,10 @@ EBTNodeResult::Type UBTTask_Patrol::MoveToNextPoint()
 {
 	TArray<AAIPatrolPathPoint*> Keys;
 	Points.GenerateKeyArray(Keys);
+	if (Keys.IsEmpty())
+	{
+		return EBTNodeResult::Succeeded;
+	}
 	AAIPatrolPathPoint* CurrentPoint = Keys[CurrentIndex];
 	const FVector Destination = CurrentPoint->GetActorLocation();
 	EPathFollowingRequestResult::Type Result = AIController->MoveToLocation(Destination, 5.0, false, true);
