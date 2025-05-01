@@ -24,7 +24,6 @@ void AMyAIController::BeginPlay()
 
 	if (BehaviorTree)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Running Behavior Tree"));
 		if (!RunBehaviorTree(BehaviorTree))
 		{
 			UE_LOG(LogTemp, Error, TEXT("Failed to run Behavior Tree"));
