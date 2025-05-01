@@ -8,6 +8,8 @@ class UInputAction;
 class UInputMappingContext;
 struct FInputActionValue;
 class UCameraComponent;
+class UPhysicsHandleComponent;
+class APuzzleManager;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AMainCharacter : public ACharacter
@@ -35,6 +37,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool IsCrouching();
 
+	UFUNCTION(BlueprintCallable)
+	void SetPuzzleManager(APuzzleManager* NewPuzzleManager); // TODO: SetCurrentPuzzle(PuzzleInterface)
+
 protected:
 	void OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
 	void OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
@@ -48,6 +53,8 @@ private:
 	// Camera component for the player
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* PlayerCamera;
+
+	UPhysicsHandleComponent* PhysicsHandle;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputMappingContext* DefaultMappingContext;
@@ -63,6 +70,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	UInputAction* RunAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* InteractAction;
 
 	UPROPERTY(EditAnywhere, Category = "Crouching")
 	FVector CrouchEyeOffset = FVector::ZeroVector;
@@ -94,6 +104,12 @@ private:
 
 	bool bIsExhausted = false;
 
+	bool bGrabbingObject = false;
+
+	AActor* GrabbedObject;
+
+	APuzzleManager* PuzzleManager;
+
 	void Move(const FInputActionValue& Value);
 	
 	void Look(const FInputActionValue& Value);
@@ -111,4 +127,9 @@ private:
 
 	UFUNCTION()
 	void OnRep_IsRunning();
+
+	void Interact(const FInputActionValue& Value);
+
+	UFUNCTION(Server, Reliable)
+	void ServerOnStatuePosed();
 };

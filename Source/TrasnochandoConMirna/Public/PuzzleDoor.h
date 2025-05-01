@@ -1,0 +1,62 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+
+#include "PuzzleDoor.generated.h"
+
+class UStaticMeshComponent;
+class UArrowComponent;
+class UBoxComponent;
+
+UCLASS()
+class TRASNOCHANDOCONMIRNA_API APuzzleDoor : public AActor
+{
+	GENERATED_BODY()
+	
+public:	
+	// Sets default values for this actor's properties
+	APuzzleDoor();
+
+	void OpenDoor();
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+private:
+	friend class PuzzleManager;
+
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* StaticMesh;
+
+	UPROPERTY(EditAnywhere)
+	UBoxComponent* CollisionBox;
+
+	UPROPERTY(EditAnywhere)
+	UArrowComponent* Arrow;
+
+	UPROPERTY(EditAnywhere)
+	UAudioComponent* Audio;
+
+	UPROPERTY(EditAnywhere)
+	uint8 AllowedPassengers = 0;
+
+	uint8 CurrentPassengers = 0;
+
+	bool bOverlapBegun = false;
+
+	// Helper for timing
+	FTimerHandle SpawnTimerHandle;
+
+	UFUNCTION(NetMulticast, Reliable)
+	void OnDoorCrossingBegin(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void OnDoorCrossingEnd(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void CloseDoor();
+
+	//UFUNCTION(NetMulticast, Reliable)
+	//void OpenDoor();
+};

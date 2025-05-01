@@ -1,8 +1,13 @@
 #include "MainCharacter.h"
+
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "Statue.h"
+#include "Pedestal.h"
+#include "PuzzleManager.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -19,6 +24,9 @@ AMainCharacter::AMainCharacter()
 	Mesh1P->SetOnlyOwnerSee(true);
 	Mesh1P->SetupAttachment(PlayerCamera);
 	Mesh1P->bOnlyOwnerSee = true;
+
+	PhysicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("PhysicsHandle"));
+	AddOwnedComponent(PhysicsHandle);
 }
 
 // Called when the game starts or when spawned
@@ -48,6 +56,11 @@ void AMainCharacter::Tick(float DeltaTime)
 
 	float CrouchInterpTime = FMath::Min(1.f, CrouchSpeed * DeltaTime);
 	CrouchEyeOffset = (1.f - CrouchInterpTime) * CrouchEyeOffset;
+
+	if (bGrabbingObject)
+	{
+		PhysicsHandle->SetTargetLocationAndRotation(PlayerCamera->GetComponentLocation() + PlayerCamera->GetForwardVector(), PlayerCamera->GetComponentRotation());
+	}
 }
 
 // Called to bind functionality to input
@@ -67,6 +80,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Input->BindAction(CrouchAction, ETriggerEvent::Started, this, &AMainCharacter::OnCrouchTriggered);
 	Input->BindAction(RunAction, ETriggerEvent::Started, this, &AMainCharacter::StartRun);
 	Input->BindAction(RunAction, ETriggerEvent::Completed, this, &AMainCharacter::EndRun);
+	Input->BindAction(InteractAction, ETriggerEvent::Completed, this, &AMainCharacter::Interact);
 }
 
 bool AMainCharacter::IsRunning()
@@ -77,6 +91,11 @@ bool AMainCharacter::IsRunning()
 bool AMainCharacter::IsCrouching()
 {
 	return bIsCrouched;
+}
+
+void AMainCharacter::SetPuzzleManager(APuzzleManager* NewPuzzleManager)
+{
+	PuzzleManager = NewPuzzleManager;
 }
 
 void AMainCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
@@ -201,6 +220,104 @@ void AMainCharacter::UpdateStamina(float DeltaTime)
 void AMainCharacter::OnRep_IsRunning()
 {
 	GetCharacterMovement()->MaxWalkSpeed = bIsRunning ? RunSpeed : WalkSpeed;
+}
+
+void AMainCharacter::Interact(const FInputActionValue& Value)
+{
+	if (!bGrabbingObject)
+	{
+		FHitResult HitResult;
+		bool bHitSucceeded = GetWorld()->LineTraceSingleByChannel(HitResult, PlayerCamera->GetComponentLocation(), PlayerCamera->GetForwardVector() * 500.f + PlayerCamera->GetComponentLocation(), ECC_Pawn);
+
+		if (bHitSucceeded)
+		{
+			AStatue* Statue = Cast<AStatue>(HitResult.GetActor());
+			if (Statue)
+			{
+				DrawDebugLine(GetWorld(),
+					PlayerCamera->GetComponentLocation(),
+					HitResult.Location,
+					FColor::Green,
+					false,
+					5.f,
+					0,
+					0.2f);
+				PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, PlayerCamera->GetForwardVector() + PlayerCamera->GetComponentLocation(), PlayerCamera->GetComponentRotation());
+				bGrabbingObject = true;
+				GrabbedObject = Statue;
+			}
+			else
+			{
+				DrawDebugLine(GetWorld(),
+					PlayerCamera->GetComponentLocation(),
+					HitResult.Location,
+					FColor::Red,
+					false,
+					5.f,
+					0,
+					0.2f);
+			}
+		}
+		else
+		{
+			DrawDebugLine(GetWorld(),
+				PlayerCamera->GetComponentLocation(),
+				HitResult.Location,
+				FColor::Red,
+				false,
+				5.f,
+				0,
+				0.2f);
+		}
+	}
+	else
+	{
+		FHitResult HitResult;
+		FCollisionQueryParams CollisionQuery;
+		CollisionQuery.AddIgnoredActor(GrabbedObject);
+		bool bHitSucceeded = GetWorld()->LineTraceSingleByChannel(HitResult, PlayerCamera->GetComponentLocation(), PlayerCamera->GetForwardVector() * 500.f + PlayerCamera->GetComponentLocation(), ECC_Pawn, CollisionQuery);
+
+		if (bHitSucceeded)
+		{
+			APedestal* Pedestal = Cast<APedestal>(HitResult.GetActor());
+			if (Pedestal)
+			{
+				DrawDebugLine(GetWorld(),
+					PlayerCamera->GetComponentLocation(),
+					HitResult.Location,
+					FColor::Green,
+					false,
+					5.f,
+					0,
+					0.2f);
+				PhysicsHandle->ReleaseComponent();
+				bGrabbingObject = false;
+				GrabbedObject->SetActorLocation(HitResult.GetComponent()->GetComponentLocation());
+				GrabbedObject->SetActorRotation(FRotator::ZeroRotator);
+				GrabbedObject = nullptr;
+				ServerOnStatuePosed();
+			}
+			else
+			{
+				DrawDebugLine(GetWorld(),
+					PlayerCamera->GetComponentLocation(),
+					HitResult.Location,
+					FColor::Red,
+					false,
+					5.f,
+					0,
+					0.2f);
+			}
+		}
+	}
+}
+
+void AMainCharacter::ServerOnStatuePosed_Implementation()
+{
+	if (PuzzleManager)
+	{
+		PuzzleManager->ServerOnStatuePosed();
+	}
 }
 
 void AMainCharacter::ServerSetRunning_Implementation(bool bInIsRunning)
