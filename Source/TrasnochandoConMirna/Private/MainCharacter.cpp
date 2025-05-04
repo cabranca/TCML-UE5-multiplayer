@@ -227,7 +227,7 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 	if (!bGrabbingObject)
 	{
 		FHitResult HitResult;
-		bool bHitSucceeded = GetWorld()->LineTraceSingleByChannel(HitResult, PlayerCamera->GetComponentLocation(), PlayerCamera->GetForwardVector() * 500.f + PlayerCamera->GetComponentLocation(), ECC_Pawn);
+		bool bHitSucceeded = GetWorld()->LineTraceSingleByChannel(HitResult, PlayerCamera->GetComponentLocation(), PlayerCamera->GetForwardVector() * 500.f + PlayerCamera->GetComponentLocation(), ECC_GameTraceChannel1);
 
 		if (bHitSucceeded)
 		{
@@ -273,9 +273,7 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 	else
 	{
 		FHitResult HitResult;
-		FCollisionQueryParams CollisionQuery;
-		CollisionQuery.AddIgnoredActor(GrabbedObject);
-		bool bHitSucceeded = GetWorld()->LineTraceSingleByChannel(HitResult, PlayerCamera->GetComponentLocation(), PlayerCamera->GetForwardVector() * 500.f + PlayerCamera->GetComponentLocation(), ECC_Pawn, CollisionQuery);
+		bool bHitSucceeded = GetWorld()->LineTraceSingleByChannel(HitResult, PlayerCamera->GetComponentLocation(), PlayerCamera->GetForwardVector() * 500.f + PlayerCamera->GetComponentLocation(), ECC_GameTraceChannel2);
 
 		if (bHitSucceeded)
 		{
@@ -317,6 +315,10 @@ void AMainCharacter::ServerOnStatuePosed_Implementation()
 	if (PuzzleManager)
 	{
 		PuzzleManager->ServerOnStatuePosed();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Puzzle Manager set for Main Character"));
 	}
 }
 
