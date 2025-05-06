@@ -25,5 +25,4 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	USphereComponent* SphereCollision;
-
 };
