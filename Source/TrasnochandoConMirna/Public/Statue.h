@@ -29,6 +29,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	USphereComponent* SphereCollision;
 
+	UPROPERTY(EditAnywhere)
+	UMaterialInterface* OutlineOverlay;
+
 	UFUNCTION()
 	void OnSphereBeginOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 

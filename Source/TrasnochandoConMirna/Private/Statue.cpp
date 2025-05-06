@@ -42,6 +42,7 @@ void AStatue::OnSphereBeginOverlap(USphereComponent* Component, AActor* OtherAct
 	if (Cast<AMainCharacter>(OtherActor))
 	{
 		StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+		StaticMesh->SetOverlayMaterial(OutlineOverlay);
 	}
 }
 
@@ -50,5 +51,6 @@ void AStatue::OnSphereEndOverlap(USphereComponent * Component, AActor * OtherAct
 	if (Cast<AMainCharacter>(OtherActor))
 	{
 		StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+		StaticMesh->SetOverlayMaterial(nullptr);
 	}
 }
