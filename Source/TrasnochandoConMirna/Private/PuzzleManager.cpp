@@ -34,9 +34,7 @@ void APuzzleManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FScriptDelegate ClockDelegateSubscriber;
-	ClockDelegateSubscriber.BindUFunction(this, "OnClockFinished");
-	ClockSFX->OnAudioFinished.Add(ClockDelegateSubscriber);
+	ClockSFX->OnAudioFinished.AddDynamic(this, &APuzzleManager::OnClockFinished);
 }
 
 void APuzzleManager::OnStatuePosed_Implementation()

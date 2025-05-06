@@ -35,9 +35,7 @@ EBTNodeResult::Type UBTTask_Patrol::MoveToNextPoint()
 	const FVector Destination = CurrentPoint->GetActorLocation();
 	EPathFollowingRequestResult::Type Result = AIController->MoveToLocation(Destination, 5.0, false, true);
 	
-	FScriptDelegate DelegateSubscriber;
-	DelegateSubscriber.BindUFunction(this, "OnMoveCompleted");
-	AIController->ReceiveMoveCompleted.Add(DelegateSubscriber);
+	AIController->ReceiveMoveCompleted.AddDynamic(this, &UBTTask_Patrol::OnMoveCompleted);
 	
 	return EBTNodeResult::InProgress;
 }

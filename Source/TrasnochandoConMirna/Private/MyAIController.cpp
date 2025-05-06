@@ -18,9 +18,7 @@ void AMyAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FScriptDelegate DelegateSubscriber;
-	DelegateSubscriber.BindUFunction(this, "OnSensed");
-	GetAIPerceptionComponent()->OnTargetPerceptionUpdated.Add(DelegateSubscriber);
+	GetAIPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AMyAIController::OnSensed);
 
 	if (BehaviorTree)
 	{
