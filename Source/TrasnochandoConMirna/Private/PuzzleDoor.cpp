@@ -10,19 +10,25 @@
 APuzzleDoor::APuzzleDoor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
+
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	RootComponent = SceneComponent;
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
-	RootComponent = StaticMesh;
+	StaticMesh->SetIsReplicated(true);
+	StaticMesh->SetupAttachment(RootComponent);
+	
 
 	Audio = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio"));
-	Audio->SetupAttachment(StaticMesh);
+	Audio->SetupAttachment(RootComponent);
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
-	CollisionBox->SetupAttachment(StaticMesh);
+	CollisionBox->SetupAttachment(RootComponent);
 
 	Arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
-	Arrow->SetupAttachment(StaticMesh);
+	Arrow->SetupAttachment(RootComponent);
 	Arrow->SetRelativeLocation(FVector::ZeroVector);
 }
 
@@ -30,17 +36,53 @@ APuzzleDoor::APuzzleDoor()
 void APuzzleDoor::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (StaticMesh)
-	{
-		FScriptDelegate BeginDelegateSubscriber;
-		BeginDelegateSubscriber.BindUFunction(this, "OnDoorCrossingBegin");
-		CollisionBox->OnComponentBeginOverlap.Add(BeginDelegateSubscriber);
 
-		FScriptDelegate EndDelegateSubscriber;
-		EndDelegateSubscriber.BindUFunction(this, "OnDoorCrossingEnd");
-		CollisionBox->OnComponentEndOverlap.Add(EndDelegateSubscriber);
+	SetActorTickEnabled(false);
+
+	StaticMesh->SetRelativeLocation(OpenPosition);
+	
+	FScriptDelegate BeginDelegateSubscriber;
+	BeginDelegateSubscriber.BindUFunction(this, "OnDoorCrossingBegin");
+	CollisionBox->OnComponentBeginOverlap.Add(BeginDelegateSubscriber);
+
+	FScriptDelegate EndDelegateSubscriber;
+	EndDelegateSubscriber.BindUFunction(this, "OnDoorCrossingEnd");
+	CollisionBox->OnComponentEndOverlap.Add(EndDelegateSubscriber);
+}
+
+void APuzzleDoor::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (HasAuthority())
+	{
+		Animate(DeltaTime);
 	}
+}
+
+void APuzzleDoor::OpenDoor()
+{
+	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	SetActorTickEnabled(true);
+	Audio->Play();
+}
+
+void APuzzleDoor::CloseDoor_Implementation()
+{
+	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+	SetActorTickEnabled(true);
+	Audio->Play();
+}
+
+void APuzzleDoor::Animate_Implementation(float DeltaTime)
+{
+	CurrentPosition += AnimationSpeed * AnimationDirection * DeltaTime;
+	if (CurrentPosition > 1.f || CurrentPosition < 0.f)
+	{
+		CurrentPosition = FMath::Clamp(CurrentPosition, 0.f, 1.f);
+		SetActorTickEnabled(false);
+	}
+	StaticMesh->SetRelativeLocation(OpenPosition + (ClosedPosition - OpenPosition) * CurrentPosition);
 }
 
 void APuzzleDoor::OnDoorCrossingBegin_Implementation(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -48,7 +90,7 @@ void APuzzleDoor::OnDoorCrossingBegin_Implementation(UBoxComponent* Component, A
 	AMainCharacter* Character = Cast<AMainCharacter>(OtherActor);
 	if (Character)
 	{
-		double DotProduct = FVector::DotProduct(Character->GetActorForwardVector(), Arrow->GetForwardVector());
+		double DotProduct = FVector::DotProduct(Character->GetVelocity(), Arrow->GetForwardVector());
 		if (DotProduct > 0)
 		{
 			bOverlapBegun = true;
@@ -61,7 +103,7 @@ void APuzzleDoor::OnDoorCrossingEnd_Implementation(UBoxComponent* Component, AAc
 	AMainCharacter* Character = Cast<AMainCharacter>(OtherActor);
 	if (Character)
 	{
-		double DotProduct = FVector::DotProduct(Character->GetActorForwardVector(), Arrow->GetForwardVector());
+		double DotProduct = FVector::DotProduct(Character->GetVelocity(), Arrow->GetForwardVector());
 		if (DotProduct > 0)
 		{
 			CurrentPassengers++;
@@ -76,18 +118,4 @@ void APuzzleDoor::OnDoorCrossingEnd_Implementation(UBoxComponent* Component, AAc
 			GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &APuzzleDoor::CloseDoor, 0.5f, false);
 		}
 	}
-}
-
-void APuzzleDoor::CloseDoor_Implementation()
-{
-	StaticMesh->SetVisibility(true);
-	StaticMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
-	Audio->Play();
-}
-
-void APuzzleDoor::OpenDoor()
-{
-	StaticMesh->SetVisibility(false);
-	StaticMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-	Audio->Play();
 }

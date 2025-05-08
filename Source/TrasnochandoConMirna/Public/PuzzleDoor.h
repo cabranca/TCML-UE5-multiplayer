@@ -5,6 +5,7 @@
 
 #include "PuzzleDoor.generated.h"
 
+// Forward declarations
 class UStaticMeshComponent;
 class UArrowComponent;
 class UBoxComponent;
@@ -18,28 +19,52 @@ public:
 	// Sets default values for this actor's properties
 	APuzzleDoor();
 
-	void OpenDoor();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+public:
+	virtual void Tick(float DeltaTime) override;
+
+	/***ACTIONS***/
+
+	void OpenDoor();
+
 private:
-	friend class PuzzleManager;
+	UFUNCTION(NetMulticast, Reliable)
+	void CloseDoor();
 
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* StaticMesh;
+	
+	/***COMPONENTS***/
 
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* CollisionBox;
+	UPROPERTY(EditAnywhere) USceneComponent* SceneComponent;
 
-	UPROPERTY(EditAnywhere)
-	UArrowComponent* Arrow;
+	UPROPERTY(EditAnywhere) UStaticMeshComponent* StaticMesh;
 
-	UPROPERTY(EditAnywhere)
-	UAudioComponent* Audio;
+	UPROPERTY(EditAnywhere) UBoxComponent* CollisionBox;
 
-	UPROPERTY(EditAnywhere)
-	uint8 AllowedPassengers = 0;
+	UPROPERTY(EditAnywhere) UArrowComponent* Arrow;
+
+	UPROPERTY(EditAnywhere) UAudioComponent* Audio;
+
+
+	/***ANIMATION***/
+
+	UPROPERTY(EditAnywhere, Category = "Animation") FVector OpenPosition = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, Category = "Animation") FVector ClosedPosition = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, Category = "Animation") float AnimationSpeed = 10.f;
+
+	float CurrentPosition = 0.f;
+
+	uint8 AnimationDirection = 1;
+
+	UFUNCTION(NetMulticast, Reliable) void Animate(float DeltaTime);
+
+	/***OVERLAP***/
+
+	UPROPERTY(EditAnywhere) uint8 AllowedPassengers = 0;
 
 	uint8 CurrentPassengers = 0;
 
@@ -48,15 +73,11 @@ private:
 	// Helper for timing
 	FTimerHandle SpawnTimerHandle;
 
-	UFUNCTION(NetMulticast, Reliable)
-	void OnDoorCrossingBegin(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION(NetMulticast, Reliable) void OnDoorCrossingBegin(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UFUNCTION(NetMulticast, Reliable)
-	void OnDoorCrossingEnd(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UFUNCTION(NetMulticast, Reliable) void OnDoorCrossingEnd(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	UFUNCTION(NetMulticast, Reliable)
-	void CloseDoor();
+	/***MISC***/
 
-	//UFUNCTION(NetMulticast, Reliable)
-	//void OpenDoor();
+	friend class PuzzleManager;
 };
