@@ -162,4 +162,17 @@ private:
 	APuzzleManager* PuzzleManager;
 	
 	UFUNCTION(Server, Reliable) void ServerOnStatuePosed();
+
+	/***NOISE SYSTEM***/
+
+	UPROPERTY(EditAnywhere, Category = "Noise")
+	float CrouchingLoudness = 30.f;
+
+	UPROPERTY(EditAnywhere, Category = "Noise")
+	float WalkingLoudness = 150.f;
+
+	UPROPERTY(EditAnywhere, Category = "Noise")
+	float RunningLoudness = 300.f;
+
+	void ProduceNoise();
 };

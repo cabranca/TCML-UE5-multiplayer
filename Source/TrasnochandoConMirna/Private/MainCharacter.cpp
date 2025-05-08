@@ -10,6 +10,7 @@
 #include "PuzzleManager.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/CapsuleComponent.h"
+#include "Perception/AISense_Hearing.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -88,6 +89,11 @@ void AMainCharacter::Tick(float DeltaTime)
 	if (bGrabbingObject && HasAuthority())
 	{
 		MulticastUpdateGrabbedObject();
+	}
+
+	if (GetVelocity().Length() > 0)
+	{
+		ProduceNoise();
 	}
 }
 
@@ -418,4 +424,16 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 	DOREPLIFETIME(AMainCharacter, bIsRunning);
 }
 
-
+void AMainCharacter::ProduceNoise()
+{
+	float Loudness = WalkingLoudness;
+	if (IsRunning())
+	{
+		Loudness = RunningLoudness;
+	}
+	else if (IsCrouching())
+	{
+		Loudness = CrouchingLoudness;
+	}
+	UAISense_Hearing::ReportNoiseEvent(GetWorld(), GetActorLocation(), Loudness, this, 10.f, NAME_None);
+}
