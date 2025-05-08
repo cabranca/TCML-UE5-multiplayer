@@ -8,6 +8,8 @@
 #include "Statue.h"
 #include "Pedestal.h"
 #include "PuzzleManager.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -19,6 +21,7 @@ AMainCharacter::AMainCharacter()
 	PlayerCamera->SetupAttachment(RootComponent);
 	PlayerCamera->SetRelativeLocation(FVector(0.0, 0.0, 70.0));
 	PlayerCamera->bUsePawnControlRotation = true;
+	PlayerCamera->SetIsReplicated(true);
 
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
@@ -27,6 +30,7 @@ AMainCharacter::AMainCharacter()
 
 	PhysicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("PhysicsHandle"));
 	AddOwnedComponent(PhysicsHandle);
+	PhysicsHandle->SetIsReplicated(true);
 }
 
 // Called when the game starts or when spawned
@@ -36,6 +40,17 @@ void AMainCharacter::BeginPlay()
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 
+	FScriptDelegate BeginDelegateSubscriber;
+	BeginDelegateSubscriber.BindUFunction(this, "OnCapsuleBeginOverlap");
+	GetCapsuleComponent()->OnComponentBeginOverlap.Add(BeginDelegateSubscriber);
+	//SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AStatue::OnSphereBeginOverlap);
+
+	FScriptDelegate EndDelegateSubscriber;
+	EndDelegateSubscriber.BindUFunction(this, "OnCapsuleEndOverlap");
+	GetCapsuleComponent()->OnComponentEndOverlap.Add(EndDelegateSubscriber);
+
+	//SphereCollision->OnComponentEndOverlap.AddDynamic(this, &AStatue::OnDoorCrossingBegin);
+
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	if (PlayerController)
 	{
@@ -43,6 +58,19 @@ void AMainCharacter::BeginPlay()
 		if (Subsystem)
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+		}
+
+		if (InteractionWidget)
+		{
+			InteractionPrompt = CreateWidget<UUserWidget>(PlayerController, InteractionWidget);
+			if (InteractionPrompt)
+			{
+				SetInteractionPrompt();
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Could not create widget"));
+			}
 		}
 	}
 }
@@ -56,10 +84,10 @@ void AMainCharacter::Tick(float DeltaTime)
 
 	float CrouchInterpTime = FMath::Min(1.f, CrouchSpeed * DeltaTime);
 	CrouchEyeOffset = (1.f - CrouchInterpTime) * CrouchEyeOffset;
-
-	if (bGrabbingObject)
+	
+	if (bGrabbingObject && HasAuthority())
 	{
-		PhysicsHandle->SetTargetLocationAndRotation(PlayerCamera->GetComponentLocation() + PlayerCamera->GetForwardVector(), PlayerCamera->GetComponentRotation());
+		MulticastUpdateGrabbedObject();
 	}
 }
 
@@ -83,12 +111,12 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Input->BindAction(InteractAction, ETriggerEvent::Completed, this, &AMainCharacter::Interact);
 }
 
-bool AMainCharacter::IsRunning()
+bool AMainCharacter::IsRunning() const
 {
 	return bIsRunning;
 }
 
-bool AMainCharacter::IsCrouching()
+bool AMainCharacter::IsCrouching() const
 {
 	return bIsCrouched;
 }
@@ -186,42 +214,6 @@ void AMainCharacter::EndRun(const FInputActionValue& Value)
 	ServerSetRunning(bIsRunning);
 }
 
-void AMainCharacter::UpdateStamina(float DeltaTime)
-{
-	if (CurrentStamina < 0.f)
-	{
-		CurrentStamina = 0.f;
-		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-		bIsRunning = false;
-		bIsExhausted = true;
-	}
-	else if (CurrentStamina > MaxStamina)
-	{
-		CurrentStamina = MaxStamina;
-		bIsExhausted = false;
-	}
-	else
-	{
-		if (bIsRunning)
-		{
-			CurrentStamina -= StaminaLossRate * DeltaTime;
-		}
-		else if (bIsExhausted)
-		{
-			CurrentStamina += StaminExhaustedRecoveryRate * DeltaTime;
-		}
-		else
-		{
-			CurrentStamina += StaminaRecoveryRate * DeltaTime;
-		}
-	}
-}
-
-void AMainCharacter::OnRep_IsRunning()
-{
-	GetCharacterMovement()->MaxWalkSpeed = bIsRunning ? RunSpeed : WalkSpeed;
-}
-
 void AMainCharacter::Interact(const FInputActionValue& Value)
 {
 	if (!bGrabbingObject)
@@ -242,9 +234,14 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 					5.f,
 					0,
 					0.2f);
+
 				PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, PlayerCamera->GetForwardVector() + PlayerCamera->GetComponentLocation(), PlayerCamera->GetComponentRotation());
 				bGrabbingObject = true;
 				GrabbedObject = Statue;
+				if (!HasAuthority())
+				{
+					ServerGrabObject(HitResult.GetComponent(), Statue);
+				}
 			}
 			else
 			{
@@ -288,11 +285,16 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 					5.f,
 					0,
 					0.2f);
+
 				PhysicsHandle->ReleaseComponent();
 				bGrabbingObject = false;
 				GrabbedObject->SetActorLocation(HitResult.GetComponent()->GetComponentLocation());
 				GrabbedObject->SetActorRotation(FRotator::ZeroRotator);
 				GrabbedObject = nullptr;
+				if (!HasAuthority())
+				{
+					ServerDropObject(HitResult.GetComponent());
+				}
 				ServerOnStatuePosed();
 			}
 			else
@@ -310,6 +312,115 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 	}
 }
 
+void AMainCharacter::UpdateStamina(float DeltaTime)
+{
+	if (CurrentStamina < 0.f)
+	{
+		CurrentStamina = 0.f;
+		GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+		bIsRunning = false;
+		bIsExhausted = true;
+	}
+	else if (CurrentStamina > MaxStamina)
+	{
+		CurrentStamina = MaxStamina;
+		bIsExhausted = false;
+	}
+	else
+	{
+		if (bIsRunning)
+		{
+			CurrentStamina -= StaminaLossRate * DeltaTime;
+		}
+		else if (bIsExhausted)
+		{
+			CurrentStamina += StaminExhaustedRecoveryRate * DeltaTime;
+		}
+		else
+		{
+			CurrentStamina += StaminaRecoveryRate * DeltaTime;
+		}
+	}
+}
+
+void AMainCharacter::ServerSetRunning_Implementation(bool bInIsRunning)
+{
+	bIsRunning = bInIsRunning;
+	OnRep_IsRunning();
+}
+
+void AMainCharacter::OnRep_IsRunning()
+{
+	GetCharacterMovement()->MaxWalkSpeed = bIsRunning ? RunSpeed : WalkSpeed;
+}
+
+void AMainCharacter::ServerGrabObject_Implementation(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab)
+{
+	FRotator Rotator = GetControlRotation();
+	//Rotator.Pitch += 1.f;
+	FVector Vector = PlayerCamera->GetComponentLocation();
+	Vector.Z += 5.f;
+	PhysicsHandle->GrabComponentAtLocationWithRotation(ComponentToGrab, NAME_None, PlayerCamera->GetForwardVector() + Vector, Rotator);
+	bGrabbingObject = true;
+	GrabbedObject = ObjectToGrab;
+}
+
+void AMainCharacter::MulticastUpdateGrabbedObject_Implementation()
+{
+	FRotator Rotator = GetControlRotation();
+	//Rotator.Pitch += 1.f;
+	FVector Vector = PlayerCamera->GetComponentLocation();
+	Vector.Z += 5.f;
+	PhysicsHandle->SetTargetLocationAndRotation(PlayerCamera->GetForwardVector() + Vector, Rotator);
+}
+
+void AMainCharacter::ServerDropObject_Implementation(UPrimitiveComponent* ComponentToDrop)
+{
+	PhysicsHandle->ReleaseComponent();
+	bGrabbingObject = false;
+	GrabbedObject->SetActorLocation(ComponentToDrop->GetComponentLocation());
+	GrabbedObject->SetActorRotation(FRotator::ZeroRotator);
+	GrabbedObject = nullptr;
+}
+
+void AMainCharacter::SetInteractionPrompt_Implementation()
+{
+	if (!InteractionPrompt->AddToPlayerScreen())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not add interaction prompt to player screen"));
+	}
+	InteractionPrompt->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void AMainCharacter::OnCapsuleBeginOverlap(UCapsuleComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (Cast<AStatue>(OtherActor) && HasAuthority())
+	{
+		SetInteractionPromptVisibility(ESlateVisibility::Visible);
+		
+	}
+}
+
+void AMainCharacter::OnCapsuleEndOverlap(UCapsuleComponent * Component, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+{
+	if (Cast<AStatue>(OtherActor) && HasAuthority())
+	{
+		SetInteractionPromptVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void AMainCharacter::SetInteractionPromptVisibility_Implementation(ESlateVisibility Visibility)
+{
+	if (InteractionPrompt)
+	{
+		InteractionPrompt->SetVisibility(Visibility);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Interaction Prompt is null"));
+	}
+}
+
 void AMainCharacter::ServerOnStatuePosed_Implementation()
 {
 	if (PuzzleManager)
@@ -320,12 +431,6 @@ void AMainCharacter::ServerOnStatuePosed_Implementation()
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Puzzle Manager set for Main Character"));
 	}
-}
-
-void AMainCharacter::ServerSetRunning_Implementation(bool bInIsRunning)
-{
-	bIsRunning = bInIsRunning;
-	OnRep_IsRunning(); // Also apply on server
 }
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

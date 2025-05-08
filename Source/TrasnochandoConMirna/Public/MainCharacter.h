@@ -4,6 +4,7 @@
 
 #include "MainCharacter.generated.h"
 
+// Forward declarations
 class UInputAction;
 class UInputMappingContext;
 struct FInputActionValue;
@@ -31,14 +32,20 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintCallable)
-	bool IsRunning();
 
-	UFUNCTION(BlueprintCallable)
-	bool IsCrouching();
+	/***GETTERS***/
 
-	UFUNCTION(BlueprintCallable)
-	void SetPuzzleManager(APuzzleManager* NewPuzzleManager); // TODO: SetCurrentPuzzle(PuzzleInterface)
+	UFUNCTION(BlueprintCallable) bool IsRunning() const;
+
+	UFUNCTION(BlueprintCallable) bool IsCrouching() const;
+
+
+	/***SETTERS***/
+
+	UFUNCTION(BlueprintCallable) void SetPuzzleManager(APuzzleManager* NewPuzzleManager); // TODO: SetCurrentPuzzle(PuzzleInterface)
+
+
+	/***CROUCHING***/
 
 protected:
 	void OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
@@ -46,54 +53,62 @@ protected:
 	void CalcCamera(float DeltaTime, struct FMinimalViewInfo& OutResult) override;
 
 private:
+	UPROPERTY(EditAnywhere, Category = "Crouching") FVector CrouchEyeOffset = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, Category = "Crouching") float CrouchSpeed = 200.f;
+
+
+	/***COMPONENTS***/
+
 	// Mesh for first person view (arms seen only by self)
-	UPROPERTY(EditAnywhere)
-	USkeletalMeshComponent* Mesh1P;
+	UPROPERTY(EditAnywhere)	USkeletalMeshComponent* Mesh1P;
 
 	// Camera component for the player
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* PlayerCamera;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) UCameraComponent* PlayerCamera;
+	
 	UPhysicsHandleComponent* PhysicsHandle;
+	
 
-	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputMappingContext* DefaultMappingContext;
+	/***INPUT ACTIONS***/
 
-	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* MoveAction;
+	UPROPERTY(EditAnywhere, Category = "Input") UInputMappingContext* DefaultMappingContext;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* LookAction;
+	UPROPERTY(EditAnywhere, Category = "Input") UInputAction* MoveAction;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* CrouchAction;
+	UPROPERTY(EditAnywhere, Category = "Input") UInputAction* LookAction;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* RunAction;
+	UPROPERTY(EditAnywhere, Category = "Input") UInputAction* CrouchAction;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
-	UInputAction* InteractAction;
+	UPROPERTY(EditAnywhere, Category = "Input") UInputAction* RunAction;
 
-	UPROPERTY(EditAnywhere, Category = "Crouching")
-	FVector CrouchEyeOffset = FVector::ZeroVector;
+	UPROPERTY(EditAnywhere, Category = "Input") UInputAction* InteractAction;
 
-	UPROPERTY(EditAnywhere, Category = "Crouching")
-	float CrouchSpeed = 200.f;
+	/***INPUT CALLBACKS***/
 
-	UPROPERTY(EditAnywhere, Category = "Running")
-	float RunSpeed = 800.f;
+	void Move(const FInputActionValue& Value);
 
-	UPROPERTY(EditAnywhere, Category = "Running")
-	float WalkSpeed = 500.f;
+	void Look(const FInputActionValue& Value);
 
-	UPROPERTY(EditAnywhere, Category = "Running")
-	float StaminaLossRate = 1.f;
+	void OnCrouchTriggered(const FInputActionValue& Value);
 
-	UPROPERTY(EditAnywhere, Category = "Running")
-	float StaminaRecoveryRate = 2.f;
+	void StartRun(const FInputActionValue& Value);
 
-	UPROPERTY(EditAnywhere, Category = "Running")
-	float StaminExhaustedRecoveryRate = 1.f;
+	void EndRun(const FInputActionValue& Value);
+
+	void Interact(const FInputActionValue& Value);
+
+
+	/***RUNNING***/
+
+	UPROPERTY(EditAnywhere, Category = "Running") float RunSpeed = 800.f;
+
+	UPROPERTY(EditAnywhere, Category = "Running") float WalkSpeed = 500.f;
+
+	UPROPERTY(EditAnywhere, Category = "Running") float StaminaLossRate = 1.f;
+
+	UPROPERTY(EditAnywhere, Category = "Running") float StaminaRecoveryRate = 2.f;
+
+	UPROPERTY(EditAnywhere, Category = "Running") float StaminExhaustedRecoveryRate = 1.f;
 
 	float CurrentStamina = 100.f;
 
@@ -104,32 +119,41 @@ private:
 
 	bool bIsExhausted = false;
 
+	void UpdateStamina(float DeltaTime);
+
+	UFUNCTION(Server, Reliable) void ServerSetRunning(bool bShouldRun);
+
+	UFUNCTION()	void OnRep_IsRunning();
+	
+	
+	/***INTERACTION***/
+
 	bool bGrabbingObject = false;
 
 	AActor* GrabbedObject;
 
-	APuzzleManager* PuzzleManager;
-
-	void Move(const FInputActionValue& Value);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) TSubclassOf<UUserWidget> InteractionWidget;
 	
-	void Look(const FInputActionValue& Value);
+	UUserWidget* InteractionPrompt;
 
-	void OnCrouchTriggered(const FInputActionValue& Value);
+	UFUNCTION(Server, Reliable) void ServerGrabObject(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab);
 
-	void StartRun(const FInputActionValue& Value);
+	UFUNCTION(NetMulticast, Reliable) void MulticastUpdateGrabbedObject();
 
-	void EndRun(const FInputActionValue& Value);
+	UFUNCTION(Server, Reliable) void ServerDropObject(UPrimitiveComponent* ComponentToDrop);
 
-	void UpdateStamina(float DeltaTime);
+	UFUNCTION(Client, Reliable) void SetInteractionPrompt();
 
-	UFUNCTION(Server, Reliable)
-	void ServerSetRunning(bool bShouldRun);
+	UFUNCTION() void OnCapsuleBeginOverlap(UCapsuleComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UFUNCTION()
-	void OnRep_IsRunning();
+	UFUNCTION() void OnCapsuleEndOverlap(UCapsuleComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	void Interact(const FInputActionValue& Value);
+	UFUNCTION(Client, Reliable) void SetInteractionPromptVisibility(ESlateVisibility Visibility);
+	
 
-	UFUNCTION(Server, Reliable)
-	void ServerOnStatuePosed();
+	/***PUZZLE***/
+	
+	APuzzleManager* PuzzleManager;
+	
+	UFUNCTION(Server, Reliable) void ServerOnStatuePosed();
 };

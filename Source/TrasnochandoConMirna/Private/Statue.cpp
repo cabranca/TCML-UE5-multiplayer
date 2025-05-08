@@ -13,12 +13,17 @@ AStatue::AStatue()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	bReplicates = true;
+	SetReplicateMovement(true);
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	RootComponent = StaticMesh;
+	StaticMesh->SetIsReplicated(true);
 
 	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	SphereCollision->SetupAttachment(StaticMesh);
+	SphereCollision->SetIsReplicated(true);
+
 }
 
 void AStatue::BeginPlay()
