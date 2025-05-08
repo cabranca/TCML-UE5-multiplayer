@@ -226,45 +226,17 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 			AStatue* Statue = Cast<AStatue>(HitResult.GetActor());
 			if (Statue)
 			{
-				DrawDebugLine(GetWorld(),
-					PlayerCamera->GetComponentLocation(),
-					HitResult.Location,
-					FColor::Green,
-					false,
-					5.f,
-					0,
-					0.2f);
-
-				PhysicsHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), NAME_None, PlayerCamera->GetForwardVector() + PlayerCamera->GetComponentLocation(), PlayerCamera->GetComponentRotation());
-				bGrabbingObject = true;
-				GrabbedObject = Statue;
-				if (!HasAuthority())
-				{
-					ServerGrabObject(HitResult.GetComponent(), Statue);
-				}
+				DrawDebugLineToLocation(HitResult.Location, FColor::Green);
+				GrabObject(HitResult.GetComponent(), Statue);
 			}
 			else
 			{
-				DrawDebugLine(GetWorld(),
-					PlayerCamera->GetComponentLocation(),
-					HitResult.Location,
-					FColor::Red,
-					false,
-					5.f,
-					0,
-					0.2f);
+				DrawDebugLineToLocation(HitResult.Location, FColor::Red);
 			}
 		}
 		else
 		{
-			DrawDebugLine(GetWorld(),
-				PlayerCamera->GetComponentLocation(),
-				HitResult.Location,
-				FColor::Red,
-				false,
-				5.f,
-				0,
-				0.2f);
+			DrawDebugLineToLocation(PlayerCamera->GetForwardVector() * 500.f + PlayerCamera->GetComponentLocation(), FColor::Blue);
 		}
 	}
 	else
@@ -277,36 +249,12 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 			APedestal* Pedestal = Cast<APedestal>(HitResult.GetActor());
 			if (Pedestal)
 			{
-				DrawDebugLine(GetWorld(),
-					PlayerCamera->GetComponentLocation(),
-					HitResult.Location,
-					FColor::Green,
-					false,
-					5.f,
-					0,
-					0.2f);
-
-				PhysicsHandle->ReleaseComponent();
-				bGrabbingObject = false;
-				GrabbedObject->SetActorLocation(HitResult.GetComponent()->GetComponentLocation());
-				GrabbedObject->SetActorRotation(FRotator::ZeroRotator);
-				GrabbedObject = nullptr;
-				if (!HasAuthority())
-				{
-					ServerDropObject(HitResult.GetComponent());
-				}
-				ServerOnStatuePosed();
+				DrawDebugLineToLocation(HitResult.Location, FColor::Green);
+				DropObject(HitResult.GetComponent());
 			}
 			else
 			{
-				DrawDebugLine(GetWorld(),
-					PlayerCamera->GetComponentLocation(),
-					HitResult.Location,
-					FColor::Red,
-					false,
-					5.f,
-					0,
-					0.2f);
+				DrawDebugLineToLocation(HitResult.Location, FColor::Red);
 			}
 		}
 	}
@@ -354,6 +302,22 @@ void AMainCharacter::OnRep_IsRunning()
 	GetCharacterMovement()->MaxWalkSpeed = bIsRunning ? RunSpeed : WalkSpeed;
 }
 
+void AMainCharacter::DrawDebugLineToLocation(const FVector TargetLocation, FColor Color) const
+{
+	DrawDebugLine(GetWorld(), PlayerCamera->GetComponentLocation(), TargetLocation, Color, false, 5.f, 0, 0.2f);
+}
+
+void AMainCharacter::GrabObject(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab)
+{
+	PhysicsHandle->GrabComponentAtLocationWithRotation(ComponentToGrab, NAME_None, PlayerCamera->GetForwardVector() + PlayerCamera->GetComponentLocation(), PlayerCamera->GetComponentRotation());
+	bGrabbingObject = true;
+	GrabbedObject = ObjectToGrab;
+	if (!HasAuthority())
+	{
+		ServerGrabObject(ComponentToGrab, ObjectToGrab);
+	}
+}
+
 void AMainCharacter::ServerGrabObject_Implementation(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab)
 {
 	FRotator Rotator = GetControlRotation();
@@ -372,6 +336,20 @@ void AMainCharacter::MulticastUpdateGrabbedObject_Implementation()
 	FVector Vector = PlayerCamera->GetComponentLocation();
 	Vector.Z += 5.f;
 	PhysicsHandle->SetTargetLocationAndRotation(PlayerCamera->GetForwardVector() + Vector, Rotator);
+}
+
+void AMainCharacter::DropObject(UPrimitiveComponent* ComponentToDrop)
+{
+	PhysicsHandle->ReleaseComponent();
+	bGrabbingObject = false;
+	GrabbedObject->SetActorLocation(ComponentToDrop->GetComponentLocation());
+	GrabbedObject->SetActorRotation(FRotator::ZeroRotator);
+	GrabbedObject = nullptr;
+	if (!HasAuthority())
+	{
+		ServerDropObject(ComponentToDrop);
+	}
+	ServerOnStatuePosed();
 }
 
 void AMainCharacter::ServerDropObject_Implementation(UPrimitiveComponent* ComponentToDrop)
@@ -439,3 +417,5 @@ void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	DOREPLIFETIME(AMainCharacter, bIsRunning);
 }
+
+

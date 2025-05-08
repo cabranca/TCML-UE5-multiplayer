@@ -64,7 +64,7 @@ private:
 	UPROPERTY(EditAnywhere)	USkeletalMeshComponent* Mesh1P;
 
 	// Camera component for the player
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) UCameraComponent* PlayerCamera;
+	UPROPERTY(EditAnywhere) UCameraComponent* PlayerCamera;
 	
 	UPhysicsHandleComponent* PhysicsHandle;
 	
@@ -132,13 +132,19 @@ private:
 
 	AActor* GrabbedObject;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true")) TSubclassOf<UUserWidget> InteractionWidget;
+	UPROPERTY(EditAnywhere) TSubclassOf<UUserWidget> InteractionWidget;
 	
 	UUserWidget* InteractionPrompt;
+
+	void DrawDebugLineToLocation(const FVector TargetLocation, FColor Color) const;
+
+	void GrabObject(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab);
 
 	UFUNCTION(Server, Reliable) void ServerGrabObject(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab);
 
 	UFUNCTION(NetMulticast, Reliable) void MulticastUpdateGrabbedObject();
+
+	void DropObject(UPrimitiveComponent* ComponentToDrop);
 
 	UFUNCTION(Server, Reliable) void ServerDropObject(UPrimitiveComponent* ComponentToDrop);
 
