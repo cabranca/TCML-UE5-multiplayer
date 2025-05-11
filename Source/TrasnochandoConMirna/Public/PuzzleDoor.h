@@ -28,11 +28,10 @@ public:
 
 	/***ACTIONS***/
 
-	void OpenDoor();
+	UFUNCTION(NetMulticast, Reliable) void OpenDoor();
 
 private:
-	UFUNCTION(NetMulticast, Reliable)
-	void CloseDoor();
+	UFUNCTION(NetMulticast, Reliable) void CloseDoor();
 
 	
 	/***COMPONENTS***/
@@ -58,7 +57,7 @@ private:
 
 	float CurrentPosition = 0.f;
 
-	uint8 AnimationDirection = 1;
+	int8 AnimationDirection = 1;
 
 	UFUNCTION(NetMulticast, Reliable) void Animate(float DeltaTime);
 

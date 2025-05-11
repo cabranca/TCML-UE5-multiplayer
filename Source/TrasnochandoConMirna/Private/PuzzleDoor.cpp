@@ -19,7 +19,6 @@ APuzzleDoor::APuzzleDoor()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMesh->SetIsReplicated(true);
 	StaticMesh->SetupAttachment(RootComponent);
-	
 
 	Audio = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio"));
 	Audio->SetupAttachment(RootComponent);
@@ -60,9 +59,10 @@ void APuzzleDoor::Tick(float DeltaTime)
 	}
 }
 
-void APuzzleDoor::OpenDoor()
+void APuzzleDoor::OpenDoor_Implementation()
 {
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	AnimationDirection = -1;
 	SetActorTickEnabled(true);
 	Audio->Play();
 }
@@ -71,6 +71,7 @@ void APuzzleDoor::CloseDoor_Implementation()
 {
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 	SetActorTickEnabled(true);
+	AnimationDirection = 1;
 	Audio->Play();
 }
 
