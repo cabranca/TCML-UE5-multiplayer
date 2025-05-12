@@ -6,11 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "PuzzleManager.generated.h"
 
-class AStatue;
-class APedestal;
-class UAudioComponent;
-class APuzzleDoor;
-class UBoxComponent;
+class IPuzzle;
+class AStatuesPuzzle;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API APuzzleManager : public AActor
@@ -21,27 +18,14 @@ public:
 	// Sets default values for this actor's properties
 	APuzzleManager();
 
-	UFUNCTION(Server, Reliable)
-	void ServerOnStatuePosed();
+	UFUNCTION(Server, Reliable) void ServerValidateSolution();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UAudioComponent* ClockSFX;
+	IPuzzle* CurrentPuzzle;
 
-	UPROPERTY(EditAnywhere)
-	UAudioComponent* ErrorSFX;
-
-	UPROPERTY(EditAnywhere)
-	TArray<APuzzleDoor*> Doors;
-
-	bool bStatueSet = false;
-	bool bPuzzleSolved = false;
-
-	UFUNCTION(NetMulticast, Reliable)
-	void OnStatuePosed();
-	UFUNCTION(NetMulticast, Reliable)
-	void OnClockFinished();
+	UPROPERTY(EditAnywhere, Category = "Puzzles") AStatuesPuzzle* StatuesPuzzle;
 };

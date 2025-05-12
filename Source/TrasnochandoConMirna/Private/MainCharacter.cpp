@@ -409,7 +409,7 @@ void AMainCharacter::ServerOnStatuePosed_Implementation()
 {
 	if (PuzzleManager)
 	{
-		PuzzleManager->ServerOnStatuePosed();
+		PuzzleManager->ServerValidateSolution();
 	}
 	else
 	{

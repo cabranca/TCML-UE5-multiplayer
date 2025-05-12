@@ -12,6 +12,7 @@ class UCameraComponent;
 class UPhysicsHandleComponent;
 class APuzzleManager;
 
+
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AMainCharacter : public ACharacter
 {
@@ -35,14 +36,14 @@ public:
 
 	/***GETTERS***/
 
-	UFUNCTION(BlueprintCallable) bool IsRunning() const;
+	UFUNCTION() bool IsRunning() const;
 
-	UFUNCTION(BlueprintCallable) bool IsCrouching() const;
+	UFUNCTION() bool IsCrouching() const;
 
 
 	/***SETTERS***/
 
-	UFUNCTION(BlueprintCallable) void SetPuzzleManager(APuzzleManager* NewPuzzleManager); // TODO: SetCurrentPuzzle(PuzzleInterface)
+	UFUNCTION(BlueprintCallable) void SetPuzzleManager(APuzzleManager* NewPuzzleManager);
 
 
 	/***CROUCHING***/
