@@ -1,9 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interactable.h"
+
 #include "Statue.generated.h"
 
 class UStaticMeshComponent;
@@ -11,7 +11,7 @@ class USphereComponent;
 class UCapsuleComponent;
 
 UCLASS()
-class TRASNOCHANDOCONMIRNA_API AStatue : public AActor
+class TRASNOCHANDOCONMIRNA_API AStatue : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	
@@ -22,8 +22,14 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+public:
+	UFUNCTION(Server, Reliable) void ServerInteract() override;
+
+	bool IsGrabbable() override;
+
+
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(EditAnywhere)

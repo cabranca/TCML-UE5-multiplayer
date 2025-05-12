@@ -13,7 +13,7 @@ struct FInputActionValue;
 class UCameraComponent;
 class UPhysicsHandleComponent;
 class APuzzleManager;
-
+class IInteractable;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AMainCharacter : public ACharacter

@@ -229,11 +229,18 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 
 		if (bHitSucceeded)
 		{
-			AStatue* Statue = Cast<AStatue>(HitResult.GetActor());
-			if (Statue)
+			IInteractable* InteractableObject = Cast<IInteractable>(HitResult.GetActor());
+			if (InteractableObject)
 			{
 				DrawDebugLineToLocation(HitResult.Location, FColor::Green);
-				GrabObject(HitResult.GetComponent(), Statue);
+				if (!HasAuthority())
+				{
+					InteractableObject->ServerInteract();
+				}
+				if (InteractableObject->IsGrabbable())
+				{
+					GrabObject(HitResult.GetComponent(), HitResult.GetActor());
+				}
 			}
 			else
 			{
