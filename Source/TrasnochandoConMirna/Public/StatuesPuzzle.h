@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -24,28 +22,19 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION(Server, Reliable)
-	void ValidateSolution() override;
+	UFUNCTION(Server, Reliable) void ValidateSolution() override;
 
 private:
-	UPROPERTY(EditAnywhere)
-	UAudioComponent* ClockSFX;
+	UPROPERTY(EditAnywhere) UAudioComponent* ClockSFX;
 
-	UPROPERTY(EditAnywhere)
-	UAudioComponent* ErrorSFX;
+	UPROPERTY(EditAnywhere) UAudioComponent* ErrorSFX;
 
-	UPROPERTY(EditAnywhere)
-	TArray<APuzzleDoor*> Doors;
+	UPROPERTY(EditAnywhere) TArray<APuzzleDoor*> Doors;
 
 	bool bStatueSet = false;
 	bool bPuzzleSolved = false;
 
-	UFUNCTION(NetMulticast, Reliable)
-	void MulticastValidateSolution() override;
+	UFUNCTION(NetMulticast, Reliable) void MulticastValidateSolution() override;
 
-	UFUNCTION(NetMulticast, Reliable)
-	void OnClockFinished() ;
+	UFUNCTION(NetMulticast, Reliable) void OnClockFinished();
 };
