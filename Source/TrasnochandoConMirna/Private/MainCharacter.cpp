@@ -405,9 +405,15 @@ void AMainCharacter::OnCapsuleBeginOverlap(UCapsuleComponent* Component, AActor*
 
 void AMainCharacter::OnCapsuleEndOverlap(UCapsuleComponent * Component, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->Implements<UInteractable>() && HasAuthority())
+	if (OtherActor->Implements<UInteractable>())
 	{
-		SetInteractionPromptVisibility(ESlateVisibility::Hidden);
+		if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+		{
+			if (PlayerController->IsLocalPlayerController())
+			{
+				SetInteractionPromptVisibility(ESlateVisibility::Hidden);
+			}
+		}
 	}
 }
 
