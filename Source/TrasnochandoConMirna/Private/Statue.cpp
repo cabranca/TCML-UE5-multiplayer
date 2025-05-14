@@ -33,13 +33,10 @@ void AStatue::BeginPlay()
 	FScriptDelegate BeginDelegateSubscriber;
 	BeginDelegateSubscriber.BindUFunction(this, "OnSphereBeginOverlap");
 	SphereCollision->OnComponentBeginOverlap.Add(BeginDelegateSubscriber);
-	//SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AStatue::OnSphereBeginOverlap);
 
 	FScriptDelegate EndDelegateSubscriber;
 	EndDelegateSubscriber.BindUFunction(this, "OnSphereEndOverlap");
 	SphereCollision->OnComponentEndOverlap.Add(EndDelegateSubscriber);
-
-	//SphereCollision->OnComponentEndOverlap.AddDynamic(this, &AStatue::OnDoorCrossingBegin);
 }
 
 void AStatue::ServerInteract_Implementation()
@@ -52,18 +49,30 @@ bool AStatue::IsGrabbable()
 
 void AStatue::OnSphereBeginOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (Cast<AMainCharacter>(OtherActor))
+	if (AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor))
 	{
-		StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
-		StaticMesh->SetOverlayMaterial(OutlineOverlay);
+		if (APlayerController* PlayerController = Cast<APlayerController>(MainCharacter->GetController()))
+		{
+			if (PlayerController->IsLocalPlayerController())
+			{
+				StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+				StaticMesh->SetOverlayMaterial(OutlineOverlay);
+			}
+		}
 	}
 }
 
 void AStatue::OnSphereEndOverlap(USphereComponent * Component, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	if (Cast<AMainCharacter>(OtherActor))
+	if (AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor))
 	{
-		StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
-		StaticMesh->SetOverlayMaterial(nullptr);
+		if (APlayerController* PlayerController = Cast<APlayerController>(MainCharacter->GetController()))
+		{
+			if (PlayerController->IsLocalPlayerController())
+			{
+				StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+				StaticMesh->SetOverlayMaterial(nullptr);
+			}
+		}
 	}
 }
