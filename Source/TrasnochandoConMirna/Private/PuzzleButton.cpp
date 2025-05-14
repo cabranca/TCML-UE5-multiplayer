@@ -28,8 +28,6 @@ void APuzzleButton::BeginPlay()
 	
 	SetActorTickEnabled(false);
 
-	UE_LOG(LogTemp, Warning, TEXT("SUBSCRIBING"))
-
 	FScriptDelegate BeginDelegateSubscriber;
 	BeginDelegateSubscriber.BindUFunction(this, "OnSphereBeginOverlap");
 	SphereCollision->OnComponentBeginOverlap.Add(BeginDelegateSubscriber);
