@@ -233,10 +233,7 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 			if (InteractableObject)
 			{
 				DrawDebugLineToLocation(HitResult.Location, FColor::Green);
-				if (!HasAuthority())
-				{
-					InteractableObject->ServerInteract();
-				}
+				ServerInteract(HitResult.GetActor());
 				if (InteractableObject->IsGrabbable())
 				{
 					GrabObject(HitResult.GetComponent(), HitResult.GetActor());
@@ -320,6 +317,15 @@ void AMainCharacter::DrawDebugLineToLocation(const FVector TargetLocation, FColo
 	DrawDebugLine(GetWorld(), PlayerCamera->GetComponentLocation(), TargetLocation, Color, false, 5.f, 0, 0.2f);
 }
 
+void AMainCharacter::ServerInteract_Implementation(AActor* Object) const
+{
+	IInteractable* InteractableObject = Cast<IInteractable>(Object);
+	if (InteractableObject)
+	{
+		InteractableObject->ServerInteract();
+	}
+}
+
 void AMainCharacter::GrabObject(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab)
 {
 	PhysicsHandle->GrabComponentAtLocationWithRotation(ComponentToGrab, NAME_None, PlayerCamera->GetForwardVector() + PlayerCamera->GetComponentLocation(), PlayerCamera->GetComponentRotation());
@@ -385,16 +391,21 @@ void AMainCharacter::SetInteractionPrompt_Implementation()
 
 void AMainCharacter::OnCapsuleBeginOverlap(UCapsuleComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (Cast<AStatue>(OtherActor) && HasAuthority())
+	if (OtherActor->Implements<UInteractable>())
 	{
-		SetInteractionPromptVisibility(ESlateVisibility::Visible);
-		
+		if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+		{
+			if (PlayerController->IsLocalPlayerController())
+			{
+				SetInteractionPromptVisibility(ESlateVisibility::Visible);
+			}
+		}
 	}
 }
 
 void AMainCharacter::OnCapsuleEndOverlap(UCapsuleComponent * Component, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	if (Cast<AStatue>(OtherActor) && HasAuthority())
+	if (OtherActor->Implements<UInteractable>() && HasAuthority())
 	{
 		SetInteractionPromptVisibility(ESlateVisibility::Hidden);
 	}

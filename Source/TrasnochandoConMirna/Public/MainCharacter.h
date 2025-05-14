@@ -141,6 +141,8 @@ private:
 
 	void DrawDebugLineToLocation(const FVector TargetLocation, FColor Color) const;
 
+	UFUNCTION(Server, Reliable) void ServerInteract(AActor* Interactable) const;
+
 	void GrabObject(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab);
 
 	UFUNCTION(Server, Reliable) void ServerGrabObject(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab);
