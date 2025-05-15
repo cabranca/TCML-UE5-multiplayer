@@ -24,4 +24,9 @@ public:
 	UFUNCTION(Server, Reliable) virtual void ServerInteract() = 0;
 
 	virtual bool IsGrabbable() = 0;
+
+	void SetCanInteract(bool bCanInteract);
+
+protected:
+	bool bInteractEnabled = true;
 };

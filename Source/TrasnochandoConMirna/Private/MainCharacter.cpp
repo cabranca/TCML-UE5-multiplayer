@@ -127,11 +127,6 @@ bool AMainCharacter::IsCrouching() const
 	return bIsCrouched;
 }
 
-void AMainCharacter::SetPuzzleManager(APuzzleManager* NewPuzzleManager)
-{
-	PuzzleManager = NewPuzzleManager;
-}
-
 void AMainCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
 {
 	if (HalfHeightAdjust == 0.f)
@@ -256,10 +251,11 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 
 		if (bHitSucceeded)
 		{
-			APedestal* Pedestal = Cast<APedestal>(HitResult.GetActor());
-			if (Pedestal)
+			IInteractable* InteractableObject = Cast<IInteractable>(HitResult.GetActor());
+			if (InteractableObject)
 			{
 				DrawDebugLineToLocation(HitResult.Location, FColor::Green);
+				ServerInteract(HitResult.GetActor());
 				DropObject(HitResult.GetComponent());
 			}
 			else
@@ -340,7 +336,6 @@ void AMainCharacter::GrabObject(UPrimitiveComponent* ComponentToGrab, AActor* Ob
 void AMainCharacter::ServerGrabObject_Implementation(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab)
 {
 	FRotator Rotator = GetControlRotation();
-	//Rotator.Pitch += 1.f;
 	FVector Vector = PlayerCamera->GetComponentLocation();
 	Vector.Z += 5.f;
 	PhysicsHandle->GrabComponentAtLocationWithRotation(ComponentToGrab, NAME_None, PlayerCamera->GetForwardVector() + Vector, Rotator);
@@ -351,7 +346,6 @@ void AMainCharacter::ServerGrabObject_Implementation(UPrimitiveComponent* Compon
 void AMainCharacter::MulticastUpdateGrabbedObject_Implementation()
 {
 	FRotator Rotator = GetControlRotation();
-	//Rotator.Pitch += 1.f;
 	FVector Vector = PlayerCamera->GetComponentLocation();
 	Vector.Z += 5.f;
 	PhysicsHandle->SetTargetLocationAndRotation(PlayerCamera->GetForwardVector() + Vector, Rotator);
@@ -368,7 +362,7 @@ void AMainCharacter::DropObject(UPrimitiveComponent* ComponentToDrop)
 	{
 		ServerDropObject(ComponentToDrop);
 	}
-	ServerOnStatuePosed();
+	//ServerOnStatuePosed();
 }
 
 void AMainCharacter::ServerDropObject_Implementation(UPrimitiveComponent* ComponentToDrop)
@@ -426,18 +420,6 @@ void AMainCharacter::SetInteractionPromptVisibility_Implementation(ESlateVisibil
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("Interaction Prompt is null"));
-	}
-}
-
-void AMainCharacter::ServerOnStatuePosed_Implementation()
-{
-	if (PuzzleManager)
-	{
-		PuzzleManager->ServerValidateSolution();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("No Puzzle Manager set for Main Character"));
 	}
 }
 

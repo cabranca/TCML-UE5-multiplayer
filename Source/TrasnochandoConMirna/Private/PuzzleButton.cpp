@@ -2,6 +2,7 @@
 
 #include "Components/SphereComponent.h"
 #include "MainCharacter.h"
+#include "ButtonsPuzzle.h"
 
 // Sets default values
 APuzzleButton::APuzzleButton()
@@ -46,12 +47,31 @@ void APuzzleButton::Tick(float DeltaTime)
 
 void APuzzleButton::ServerInteract_Implementation()
 {
-	SetActorTickEnabled(true);
+	if (bInteractEnabled)
+	{
+		SetForwardAnimation();
+		SetActorTickEnabled(true);
+		if (Puzzle)
+		{
+			Puzzle->ValidateSolution();
+		}
+		bInteractEnabled = false;
+	}
 }
 
 bool APuzzleButton::IsGrabbable()
 {
 	return false;
+}
+
+void APuzzleButton::SetForwardAnimation()
+{
+	AnimationDirection = 1;
+}
+
+void APuzzleButton::SetBackwardsAnimation()
+{
+	AnimationDirection = -1;
 }
 
 void APuzzleButton::Animate_Implementation(float DeltaTime)
@@ -63,6 +83,11 @@ void APuzzleButton::Animate_Implementation(float DeltaTime)
 		SetActorTickEnabled(false);
 	}
 	StaticMesh->SetRelativeLocation(StartPosition + (FinishPosition - StartPosition) * CurrentPosition);
+}
+
+void APuzzleButton::OnRep_AnimationDirection()
+{
+	
 }
 
 void APuzzleButton::OnSphereBeginOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -95,3 +120,9 @@ void APuzzleButton::OnSphereEndOverlap(USphereComponent* Component, AActor* Othe
 	}
 }
 
+void APuzzleButton::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(APuzzleButton, AnimationDirection);
+}

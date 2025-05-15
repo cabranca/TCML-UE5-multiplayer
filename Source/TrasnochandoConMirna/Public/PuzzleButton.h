@@ -8,7 +8,7 @@
 
 /// Forward declarations
 class USphereComponent;
-
+class AButtonsPuzzle;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API APuzzleButton : public AActor, public IInteractable
@@ -31,7 +31,27 @@ public:
 
 	bool IsGrabbable() override;
 
+	/***ANIMATION***/
+	void SetForwardAnimation();
+
+	void SetBackwardsAnimation();
+
 private:
+	UPROPERTY(EditAnywhere, Category = "Animation") FVector StartPosition = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, Category = "Animation") FVector FinishPosition = FVector::ZeroVector;
+
+	UPROPERTY(EditAnywhere, Category = "Animation") float AnimationSpeed = 0.5f;
+
+	float CurrentPosition = 0.f;
+
+	UPROPERTY(ReplicatedUsing = OnRep_AnimationDirection) int8 AnimationDirection = 1;
+
+	UFUNCTION(NetMulticast, Reliable) void Animate(float DeltaTime);
+
+	UFUNCTION()	void OnRep_AnimationDirection();
+
+
 	/***COMPONENTS***/
 
 	UPROPERTY(EditAnywhere) USceneComponent* SceneComponent;
@@ -43,19 +63,9 @@ private:
 	UPROPERTY(EditAnywhere) UMaterialInterface* OutlineOverlay;
 
 
-	/***ANIMATION***/
-
-	UPROPERTY(EditAnywhere, Category = "Animation") FVector StartPosition = FVector::ZeroVector;
-
-	UPROPERTY(EditAnywhere, Category = "Animation") FVector FinishPosition = FVector::ZeroVector;
-
-	UPROPERTY(EditAnywhere, Category = "Animation") float AnimationSpeed = 0.5f;
-
-	float CurrentPosition = 0.f;
-
-	int8 AnimationDirection = 1;
-
-	UFUNCTION(NetMulticast, Reliable) void Animate(float DeltaTime);
+	/***ACTORS***/
+	
+	UPROPERTY(EditAnywhere) AButtonsPuzzle* Puzzle;
 
 
 	/***OVERLAP***/

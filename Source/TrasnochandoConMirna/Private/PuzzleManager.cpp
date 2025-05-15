@@ -1,10 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "PuzzleManager.h"
 
 #include "Puzzle.h"
 #include "StatuesPuzzle.h"
+#include "ButtonsPuzzle.h"
 
 // Sets default values
 APuzzleManager::APuzzleManager()
@@ -16,7 +14,7 @@ void APuzzleManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CurrentPuzzle = StatuesPuzzle;
+	CurrentPuzzle = ButtonsPuzzle;
 }
 
 void APuzzleManager::ServerValidateSolution_Implementation()

@@ -29,18 +29,19 @@ public:
 
 
 private:
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* StaticMesh;
+	/***COMPONENTS***/
+	UPROPERTY(EditAnywhere) UStaticMeshComponent* StaticMesh;
 
-	UPROPERTY(EditAnywhere)
-	USphereComponent* SphereCollision;
+	UPROPERTY(EditAnywhere) USphereComponent* SphereCollision;
 
-	UPROPERTY(EditAnywhere)
-	UMaterialInterface* OutlineOverlay;
 
-	UFUNCTION()
-	void OnSphereBeginOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	/***MATERIALS***/
+	UPROPERTY(EditAnywhere) UMaterialInterface* OutlineOverlay;
 
-	UFUNCTION()
-	void OnSphereEndOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	/***OVERLAP***/
+
+	UFUNCTION() void OnSphereBeginOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION() void OnSphereEndOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };

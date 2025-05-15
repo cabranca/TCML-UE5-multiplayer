@@ -43,11 +43,6 @@ public:
 	UFUNCTION() bool IsCrouching() const;
 
 
-	/***SETTERS***/
-
-	UFUNCTION(BlueprintCallable) void SetPuzzleManager(APuzzleManager* NewPuzzleManager);
-
-
 	/***CROUCHING***/
 
 protected:
@@ -160,13 +155,7 @@ private:
 	UFUNCTION() void OnCapsuleEndOverlap(UCapsuleComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION(Client, Reliable) void SetInteractionPromptVisibility(ESlateVisibility Visibility);
-	
 
-	/***PUZZLE***/
-	
-	APuzzleManager* PuzzleManager;
-	
-	UFUNCTION(Server, Reliable) void ServerOnStatuePosed();
 
 	/***NOISE SYSTEM***/
 

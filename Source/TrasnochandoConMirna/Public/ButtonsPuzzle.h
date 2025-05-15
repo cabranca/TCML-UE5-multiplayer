@@ -6,6 +6,9 @@
 
 #include "ButtonsPuzzle.generated.h"
 
+/***FORWARD DECLARATIONS***/
+class APuzzleButton;
+
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AButtonsPuzzle : public AActor, public IPuzzle
 {
@@ -20,12 +23,24 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	UFUNCTION(Server, Reliable) void ValidateSolution() override;
 
-protected:
+private:
+	/***COMPONENTS***/
+
+	UPROPERTY(EditAnywhere) UAudioComponent* ClockSFX;
+
+	UPROPERTY(EditAnywhere) UAudioComponent* ErrorSFX;
+
+
+	/***PUZZLE RESOLUTION***/
+	UPROPERTY(EditAnywhere) TArray<APuzzleButton*> Buttons;
+
+	bool bButtonPressed = false;
+
+	bool bPuzzleSolved = false;
+
 	UFUNCTION(NetMulticast, Reliable) void MulticastValidateSolution() override;
 
+	UFUNCTION(NetMulticast, Reliable) void OnClockFinished();
 };

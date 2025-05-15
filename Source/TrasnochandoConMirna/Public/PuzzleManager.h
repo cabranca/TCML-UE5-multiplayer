@@ -8,6 +8,7 @@
 
 class IPuzzle;
 class AStatuesPuzzle;
+class AButtonsPuzzle;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API APuzzleManager : public AActor
@@ -28,4 +29,6 @@ private:
 	IPuzzle* CurrentPuzzle;
 
 	UPROPERTY(EditAnywhere, Category = "Puzzles") AStatuesPuzzle* StatuesPuzzle;
+
+	UPROPERTY(EditAnywhere, Category = "Puzzles") AButtonsPuzzle* ButtonsPuzzle;
 };

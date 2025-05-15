@@ -1,16 +1,17 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interactable.h"
+
 #include "Pedestal.generated.h"
 
 class UStaticMeshComponent;
 class UBoxComponent;
+class AStatuesPuzzle;
 
 UCLASS()
-class TRASNOCHANDOCONMIRNA_API APedestal : public AActor
+class TRASNOCHANDOCONMIRNA_API APedestal : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	
@@ -18,12 +19,20 @@ public:
 	// Sets default values for this actor's properties
 	APedestal();
 
+	UFUNCTION(Server, Reliable) void ServerInteract() override;
+
+	bool IsGrabbable() override;
+
 private:
-	friend class APuzzleManager;
 
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* StaticMesh;
+	/***COMPONENTS***/
 
-	UPROPERTY(EditAnywhere)
-	UBoxComponent* BoxCollision;
+	UPROPERTY(EditAnywhere) UStaticMeshComponent* StaticMesh;
+
+	UPROPERTY(EditAnywhere) UBoxComponent* BoxCollision;
+
+
+	/***ACTORS***/
+
+	UPROPERTY(EditAnywhere) AStatuesPuzzle* Puzzle;
 };

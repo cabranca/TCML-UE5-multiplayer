@@ -1,34 +1,72 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "ButtonsPuzzle.h"
 
-// Sets default values
+#include "Components/AudioComponent.h"
+#include "PuzzleButton.h"
+
 AButtonsPuzzle::AButtonsPuzzle()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	bReplicates = true;
 
+	ClockSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("ClockSFX"));
+	ClockSFX->SetIsReplicated(true);
+
+	ErrorSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("ErrorSFX"));
+	ErrorSFX->SetIsReplicated(true);
 }
 
-// Called when the game starts or when spawned
 void AButtonsPuzzle::BeginPlay()
 {
 	Super::BeginPlay();
 	
-}
-
-// Called every frame
-void AButtonsPuzzle::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
+	ClockSFX->OnAudioFinished.AddDynamic(this, &AButtonsPuzzle::OnClockFinished);
 }
 
 void AButtonsPuzzle::ValidateSolution_Implementation()
-{}
+{
+	MulticastValidateSolution();
+}
 
 void AButtonsPuzzle::MulticastValidateSolution_Implementation()
 {
+	if (!bButtonPressed)
+	{
+		ClockSFX->Play();
+		bButtonPressed = true;
+	}
+	else
+	{
+		bPuzzleSolved = true;
+		ClockSFX->Stop();
+		/*for (auto& Button : Buttons)
+		{
+			Button->SetBackwardsAnimation();
+			Button->SetActorTickEnabled(true);
+			Cast<IInteractable>(Button)->SetCanInteract(true);
+		}*/
+	}
+}
+
+void AButtonsPuzzle::OnClockFinished_Implementation()
+{
+	if (!bPuzzleSolved)
+	{
+		ErrorSFX->Play();
+		bButtonPressed = false;
+	}
+	for (auto& Button : Buttons)
+	{
+		if (HasAuthority())
+		{
+			Button->SetBackwardsAnimation();
+			Button->SetActorTickEnabled(true);
+		}
+		else
+		{
+			Button->SetBackwardsAnimation();
+		}
+
+		Cast<IInteractable>(Button)->SetCanInteract(!bPuzzleSolved);
+	}
 }
 
