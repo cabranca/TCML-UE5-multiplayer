@@ -25,7 +25,11 @@ protected:
 public:
 	UFUNCTION(Server, Reliable) void ServerInteract() override;
 
+	UFUNCTION(NetMulticast, Reliable) void MulticastInteract();
+
 	bool IsGrabbable() override;
+
+	void EnableCapsuleOverlap(bool bEnabled);
 
 
 private:
@@ -33,6 +37,8 @@ private:
 	UPROPERTY(EditAnywhere) UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(EditAnywhere) USphereComponent* SphereCollision;
+
+	UPROPERTY(EditAnywhere) UCapsuleComponent* CapsuleCollision;
 
 
 	/***MATERIALS***/

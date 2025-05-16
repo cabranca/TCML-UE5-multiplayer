@@ -144,9 +144,9 @@ private:
 
 	UFUNCTION(NetMulticast, Reliable) void MulticastUpdateGrabbedObject();
 
-	void DropObject(UPrimitiveComponent* ComponentToDrop);
+	void DropObject();
 
-	UFUNCTION(Server, Reliable) void ServerDropObject(UPrimitiveComponent* ComponentToDrop);
+	UFUNCTION(Server, Reliable) void ServerDropObject();
 
 	UFUNCTION(Client, Reliable) void SetInteractionPrompt();
 

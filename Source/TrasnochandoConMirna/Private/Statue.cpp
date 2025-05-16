@@ -24,6 +24,9 @@ AStatue::AStatue()
 	SphereCollision->SetupAttachment(StaticMesh);
 	SphereCollision->SetIsReplicated(true);
 
+	CapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleCollision"));
+	CapsuleCollision->SetupAttachment(StaticMesh);
+	CapsuleCollision->SetIsReplicated(true);
 }
 
 void AStatue::BeginPlay()
@@ -41,12 +44,22 @@ void AStatue::BeginPlay()
 
 void AStatue::ServerInteract_Implementation()
 {
+	MulticastInteract();
+}
 
+void AStatue::MulticastInteract_Implementation()
+{
+	EnableCapsuleOverlap(false);
 }
 
 bool AStatue::IsGrabbable()
 {
 	return bInteractEnabled;
+}
+
+void AStatue::EnableCapsuleOverlap(bool bEnabled)
+{
+	CapsuleCollision->SetGenerateOverlapEvents(bEnabled);
 }
 
 void AStatue::OnSphereBeginOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

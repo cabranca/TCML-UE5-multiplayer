@@ -44,13 +44,10 @@ void AMainCharacter::BeginPlay()
 	FScriptDelegate BeginDelegateSubscriber;
 	BeginDelegateSubscriber.BindUFunction(this, "OnCapsuleBeginOverlap");
 	GetCapsuleComponent()->OnComponentBeginOverlap.Add(BeginDelegateSubscriber);
-	//SphereCollision->OnComponentBeginOverlap.AddDynamic(this, &AStatue::OnSphereBeginOverlap);
 
 	FScriptDelegate EndDelegateSubscriber;
 	EndDelegateSubscriber.BindUFunction(this, "OnCapsuleEndOverlap");
 	GetCapsuleComponent()->OnComponentEndOverlap.Add(EndDelegateSubscriber);
-
-	//SphereCollision->OnComponentEndOverlap.AddDynamic(this, &AStatue::OnDoorCrossingBegin);
 
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	if (PlayerController)
@@ -86,6 +83,7 @@ void AMainCharacter::Tick(float DeltaTime)
 	float CrouchInterpTime = FMath::Min(1.f, CrouchSpeed * DeltaTime);
 	CrouchEyeOffset = (1.f - CrouchInterpTime) * CrouchEyeOffset;
 	
+
 	if (bGrabbingObject && HasAuthority())
 	{
 		MulticastUpdateGrabbedObject();
@@ -203,7 +201,6 @@ void AMainCharacter::StartRun(const FInputActionValue& Value)
 		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
 		bIsRunning = true;
 
-		// Notify the server
 		ServerSetRunning(bIsRunning);
 	}
 }
@@ -246,23 +243,7 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 	}
 	else
 	{
-		FHitResult HitResult;
-		bool bHitSucceeded = GetWorld()->LineTraceSingleByChannel(HitResult, PlayerCamera->GetComponentLocation(), PlayerCamera->GetForwardVector() * 500.f + PlayerCamera->GetComponentLocation(), ECC_GameTraceChannel2);
-
-		if (bHitSucceeded)
-		{
-			IInteractable* InteractableObject = Cast<IInteractable>(HitResult.GetActor());
-			if (InteractableObject)
-			{
-				DrawDebugLineToLocation(HitResult.Location, FColor::Green);
-				ServerInteract(HitResult.GetActor());
-				DropObject(HitResult.GetComponent());
-			}
-			else
-			{
-				DrawDebugLineToLocation(HitResult.Location, FColor::Red);
-			}
-		}
+		DropObject();
 	}
 }
 
@@ -351,26 +332,23 @@ void AMainCharacter::MulticastUpdateGrabbedObject_Implementation()
 	PhysicsHandle->SetTargetLocationAndRotation(PlayerCamera->GetForwardVector() + Vector, Rotator);
 }
 
-void AMainCharacter::DropObject(UPrimitiveComponent* ComponentToDrop)
+void AMainCharacter::DropObject()
 {
 	PhysicsHandle->ReleaseComponent();
 	bGrabbingObject = false;
-	GrabbedObject->SetActorLocation(ComponentToDrop->GetComponentLocation());
-	GrabbedObject->SetActorRotation(FRotator::ZeroRotator);
-	GrabbedObject = nullptr;
+	Cast<AStatue>(GrabbedObject)->EnableCapsuleOverlap(true);
 	if (!HasAuthority())
 	{
-		ServerDropObject(ComponentToDrop);
+		ServerDropObject();
 	}
-	//ServerOnStatuePosed();
+	GrabbedObject = nullptr;
 }
 
-void AMainCharacter::ServerDropObject_Implementation(UPrimitiveComponent* ComponentToDrop)
+void AMainCharacter::ServerDropObject_Implementation()
 {
 	PhysicsHandle->ReleaseComponent();
 	bGrabbingObject = false;
-	GrabbedObject->SetActorLocation(ComponentToDrop->GetComponentLocation());
-	GrabbedObject->SetActorRotation(FRotator::ZeroRotator);
+	Cast<AStatue>(GrabbedObject)->EnableCapsuleOverlap(true);
 	GrabbedObject = nullptr;
 }
 
