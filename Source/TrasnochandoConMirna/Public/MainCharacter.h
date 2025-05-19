@@ -126,6 +126,8 @@ private:
 	
 	/***INTERACTION***/
 
+	UPROPERTY(EditAnywhere) UAnimMontage* InteractionMontage;
+
 	UPROPERTY(EditAnywhere, Category = "Interaction") float InteractionRange = 200.f;
 
 	AActor* TargetActor;
@@ -142,7 +144,9 @@ private:
 
 	void DrawDebugLineToLocation(const FVector TargetLocation, FColor Color) const;
 
-	UFUNCTION(Server, Reliable) void ServerInteract(AActor* Interactable) const;
+	UFUNCTION(Server, Reliable) void ServerInteract(AActor* Interactable);
+
+	UFUNCTION(NetMulticast, Reliable) void MulticastPlayInteractMontage();
 
 	UFUNCTION(Server, Reliable) void ServerGrabObject(UStaticMeshComponent* ObjectToGrab);
 

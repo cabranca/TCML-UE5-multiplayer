@@ -328,12 +328,22 @@ void AMainCharacter::DrawDebugLineToLocation(const FVector TargetLocation, FColo
 	DrawDebugLine(GetWorld(), PlayerCamera->GetComponentLocation(), TargetLocation, Color, false, 5.f, 0, 0.2f);
 }
 
-void AMainCharacter::ServerInteract_Implementation(AActor* Object) const
+void AMainCharacter::ServerInteract_Implementation(AActor* Object)
 {
 	IInteractable* InteractableObject = Cast<IInteractable>(Object);
 	if (InteractableObject)
 	{
 		InteractableObject->ServerInteract();
+	}
+	MulticastPlayInteractMontage();
+}
+
+void AMainCharacter::MulticastPlayInteractMontage_Implementation()
+{
+	if (InteractionMontage)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PLAYING MONTAGE"));
+		PlayAnimMontage(InteractionMontage);
 	}
 }
 
