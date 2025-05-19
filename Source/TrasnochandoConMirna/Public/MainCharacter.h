@@ -39,9 +39,9 @@ public:
 
 	/***GETTERS***/
 
-	UFUNCTION() bool IsRunning() const;
+	UFUNCTION(BlueprintCallable) bool IsRunning() const;
 
-	UFUNCTION() bool IsCrouching() const;
+	UFUNCTION(BlueprintCallable) bool IsCrouching() const;
 
 
 	/***CROUCHING***/
