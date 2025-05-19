@@ -20,26 +20,14 @@ AStatue::AStatue()
 	RootComponent = StaticMesh;
 	StaticMesh->SetIsReplicated(true);
 
-	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
-	SphereCollision->SetupAttachment(StaticMesh);
-	SphereCollision->SetIsReplicated(true);
-
-	CapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleCollision"));
-	CapsuleCollision->SetupAttachment(StaticMesh);
-	CapsuleCollision->SetIsReplicated(true);
+	PickUpCollision = CreateDefaultSubobject<USphereComponent>(TEXT("PickUpCollision"));
+	PickUpCollision->SetupAttachment(StaticMesh);
+	PickUpCollision->SetIsReplicated(true);
 }
 
 void AStatue::BeginPlay()
 {
 	Super::BeginPlay();
-
-	FScriptDelegate BeginDelegateSubscriber;
-	BeginDelegateSubscriber.BindUFunction(this, "OnSphereBeginOverlap");
-	SphereCollision->OnComponentBeginOverlap.Add(BeginDelegateSubscriber);
-
-	FScriptDelegate EndDelegateSubscriber;
-	EndDelegateSubscriber.BindUFunction(this, "OnSphereEndOverlap");
-	SphereCollision->OnComponentEndOverlap.Add(EndDelegateSubscriber);
 }
 
 void AStatue::ServerInteract_Implementation()
@@ -49,7 +37,9 @@ void AStatue::ServerInteract_Implementation()
 
 void AStatue::MulticastInteract_Implementation()
 {
-	EnableCapsuleOverlap(false);
+	bInteractEnabled = false;
+	PickUpCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+	StaticMesh->SetOverlayMaterial(nullptr);
 }
 
 bool AStatue::IsGrabbable()
@@ -57,37 +47,20 @@ bool AStatue::IsGrabbable()
 	return bInteractEnabled;
 }
 
-void AStatue::EnableCapsuleOverlap(bool bEnabled)
+void AStatue::SetOverlay(bool bEnabled)
 {
-	CapsuleCollision->SetGenerateOverlapEvents(bEnabled);
-}
-
-void AStatue::OnSphereBeginOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor))
+	if (bEnabled)
 	{
-		if (APlayerController* PlayerController = Cast<APlayerController>(MainCharacter->GetController()))
-		{
-			if (PlayerController->IsLocalPlayerController())
-			{
-				StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
-				StaticMesh->SetOverlayMaterial(OutlineOverlay);
-			}
-		}
+		StaticMesh->SetOverlayMaterial(OutlineOverlay);
+	}
+	else
+	{
+		StaticMesh->SetOverlayMaterial(nullptr);
 	}
 }
 
-void AStatue::OnSphereEndOverlap(USphereComponent * Component, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+void AStatue::EnableInteraction()
 {
-	if (AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor))
-	{
-		if (APlayerController* PlayerController = Cast<APlayerController>(MainCharacter->GetController()))
-		{
-			if (PlayerController->IsLocalPlayerController())
-			{
-				StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
-				StaticMesh->SetOverlayMaterial(nullptr);
-			}
-		}
-	}
+	bInteractEnabled = true;
+	StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
 }

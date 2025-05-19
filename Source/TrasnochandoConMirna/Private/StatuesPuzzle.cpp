@@ -2,6 +2,7 @@
 
 #include "Components/AudioComponent.h"
 #include "PuzzleDoor.h"
+#include "Statue.h"
 
 AStatuesPuzzle::AStatuesPuzzle()
 {
@@ -50,6 +51,10 @@ void AStatuesPuzzle::OnClockFinished_Implementation()
 	if (!bPuzzleSolved)
 	{
 		ErrorSFX->Play();
+		for (auto& Statue : Statues)
+		{
+			Statue->EnableInteraction();
+		}
 		bStatueSet = false;
 	}
 }

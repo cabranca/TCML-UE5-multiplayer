@@ -27,6 +27,8 @@ public:
 
 	void SetCanInteract(bool bCanInteract);
 
+	virtual void SetOverlay(bool bEnabled) = 0;
+
 protected:
 	bool bInteractEnabled = true;
 };

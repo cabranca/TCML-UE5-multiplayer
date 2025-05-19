@@ -38,12 +38,6 @@ void AButtonsPuzzle::MulticastValidateSolution_Implementation()
 	{
 		bPuzzleSolved = true;
 		ClockSFX->Stop();
-		/*for (auto& Button : Buttons)
-		{
-			Button->SetBackwardsAnimation();
-			Button->SetActorTickEnabled(true);
-			Cast<IInteractable>(Button)->SetCanInteract(true);
-		}*/
 	}
 }
 
@@ -65,8 +59,10 @@ void AButtonsPuzzle::OnClockFinished_Implementation()
 		{
 			Button->SetBackwardsAnimation();
 		}
-
-		Cast<IInteractable>(Button)->SetCanInteract(!bPuzzleSolved);
+		if (!bPuzzleSolved)
+		{
+			Button->EnableInteraction();
+		}
 	}
 }
 

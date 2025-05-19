@@ -14,6 +14,7 @@ class UCameraComponent;
 class UPhysicsHandleComponent;
 class APuzzleManager;
 class IInteractable;
+class APedestal;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AMainCharacter : public ACharacter
@@ -64,8 +65,7 @@ private:
 	// Camera component for the player
 	UPROPERTY(EditAnywhere) UCameraComponent* PlayerCamera;
 	
-	UPhysicsHandleComponent* PhysicsHandle;
-	
+	UPROPERTY(EditAnywhere) USceneComponent* GrabPivot;
 
 	/***INPUT ACTIONS***/
 
@@ -126,33 +126,35 @@ private:
 	
 	/***INTERACTION***/
 
-	bool bGrabbingObject = false;
+	UPROPERTY(EditAnywhere, Category = "Interaction") float InteractionRange = 200.f;
 
-	AActor* GrabbedObject;
+	AActor* TargetActor;
+
+	UStaticMeshComponent* GrabbedMesh;
+
+	APedestal* HoveredPedestal;
 
 	UPROPERTY(EditAnywhere) TSubclassOf<UUserWidget> InteractionWidget;
 	
 	UUserWidget* InteractionPrompt;
 
+	void LookForInteraction();
+
 	void DrawDebugLineToLocation(const FVector TargetLocation, FColor Color) const;
 
 	UFUNCTION(Server, Reliable) void ServerInteract(AActor* Interactable) const;
 
-	void GrabObject(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab);
+	UFUNCTION(Server, Reliable) void ServerGrabObject(UStaticMeshComponent* ObjectToGrab);
 
-	UFUNCTION(Server, Reliable) void ServerGrabObject(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab);
+	UFUNCTION(NetMulticast, Reliable) void MulticastGrabObject(UStaticMeshComponent* ObjectToGrab);
 
-	UFUNCTION(NetMulticast, Reliable) void MulticastUpdateGrabbedObject();
+	void GetPlaceableHint();
 
-	void DropObject();
+	UFUNCTION(Server, Reliable) void ServerDropObject(APedestal* Pedestal);
 
-	UFUNCTION(Server, Reliable) void ServerDropObject();
+	UFUNCTION(NetMulticast, Reliable) void MulticastDropObject(APedestal* Pedestal);
 
 	UFUNCTION(Client, Reliable) void SetInteractionPrompt();
-
-	UFUNCTION() void OnCapsuleBeginOverlap(UCapsuleComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION() void OnCapsuleEndOverlap(UCapsuleComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION(Client, Reliable) void SetInteractionPromptVisibility(ESlateVisibility Visibility);
 

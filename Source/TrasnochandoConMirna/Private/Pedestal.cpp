@@ -1,7 +1,7 @@
 #include "Pedestal.h"
 
 #include "Components/StaticMeshComponent.h"
-#include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "StatuesPuzzle.h"
 #include "Statue.h"
 
@@ -13,57 +13,46 @@ APedestal::APedestal()
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	RootComponent = StaticMesh;
 
-	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
-	BoxCollision->SetupAttachment(StaticMesh);
+	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
+	SphereCollision->SetupAttachment(StaticMesh);
+
+	GhostMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StatueGhost"));
+	GhostMesh->SetupAttachment(StaticMesh);
 }
 
 void APedestal::BeginPlay()
 {
 	Super::BeginPlay();
-
-	FScriptDelegate BeginDelegateSubscriber;
-	BeginDelegateSubscriber.BindUFunction(this, "OnBoxBeginOverlap");
-	BoxCollision->OnComponentBeginOverlap.Add(BeginDelegateSubscriber);
-
-	FScriptDelegate EndDelegateSubscriber;
-	EndDelegateSubscriber.BindUFunction(this, "OnBoxEndOverlap");
-	BoxCollision->OnComponentEndOverlap.Add(EndDelegateSubscriber);
 }
 
-void APedestal::ServerInteract_Implementation()
+void APedestal::ShowGhost(UStaticMesh* Mesh)
 {
-	if (Puzzle)
+	if (Mesh)
 	{
-		Puzzle->ValidateSolution();
+		GhostMesh->SetStaticMesh(Mesh);
+		int32 NumMaterials = GhostMesh->GetNumMaterials();
+		for (int32 i = 0; i < NumMaterials; ++i)
+		{
+			GhostMesh->SetMaterial(i, GhostMaterial);
+		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Puzzle not set"));
+		UE_LOG(LogTemp, Warning, TEXT("Attempted setting null Mesh"));
 	}
 }
 
-bool APedestal::IsGrabbable()
+void APedestal::HideGhost()
 {
-	return false;
+	GhostMesh->SetStaticMesh(nullptr);
 }
 
-void APedestal::OnBoxBeginOverlap(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void APedestal::PlaceObject(UStaticMeshComponent* Object)
 {
-	if (!bStatuePosed && Cast<AStatue>(OtherActor))
+	HideGhost();
+	Object->SetWorldLocation(GhostMesh->GetComponentLocation());
+	if (Puzzle && HasAuthority())
 	{
-		if (HasAuthority())
-		{
-			ServerInteract();
-		}
-		
-		bStatuePosed = true;
-	}
-}
-
-void APedestal::OnBoxEndOverlap(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (Cast<AStatue>(OtherActor))
-	{
-		bStatuePosed = false;
+		Puzzle->ValidateSolution();
 	}
 }

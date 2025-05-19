@@ -7,11 +7,11 @@
 #include "Pedestal.generated.h"
 
 class UStaticMeshComponent;
-class UBoxComponent;
+class USphereComponent;
 class AStatuesPuzzle;
 
 UCLASS()
-class TRASNOCHANDOCONMIRNA_API APedestal : public AActor, public IInteractable
+class TRASNOCHANDOCONMIRNA_API APedestal : public AActor
 {
 	GENERATED_BODY()
 	
@@ -22,17 +22,21 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UFUNCTION(Server, Reliable) void ServerInteract() override;
+public:
+	void ShowGhost(UStaticMesh* Mesh);
 
-	bool IsGrabbable() override;
+	void HideGhost();
+
+	void PlaceObject(UStaticMeshComponent* Object);
 
 private:
-
 	/***COMPONENTS***/
 
 	UPROPERTY(EditAnywhere) UStaticMeshComponent* StaticMesh;
 
-	UPROPERTY(EditAnywhere) UBoxComponent* BoxCollision;
+	UPROPERTY(EditAnywhere) USphereComponent* SphereCollision;
+
+	UPROPERTY(EditAnywhere) UStaticMeshComponent* GhostMesh;
 
 
 	/***ACTORS***/
@@ -40,9 +44,7 @@ private:
 	UPROPERTY(EditAnywhere) AStatuesPuzzle* Puzzle;
 
 
-	bool bStatuePosed = false;
+	/***MATERIALS***/
 
-	UFUNCTION() void OnBoxBeginOverlap(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION() void OnBoxEndOverlap(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UPROPERTY(EditDefaultsOnly) UMaterialInterface* GhostMaterial;
 };

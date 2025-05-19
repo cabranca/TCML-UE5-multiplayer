@@ -29,25 +29,17 @@ public:
 
 	bool IsGrabbable() override;
 
-	void EnableCapsuleOverlap(bool bEnabled);
+	void SetOverlay(bool bEnabled) override;
 
+	void EnableInteraction();
 
 private:
 	/***COMPONENTS***/
 	UPROPERTY(EditAnywhere) UStaticMeshComponent* StaticMesh;
 
-	UPROPERTY(EditAnywhere) USphereComponent* SphereCollision;
-
-	UPROPERTY(EditAnywhere) UCapsuleComponent* CapsuleCollision;
+	UPROPERTY(EditAnywhere) USphereComponent* PickUpCollision;
 
 
 	/***MATERIALS***/
 	UPROPERTY(EditAnywhere) UMaterialInterface* OutlineOverlay;
-
-
-	/***OVERLAP***/
-
-	UFUNCTION() void OnSphereBeginOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION() void OnSphereEndOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };

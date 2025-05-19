@@ -31,6 +31,10 @@ public:
 
 	bool IsGrabbable() override;
 
+	void SetOverlay(bool bEnabled) override;
+
+	void EnableInteraction();
+
 	/***ANIMATION***/
 	void SetForwardAnimation();
 
@@ -68,9 +72,5 @@ private:
 	UPROPERTY(EditAnywhere) AButtonsPuzzle* Puzzle;
 
 
-	/***OVERLAP***/
-
-	UFUNCTION() void OnSphereBeginOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION() void OnSphereEndOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UFUNCTION(NetMulticast, Reliable) void MulticastInteract();
 };

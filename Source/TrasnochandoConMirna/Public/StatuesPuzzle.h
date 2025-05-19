@@ -7,6 +7,7 @@
 #include "StatuesPuzzle.generated.h"
 
 class APuzzleDoor;
+class AStatue;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AStatuesPuzzle : public AActor, public IPuzzle
@@ -30,6 +31,8 @@ private:
 	UPROPERTY(EditAnywhere) UAudioComponent* ErrorSFX;
 
 	UPROPERTY(EditAnywhere) TArray<APuzzleDoor*> Doors;
+
+	UPROPERTY(EditAnywhere) TArray<AStatue*> Statues;
 
 	bool bStatueSet = false;
 	bool bPuzzleSolved = false;

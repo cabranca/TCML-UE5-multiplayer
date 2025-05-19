@@ -57,11 +57,38 @@ void APuzzleButton::ServerInteract_Implementation()
 		}
 		bInteractEnabled = false;
 	}
+
+	MulticastInteract();
+}
+
+void APuzzleButton::MulticastInteract_Implementation()
+{
+	bInteractEnabled = false;
+	StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+	StaticMesh->SetOverlayMaterial(nullptr);
 }
 
 bool APuzzleButton::IsGrabbable()
 {
 	return false;
+}
+
+void APuzzleButton::SetOverlay(bool bEnabled)
+{
+	if (bEnabled)
+	{
+		StaticMesh->SetOverlayMaterial(OutlineOverlay);
+	}
+	else
+	{
+		StaticMesh->SetOverlayMaterial(nullptr);
+	}
+}
+
+void APuzzleButton::EnableInteraction()
+{
+	bInteractEnabled = true;
+	StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
 }
 
 void APuzzleButton::SetForwardAnimation()
@@ -88,36 +115,6 @@ void APuzzleButton::Animate_Implementation(float DeltaTime)
 void APuzzleButton::OnRep_AnimationDirection()
 {
 	
-}
-
-void APuzzleButton::OnSphereBeginOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor))
-	{
-		if (APlayerController* PlayerController = Cast<APlayerController>(MainCharacter->GetController()))
-		{
-			if (PlayerController->IsLocalPlayerController())
-			{
-				StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
-				StaticMesh->SetOverlayMaterial(OutlineOverlay);
-			}
-		}
-	}
-}
-
-void APuzzleButton::OnSphereEndOverlap(USphereComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor))
-	{
-		if (APlayerController* PlayerController = Cast<APlayerController>(MainCharacter->GetController()))
-		{
-			if (PlayerController->IsLocalPlayerController())
-			{
-				StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
-				StaticMesh->SetOverlayMaterial(nullptr);
-			}
-		}
-	}
 }
 
 void APuzzleButton::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

@@ -9,7 +9,6 @@
 #include "Pedestal.h"
 #include "PuzzleManager.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/CapsuleComponent.h"
 #include "Perception/AISense_Hearing.h"
 
 // Sets default values
@@ -24,14 +23,16 @@ AMainCharacter::AMainCharacter()
 	PlayerCamera->bUsePawnControlRotation = true;
 	PlayerCamera->SetIsReplicated(true);
 
+	GrabPivot = CreateDefaultSubobject<USceneComponent>(TEXT("GrabPivot"));
+	GrabPivot->SetupAttachment(PlayerCamera);
+	GrabPivot->SetRelativeLocation(FVector(200.f, 0.f, 0.f));
+	GrabPivot->SetUsingAbsoluteLocation(false);
+
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
 	Mesh1P->SetupAttachment(PlayerCamera);
 	Mesh1P->bOnlyOwnerSee = true;
 
-	PhysicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("PhysicsHandle"));
-	AddOwnedComponent(PhysicsHandle);
-	PhysicsHandle->SetIsReplicated(true);
 }
 
 // Called when the game starts or when spawned
@@ -40,14 +41,6 @@ void AMainCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-
-	FScriptDelegate BeginDelegateSubscriber;
-	BeginDelegateSubscriber.BindUFunction(this, "OnCapsuleBeginOverlap");
-	GetCapsuleComponent()->OnComponentBeginOverlap.Add(BeginDelegateSubscriber);
-
-	FScriptDelegate EndDelegateSubscriber;
-	EndDelegateSubscriber.BindUFunction(this, "OnCapsuleEndOverlap");
-	GetCapsuleComponent()->OnComponentEndOverlap.Add(EndDelegateSubscriber);
 
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	if (PlayerController)
@@ -82,16 +75,22 @@ void AMainCharacter::Tick(float DeltaTime)
 
 	float CrouchInterpTime = FMath::Min(1.f, CrouchSpeed * DeltaTime);
 	CrouchEyeOffset = (1.f - CrouchInterpTime) * CrouchEyeOffset;
-	
-
-	if (bGrabbingObject && HasAuthority())
-	{
-		MulticastUpdateGrabbedObject();
-	}
 
 	if (GetVelocity().Length() > 0)
 	{
-		ProduceNoise();
+		ProduceNoise(); //TODO: check if this can be called only on Server
+	}
+
+	if (IsLocallyControlled())
+	{
+		if (GrabbedMesh)
+		{
+			GetPlaceableHint();
+		}
+		else
+		{
+			LookForInteraction();
+		}
 	}
 }
 
@@ -214,36 +213,28 @@ void AMainCharacter::EndRun(const FInputActionValue& Value)
 
 void AMainCharacter::Interact(const FInputActionValue& Value)
 {
-	if (!bGrabbingObject)
+	if (!GrabbedMesh)
 	{
-		FHitResult HitResult;
-		bool bHitSucceeded = GetWorld()->LineTraceSingleByChannel(HitResult, PlayerCamera->GetComponentLocation(), PlayerCamera->GetForwardVector() * 500.f + PlayerCamera->GetComponentLocation(), ECC_GameTraceChannel1);
-
-		if (bHitSucceeded)
+		if (TargetActor)
 		{
-			IInteractable* InteractableObject = Cast<IInteractable>(HitResult.GetActor());
+			IInteractable* InteractableObject = Cast<IInteractable>(TargetActor);
 			if (InteractableObject)
 			{
-				DrawDebugLineToLocation(HitResult.Location, FColor::Green);
-				ServerInteract(HitResult.GetActor());
 				if (InteractableObject->IsGrabbable())
 				{
-					GrabObject(HitResult.GetComponent(), HitResult.GetActor());
+					SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
+					UStaticMeshComponent* HitMesh = Cast<UStaticMeshComponent>(TargetActor->GetRootComponent());
+					GrabbedMesh = HitMesh; //TODO: put this line only because the next tick does not have the updated value (set in multicast) so the prompt is set to visible wrongly.
+					ServerGrabObject(HitMesh);
 				}
+				ServerInteract(TargetActor);
+				TargetActor = nullptr;
 			}
-			else
-			{
-				DrawDebugLineToLocation(HitResult.Location, FColor::Red);
-			}
-		}
-		else
-		{
-			DrawDebugLineToLocation(PlayerCamera->GetForwardVector() * 500.f + PlayerCamera->GetComponentLocation(), FColor::Blue);
 		}
 	}
-	else
+	else if (HoveredPedestal)
 	{
-		DropObject();
+		ServerDropObject(HoveredPedestal);
 	}
 }
 
@@ -289,6 +280,49 @@ void AMainCharacter::OnRep_IsRunning()
 	GetCharacterMovement()->MaxWalkSpeed = bIsRunning ? RunSpeed : WalkSpeed;
 }
 
+void AMainCharacter::LookForInteraction()
+{
+	FVector Start = PlayerCamera->GetComponentLocation();
+	FVector End = Start + PlayerCamera->GetForwardVector() * InteractionRange;
+
+	FHitResult Hit;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel1, Params))
+	{
+		IInteractable* Interactable = Cast<IInteractable>(Hit.GetActor());
+		if (Interactable)
+		{
+			SetInteractionPromptVisibility(ESlateVisibility::Visible);
+			if (TargetActor)
+			{
+				Cast<IInteractable>(TargetActor)->SetOverlay(false);
+			}
+			TargetActor = Hit.GetActor();
+			Interactable->SetOverlay(true);
+		}
+		else
+		{
+			SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
+			if (TargetActor)
+			{
+				Cast<IInteractable>(TargetActor)->SetOverlay(false);
+				TargetActor = nullptr;
+			}
+		}
+	}
+	else
+	{
+		SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
+		if (TargetActor)
+		{
+			Cast<IInteractable>(TargetActor)->SetOverlay(false);
+			TargetActor = nullptr;
+		}
+	}
+}
+
 void AMainCharacter::DrawDebugLineToLocation(const FVector TargetLocation, FColor Color) const
 {
 	DrawDebugLine(GetWorld(), PlayerCamera->GetComponentLocation(), TargetLocation, Color, false, 5.f, 0, 0.2f);
@@ -303,53 +337,67 @@ void AMainCharacter::ServerInteract_Implementation(AActor* Object) const
 	}
 }
 
-void AMainCharacter::GrabObject(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab)
+void AMainCharacter::ServerGrabObject_Implementation(UStaticMeshComponent* ObjectToGrab)
 {
-	PhysicsHandle->GrabComponentAtLocationWithRotation(ComponentToGrab, NAME_None, PlayerCamera->GetForwardVector() + PlayerCamera->GetComponentLocation(), PlayerCamera->GetComponentRotation());
-	bGrabbingObject = true;
-	GrabbedObject = ObjectToGrab;
-	if (!HasAuthority())
+	MulticastGrabObject(ObjectToGrab);
+}
+
+void AMainCharacter::MulticastGrabObject_Implementation(UStaticMeshComponent* ObjectToGrab)
+{
+	GrabbedMesh = ObjectToGrab;
+
+	GrabbedMesh->SetSimulatePhysics(false);
+	GrabbedMesh->AttachToComponent(GrabPivot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+}
+
+void AMainCharacter::GetPlaceableHint()
+{
+	FVector Start = PlayerCamera->GetComponentLocation();
+	FVector End = Start + PlayerCamera->GetForwardVector() * InteractionRange;
+
+	FHitResult Hit;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredComponent(GrabbedMesh);
+	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel2, Params))
 	{
-		ServerGrabObject(ComponentToGrab, ObjectToGrab);
+		APedestal* Pedestal = Cast<APedestal>(Hit.GetActor());
+
+		if (Pedestal && Pedestal != HoveredPedestal)
+		{
+			if (HoveredPedestal)
+			{
+				HoveredPedestal->HideGhost();
+			}
+
+			HoveredPedestal = Pedestal;
+			HoveredPedestal->ShowGhost(GrabbedMesh->GetStaticMesh());
+		}
+		else if (!Pedestal && HoveredPedestal)
+		{
+			HoveredPedestal->HideGhost();
+			HoveredPedestal = nullptr;
+		}
+	}
+	else if (HoveredPedestal)
+	{
+		HoveredPedestal->HideGhost();
+		HoveredPedestal = nullptr;
 	}
 }
 
-void AMainCharacter::ServerGrabObject_Implementation(UPrimitiveComponent* ComponentToGrab, AActor* ObjectToGrab)
+void AMainCharacter::ServerDropObject_Implementation(APedestal* Pedestal)
 {
-	FRotator Rotator = GetControlRotation();
-	FVector Vector = PlayerCamera->GetComponentLocation();
-	Vector.Z += 5.f;
-	PhysicsHandle->GrabComponentAtLocationWithRotation(ComponentToGrab, NAME_None, PlayerCamera->GetForwardVector() + Vector, Rotator);
-	bGrabbingObject = true;
-	GrabbedObject = ObjectToGrab;
+	MulticastDropObject(Pedestal);
 }
 
-void AMainCharacter::MulticastUpdateGrabbedObject_Implementation()
+void AMainCharacter::MulticastDropObject_Implementation(APedestal* Pedestal)
 {
-	FRotator Rotator = GetControlRotation();
-	FVector Vector = PlayerCamera->GetComponentLocation();
-	Vector.Z += 5.f;
-	PhysicsHandle->SetTargetLocationAndRotation(PlayerCamera->GetForwardVector() + Vector, Rotator);
-}
-
-void AMainCharacter::DropObject()
-{
-	PhysicsHandle->ReleaseComponent();
-	bGrabbingObject = false;
-	Cast<AStatue>(GrabbedObject)->EnableCapsuleOverlap(true);
-	if (!HasAuthority())
-	{
-		ServerDropObject();
-	}
-	GrabbedObject = nullptr;
-}
-
-void AMainCharacter::ServerDropObject_Implementation()
-{
-	PhysicsHandle->ReleaseComponent();
-	bGrabbingObject = false;
-	Cast<AStatue>(GrabbedObject)->EnableCapsuleOverlap(true);
-	GrabbedObject = nullptr;
+	GrabbedMesh->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	GrabbedMesh->SetSimulatePhysics(true);
+	Pedestal->PlaceObject(GrabbedMesh);
+	GrabbedMesh = nullptr;
+	HoveredPedestal = nullptr;
 }
 
 void AMainCharacter::SetInteractionPrompt_Implementation()
@@ -359,34 +407,6 @@ void AMainCharacter::SetInteractionPrompt_Implementation()
 		UE_LOG(LogTemp, Error, TEXT("Could not add interaction prompt to player screen"));
 	}
 	InteractionPrompt->SetVisibility(ESlateVisibility::Collapsed);
-}
-
-void AMainCharacter::OnCapsuleBeginOverlap(UCapsuleComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (OtherActor->Implements<UInteractable>())
-	{
-		if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
-		{
-			if (PlayerController->IsLocalPlayerController())
-			{
-				SetInteractionPromptVisibility(ESlateVisibility::Visible);
-			}
-		}
-	}
-}
-
-void AMainCharacter::OnCapsuleEndOverlap(UCapsuleComponent * Component, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
-{
-	if (OtherActor->Implements<UInteractable>())
-	{
-		if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
-		{
-			if (PlayerController->IsLocalPlayerController())
-			{
-				SetInteractionPromptVisibility(ESlateVisibility::Hidden);
-			}
-		}
-	}
 }
 
 void AMainCharacter::SetInteractionPromptVisibility_Implementation(ESlateVisibility Visibility)
