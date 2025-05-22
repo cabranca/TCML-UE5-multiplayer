@@ -217,24 +217,20 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 	{
 		if (TargetActor)
 		{
-			IInteractable* InteractableObject = Cast<IInteractable>(TargetActor);
-			if (InteractableObject)
+			if (IInteractable::Execute_CanGrab(TargetActor))
 			{
-				if (InteractableObject->IsGrabbable())
-				{
-					SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
-					UStaticMeshComponent* HitMesh = Cast<UStaticMeshComponent>(TargetActor->GetRootComponent());
-					GrabbedMesh = HitMesh; //TODO: put this line only because the next tick does not have the updated value (set in multicast) so the prompt is set to visible wrongly.
-					ServerGrabObject(HitMesh);
-				}
-				ServerInteract(TargetActor);
-				TargetActor = nullptr;
+				SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
+				UStaticMeshComponent* HitMesh = IInteractable::Execute_GetMeshToGrab(TargetActor);
+				GrabbedMesh = HitMesh; //TODO: put this line only because the next tick does not have the updated value (set in multicast) so the prompt is set to visible wrongly.
+				ServerGrabObject(HitMesh);
 			}
+			ServerInteract(TargetActor);
 		}
 	}
 	else if (HoveredPedestal)
 	{
-		ServerDropObject(HoveredPedestal);
+		ServerDropObject(HoveredPedestal, TargetActor);
+		TargetActor = nullptr;
 	}
 }
 
@@ -291,35 +287,29 @@ void AMainCharacter::LookForInteraction()
 
 	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel1, Params))
 	{
-		IInteractable* Interactable = Cast<IInteractable>(Hit.GetActor());
-		if (Interactable)
+		AInteractableObject* Interactable = Cast<AInteractableObject>(Hit.GetActor());
+		if (Interactable && Interactable != TargetActor)
 		{
 			SetInteractionPromptVisibility(ESlateVisibility::Visible);
 			if (TargetActor)
 			{
-				Cast<IInteractable>(TargetActor)->SetOverlay(false);
+				IInteractable::Execute_Highlight(TargetActor, false);
 			}
-			TargetActor = Hit.GetActor();
-			Interactable->SetOverlay(true);
+			TargetActor = Interactable;
+			IInteractable::Execute_Highlight(TargetActor, true);
 		}
-		else
+		else if (!Interactable && TargetActor)
 		{
 			SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
-			if (TargetActor)
-			{
-				Cast<IInteractable>(TargetActor)->SetOverlay(false);
-				TargetActor = nullptr;
-			}
-		}
-	}
-	else
-	{
-		SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
-		if (TargetActor)
-		{
-			Cast<IInteractable>(TargetActor)->SetOverlay(false);
+			IInteractable::Execute_Highlight(TargetActor, false);
 			TargetActor = nullptr;
 		}
+	}
+	else if (TargetActor)
+	{
+		SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
+		IInteractable::Execute_Highlight(TargetActor, false);
+		TargetActor = nullptr;
 	}
 }
 
@@ -328,13 +318,9 @@ void AMainCharacter::DrawDebugLineToLocation(const FVector TargetLocation, FColo
 	DrawDebugLine(GetWorld(), PlayerCamera->GetComponentLocation(), TargetLocation, Color, false, 5.f, 0, 0.2f);
 }
 
-void AMainCharacter::ServerInteract_Implementation(AActor* Object)
+void AMainCharacter::ServerInteract_Implementation(AInteractableObject* Object)
 {
-	IInteractable* InteractableObject = Cast<IInteractable>(Object);
-	if (InteractableObject)
-	{
-		InteractableObject->ServerInteract();
-	}
+	Object->ServerInteract();
 	MulticastPlayInteractMontage();
 }
 
@@ -342,7 +328,6 @@ void AMainCharacter::MulticastPlayInteractMontage_Implementation()
 {
 	if (InteractionMontage)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PLAYING MONTAGE"));
 		PlayAnimMontage(InteractionMontage);
 	}
 }
@@ -396,16 +381,16 @@ void AMainCharacter::GetPlaceableHint()
 	}
 }
 
-void AMainCharacter::ServerDropObject_Implementation(APedestal* Pedestal)
+void AMainCharacter::ServerDropObject_Implementation(APedestal* Pedestal, AInteractableObject* Object)
 {
-	MulticastDropObject(Pedestal);
+	MulticastDropObject(Pedestal, Object);
 }
 
-void AMainCharacter::MulticastDropObject_Implementation(APedestal* Pedestal)
+void AMainCharacter::MulticastDropObject_Implementation(APedestal* Pedestal, AInteractableObject* Object)
 {
 	GrabbedMesh->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 	GrabbedMesh->SetSimulatePhysics(true);
-	Pedestal->PlaceObject(GrabbedMesh);
+	Pedestal->PlaceObject(Object);
 	GrabbedMesh = nullptr;
 	HoveredPedestal = nullptr;
 }

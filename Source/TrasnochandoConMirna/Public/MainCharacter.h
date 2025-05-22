@@ -11,10 +11,8 @@ class UInputAction;
 class UInputMappingContext;
 struct FInputActionValue;
 class UCameraComponent;
-class UPhysicsHandleComponent;
-class APuzzleManager;
-class IInteractable;
 class APedestal;
+class AInteractableObject;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AMainCharacter : public ACharacter
@@ -130,7 +128,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Interaction") float InteractionRange = 200.f;
 
-	AActor* TargetActor;
+	AInteractableObject* TargetActor;
 
 	UStaticMeshComponent* GrabbedMesh;
 
@@ -144,7 +142,7 @@ private:
 
 	void DrawDebugLineToLocation(const FVector TargetLocation, FColor Color) const;
 
-	UFUNCTION(Server, Reliable) void ServerInteract(AActor* Interactable);
+	UFUNCTION(Server, Reliable) void ServerInteract(AInteractableObject* Interactable);
 
 	UFUNCTION(NetMulticast, Reliable) void MulticastPlayInteractMontage();
 
@@ -154,9 +152,9 @@ private:
 
 	void GetPlaceableHint();
 
-	UFUNCTION(Server, Reliable) void ServerDropObject(APedestal* Pedestal);
+	UFUNCTION(Server, Reliable) void ServerDropObject(APedestal* Pedestal, AInteractableObject* Object);
 
-	UFUNCTION(NetMulticast, Reliable) void MulticastDropObject(APedestal* Pedestal);
+	UFUNCTION(NetMulticast, Reliable) void MulticastDropObject(APedestal* Pedestal, AInteractableObject* Object);
 
 	UFUNCTION(Client, Reliable) void SetInteractionPrompt();
 

@@ -61,7 +61,7 @@ void AButtonsPuzzle::OnClockFinished_Implementation()
 		}
 		if (!bPuzzleSolved)
 		{
-			Button->EnableInteraction();
+			IInteractable::Execute_SetCanInteract(Button, true);
 		}
 	}
 }

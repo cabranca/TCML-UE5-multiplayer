@@ -23,12 +23,20 @@ public:
 
 	UFUNCTION(Server, Reliable) virtual void ServerInteract() = 0;
 
-	virtual bool IsGrabbable() = 0;
+	UFUNCTION(NetMulticast, Reliable) virtual void MulticastInteract() = 0;
 
-	void SetCanInteract(bool bCanInteract);
+	/***GETTERS***/
 
-	virtual void SetOverlay(bool bEnabled) = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent) bool CanInteract();
 
-protected:
-	bool bInteractEnabled = true;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent) bool CanGrab();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent) UStaticMeshComponent* GetMeshToGrab();
+
+
+	/***SETTERS***/
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent) void Highlight(bool bEnabled);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent) void SetCanInteract(bool bEnabled);
 };

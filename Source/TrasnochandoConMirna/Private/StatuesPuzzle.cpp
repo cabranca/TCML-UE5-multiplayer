@@ -53,7 +53,7 @@ void AStatuesPuzzle::OnClockFinished_Implementation()
 		ErrorSFX->Play();
 		for (auto& Statue : Statues)
 		{
-			Statue->EnableInteraction();
+			IInteractable::Execute_SetCanInteract(Statue, true);
 		}
 		bStatueSet = false;
 	}

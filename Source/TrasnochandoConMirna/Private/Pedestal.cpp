@@ -3,7 +3,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "StatuesPuzzle.h"
-#include "Statue.h"
+#include "InteractableObject.h"
 
 // Sets default values
 APedestal::APedestal()
@@ -47,12 +47,17 @@ void APedestal::HideGhost()
 	GhostMesh->SetStaticMesh(nullptr);
 }
 
-void APedestal::PlaceObject(UStaticMeshComponent* Object)
+void APedestal::PlaceObject(AInteractableObject* Object)
 {
 	HideGhost();
-	Object->SetWorldLocation(GhostMesh->GetComponentLocation());
+	UStaticMeshComponent* Mesh = IInteractable::Execute_GetMeshToGrab(Object);
+	Mesh->SetWorldLocation(GhostMesh->GetComponentLocation());
 	if (Puzzle && HasAuthority())
 	{
 		Puzzle->ValidateSolution();
+	}
+	else if (!Puzzle)
+	{
+		//IInteractable::Execute_SetCanInteract(Object, true);
 	}
 }

@@ -2,11 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Interactable.h"
 
 #include "Pedestal.generated.h"
 
-class UStaticMeshComponent;
+class AInteractableObject;
 class USphereComponent;
 class AStatuesPuzzle;
 
@@ -27,7 +26,7 @@ public:
 
 	void HideGhost();
 
-	void PlaceObject(UStaticMeshComponent* Object);
+	void PlaceObject(AInteractableObject* Object);
 
 private:
 	/***COMPONENTS***/

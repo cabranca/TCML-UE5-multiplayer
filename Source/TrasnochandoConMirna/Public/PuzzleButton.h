@@ -2,16 +2,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Interactable.h"
+#include "InteractableObject.h"
 
 #include "PuzzleButton.generated.h"
 
 /// Forward declarations
-class USphereComponent;
 class AButtonsPuzzle;
 
 UCLASS()
-class TRASNOCHANDOCONMIRNA_API APuzzleButton : public AActor, public IInteractable
+class TRASNOCHANDOCONMIRNA_API APuzzleButton : public AInteractableObject
 {
 	GENERATED_BODY()
 	
@@ -27,13 +26,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(Server, Reliable) void ServerInteract() override;
+	void ServerInteract_Implementation() override;
 
-	bool IsGrabbable() override;
-
-	void SetOverlay(bool bEnabled) override;
-
-	void EnableInteraction();
 
 	/***ANIMATION***/
 	void SetForwardAnimation();
@@ -56,21 +50,7 @@ private:
 	UFUNCTION()	void OnRep_AnimationDirection();
 
 
-	/***COMPONENTS***/
-
-	UPROPERTY(EditAnywhere) USceneComponent* SceneComponent;
-
-	UPROPERTY(EditAnywhere) UStaticMeshComponent* StaticMesh;
-
-	UPROPERTY(EditAnywhere) USphereComponent* SphereCollision;
-
-	UPROPERTY(EditAnywhere) UMaterialInterface* OutlineOverlay;
-
-
 	/***ACTORS***/
 	
 	UPROPERTY(EditAnywhere) AButtonsPuzzle* Puzzle;
-
-
-	UFUNCTION(NetMulticast, Reliable) void MulticastInteract();
 };

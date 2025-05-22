@@ -7,19 +7,7 @@
 // Sets default values
 APuzzleButton::APuzzleButton()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	bReplicates = true;
-
-	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
-	RootComponent = SceneComponent;
-
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
-	StaticMesh->SetIsReplicated(true);
-	StaticMesh->SetupAttachment(RootComponent);
-
-	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
-	SphereCollision->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -47,48 +35,20 @@ void APuzzleButton::Tick(float DeltaTime)
 
 void APuzzleButton::ServerInteract_Implementation()
 {
-	if (bInteractEnabled)
+	if (bCanInteract)
 	{
 		SetForwardAnimation();
 		SetActorTickEnabled(true);
 		if (Puzzle)
 		{
 			Puzzle->ValidateSolution();
+			Super::ServerInteract();
 		}
-		bInteractEnabled = false;
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("PUZZLE NOT SET"));
+		}
 	}
-
-	MulticastInteract();
-}
-
-void APuzzleButton::MulticastInteract_Implementation()
-{
-	bInteractEnabled = false;
-	StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
-	StaticMesh->SetOverlayMaterial(nullptr);
-}
-
-bool APuzzleButton::IsGrabbable()
-{
-	return false;
-}
-
-void APuzzleButton::SetOverlay(bool bEnabled)
-{
-	if (bEnabled)
-	{
-		StaticMesh->SetOverlayMaterial(OutlineOverlay);
-	}
-	else
-	{
-		StaticMesh->SetOverlayMaterial(nullptr);
-	}
-}
-
-void APuzzleButton::EnableInteraction()
-{
-	bInteractEnabled = true;
-	StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
 }
 
 void APuzzleButton::SetForwardAnimation()
