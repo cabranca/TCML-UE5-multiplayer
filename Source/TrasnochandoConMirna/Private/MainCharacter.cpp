@@ -28,11 +28,6 @@ AMainCharacter::AMainCharacter()
 	GrabPivot->SetRelativeLocation(FVector(200.f, 0.f, 0.f));
 	GrabPivot->SetUsingAbsoluteLocation(false);
 
-	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-	Mesh1P->SetOnlyOwnerSee(true);
-	Mesh1P->SetupAttachment(PlayerCamera);
-	Mesh1P->bOnlyOwnerSee = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -122,6 +117,12 @@ bool AMainCharacter::IsRunning() const
 bool AMainCharacter::IsCrouching() const
 {
 	return bIsCrouched;
+}
+
+void AMainCharacter::SetVisibility(bool bIsVisible)
+{
+	SetActorEnableCollision(bIsVisible);
+	SetActorHiddenInGame(!bIsVisible);
 }
 
 void AMainCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)

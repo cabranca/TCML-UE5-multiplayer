@@ -42,6 +42,11 @@ public:
 	UFUNCTION(BlueprintCallable) bool IsCrouching() const;
 
 
+	/***SETTERS***/
+
+	void SetVisibility(bool bIsVisible);
+
+
 	/***CROUCHING***/
 
 protected:
@@ -56,9 +61,6 @@ private:
 
 
 	/***COMPONENTS***/
-
-	// Mesh for first person view (arms seen only by self)
-	UPROPERTY(EditAnywhere)	USkeletalMeshComponent* Mesh1P;
 
 	// Camera component for the player
 	UPROPERTY(EditAnywhere) UCameraComponent* PlayerCamera;
