@@ -8,6 +8,7 @@
 
 /// Forward declarations
 class AButtonsPuzzle;
+class USimpleAnimatorComponent;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API APuzzleButton : public AInteractableObject
@@ -28,27 +29,12 @@ public:
 
 	void ServerInteract_Implementation(AMainCharacter* MainCharacter) override;
 
-
-	/***ANIMATION***/
-	void SetForwardAnimation();
-
-	void SetBackwardsAnimation();
+	void Release();
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Animation") FVector StartPosition = FVector::ZeroVector;
+	/***COMPONENTS***/
 
-	UPROPERTY(EditAnywhere, Category = "Animation") FVector FinishPosition = FVector::ZeroVector;
-
-	UPROPERTY(EditAnywhere, Category = "Animation") float AnimationSpeed = 0.5f;
-
-	float CurrentPosition = 0.f;
-
-	UPROPERTY(ReplicatedUsing = OnRep_AnimationDirection) int8 AnimationDirection = 1;
-
-	UFUNCTION(NetMulticast, Reliable) void Animate(float DeltaTime);
-
-	UFUNCTION()	void OnRep_AnimationDirection();
-
+	UPROPERTY(VisibleAnyWhere) USimpleAnimatorComponent* Animator;
 
 	/***ACTORS***/
 	

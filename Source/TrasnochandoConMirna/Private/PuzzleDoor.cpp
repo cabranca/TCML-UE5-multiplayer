@@ -5,6 +5,7 @@
 #include "Components/AudioComponent.h"
 #include "MainCharacter.h"
 #include "Components/BoxComponent.h"
+#include "SimpleAnimatorComponent.h"
 
 // Sets default values
 APuzzleDoor::APuzzleDoor()
@@ -29,16 +30,15 @@ APuzzleDoor::APuzzleDoor()
 	Arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
 	Arrow->SetupAttachment(RootComponent);
 	Arrow->SetRelativeLocation(FVector::ZeroVector);
+
+	Animator = CreateDefaultSubobject<USimpleAnimatorComponent>(TEXT("Animator"));
+	Animator->TargetMesh = StaticMesh;
 }
 
 // Called when the game starts or when spawned
 void APuzzleDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	SetActorTickEnabled(false);
-
-	StaticMesh->SetRelativeLocation(OpenPosition);
 	
 	FScriptDelegate BeginDelegateSubscriber;
 	BeginDelegateSubscriber.BindUFunction(this, "OnDoorCrossingBegin");
@@ -52,38 +52,20 @@ void APuzzleDoor::BeginPlay()
 void APuzzleDoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (HasAuthority())
-	{
-		Animate(DeltaTime);
-	}
 }
 
 void APuzzleDoor::OpenDoor_Implementation()
 {
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-	AnimationDirection = -1;
-	SetActorTickEnabled(true);
+	Animator->PlayReverse();
 	Audio->Play();
 }
 
 void APuzzleDoor::CloseDoor_Implementation()
 {
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
-	SetActorTickEnabled(true);
-	AnimationDirection = 1;
+	Animator->PlayForward();
 	Audio->Play();
-}
-
-void APuzzleDoor::Animate_Implementation(float DeltaTime)
-{
-	CurrentPosition += AnimationSpeed * AnimationDirection * DeltaTime;
-	if (CurrentPosition > 1.f || CurrentPosition < 0.f)
-	{
-		CurrentPosition = FMath::Clamp(CurrentPosition, 0.f, 1.f);
-		SetActorTickEnabled(false);
-	}
-	StaticMesh->SetRelativeLocation(OpenPosition + (ClosedPosition - OpenPosition) * CurrentPosition);
 }
 
 void APuzzleDoor::OnDoorCrossingBegin_Implementation(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

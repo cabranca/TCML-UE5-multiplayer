@@ -52,12 +52,7 @@ void AButtonsPuzzle::OnClockFinished_Implementation()
 	{
 		if (HasAuthority())
 		{
-			Button->SetBackwardsAnimation();
-			Button->SetActorTickEnabled(true);
-		}
-		else
-		{
-			Button->SetBackwardsAnimation();
+			Button->Release();
 		}
 		if (!bPuzzleSolved)
 		{

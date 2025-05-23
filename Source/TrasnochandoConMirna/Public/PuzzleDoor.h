@@ -9,6 +9,7 @@
 class UStaticMeshComponent;
 class UArrowComponent;
 class UBoxComponent;
+class USimpleAnimatorComponent;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API APuzzleDoor : public AActor
@@ -46,20 +47,8 @@ private:
 
 	UPROPERTY(EditAnywhere) UAudioComponent* Audio;
 
+	UPROPERTY(VisibleAnywhere) USimpleAnimatorComponent* Animator;
 
-	/***ANIMATION***/
-
-	UPROPERTY(EditAnywhere, Category = "Animation") FVector OpenPosition = FVector::ZeroVector;
-
-	UPROPERTY(EditAnywhere, Category = "Animation") FVector ClosedPosition = FVector::ZeroVector;
-
-	UPROPERTY(EditAnywhere, Category = "Animation") float AnimationSpeed = 10.f;
-
-	float CurrentPosition = 0.f;
-
-	int8 AnimationDirection = 1;
-
-	UFUNCTION(NetMulticast, Reliable) void Animate(float DeltaTime);
 
 	/***OVERLAP***/
 
