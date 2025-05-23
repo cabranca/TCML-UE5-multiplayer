@@ -33,6 +33,16 @@ void AWardrobe::Tick(float DeltaTime)
 
 void AWardrobe::ServerInteract_Implementation(AMainCharacter* MainCharacter)
 {
+	if (MainCharacter != HiddenCharacter)
+	{
+		if (HiddenCharacter) return;
+
+		HiddenCharacter = MainCharacter;
+	}
+	else
+	{
+		HiddenCharacter = nullptr;
+	}
 	MulticastHidePlayer(MainCharacter);
 }
 
@@ -40,34 +50,21 @@ void AWardrobe::MulticastHidePlayer_Implementation(AMainCharacter* MainCharacter
 {
 	if (!bPlayerHidden)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("HIDING"));
-		if (HasAuthority())
+		MainCharacter->Hide();
+		if (MainCharacter->IsLocallyControlled())
 		{
-			MainCharacter->SetVisibility(false);
-		}
-		else
-		{
-			if (MainCharacter->IsLocallyControlled())
-			{
-				Cast<APlayerController>(MainCharacter->GetController())->SetViewTargetWithBlend(this, 0.5f);
-			}
+			Cast<APlayerController>(MainCharacter->GetController())->SetViewTargetWithBlend(this, 0.5f);
 		}
 		bPlayerHidden = true;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NOT HIDING"));
-		if (HasAuthority())
+		
+		if (MainCharacter->IsLocallyControlled())
 		{
-			MainCharacter->SetVisibility(true);
+			Cast<APlayerController>(MainCharacter->GetController())->SetViewTargetWithBlend(MainCharacter, 0.5f);
 		}
-		else
-		{
-			if (MainCharacter->IsLocallyControlled())
-			{
-				Cast<APlayerController>(MainCharacter->GetController())->SetViewTargetWithBlend(MainCharacter, 0.5f);
-			}
-		}
+		MainCharacter->Expose();
 		bPlayerHidden = false;
 	}
 }

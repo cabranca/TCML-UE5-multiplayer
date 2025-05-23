@@ -32,10 +32,16 @@ public:
 	void ServerInteract_Implementation(AMainCharacter* MainCharacter) override;
 
 private:
+	/***COMPONENTS***/
+
 	UPROPERTY(EditAnywhere) UStaticMeshComponent* DoorMesh;
 
 	UPROPERTY(EditAnywhere) UCameraComponent* Camera;
 
+
+	/***HIDING***/
+
+	AMainCharacter* HiddenCharacter;
 	bool bPlayerHidden = false;
 
 	UFUNCTION(NetMulticast, Reliable) void MulticastHidePlayer(AMainCharacter* MainCharacter);

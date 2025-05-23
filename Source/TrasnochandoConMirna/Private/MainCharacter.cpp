@@ -10,6 +10,7 @@
 #include "PuzzleManager.h"
 #include "Blueprint/UserWidget.h"
 #include "Perception/AISense_Hearing.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -27,7 +28,6 @@ AMainCharacter::AMainCharacter()
 	GrabPivot->SetupAttachment(PlayerCamera);
 	GrabPivot->SetRelativeLocation(FVector(200.f, 0.f, 0.f));
 	GrabPivot->SetUsingAbsoluteLocation(false);
-
 }
 
 // Called when the game starts or when spawned
@@ -119,12 +119,6 @@ bool AMainCharacter::IsCrouching() const
 	return bIsCrouched;
 }
 
-void AMainCharacter::SetVisibility(bool bIsVisible)
-{
-	SetActorEnableCollision(bIsVisible);
-	SetActorHiddenInGame(!bIsVisible);
-}
-
 void AMainCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
 {
 	if (HalfHeightAdjust == 0.f)
@@ -162,6 +156,8 @@ void AMainCharacter::CalcCamera(float DeltaTime, FMinimalViewInfo & OutResult)
 
 void AMainCharacter::Move(const FInputActionValue& Value)
 {
+	if (bIsHidden) return;
+
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 
 	const FRotator Rotation = Controller->GetControlRotation();
@@ -176,6 +172,8 @@ void AMainCharacter::Move(const FInputActionValue& Value)
 
 void AMainCharacter::Look(const FInputActionValue& Value)
 {
+	if (bIsHidden) return;
+
 	const FVector2D LookAxisVector = Value.Get<FVector2D>();
 
 	AddControllerYawInput(LookAxisVector.X);
@@ -436,4 +434,24 @@ void AMainCharacter::ProduceNoise()
 		Loudness = CrouchingLoudness;
 	}
 	UAISense_Hearing::ReportNoiseEvent(GetWorld(), GetActorLocation(), Loudness, this, 10.f, NAME_None);
+}
+
+void AMainCharacter::Hide()
+{
+	if (bIsHidden) return;
+
+	GetMesh()->SetVisibility(false);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	bIsHidden = true;
+}
+
+void AMainCharacter::Expose()
+{
+	if (!bIsHidden) return;
+
+	GetMesh()->SetVisibility(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	bIsHidden = false;
 }

@@ -39,12 +39,7 @@ public:
 
 	UFUNCTION(BlueprintCallable) bool IsRunning() const;
 
-	UFUNCTION(BlueprintCallable) bool IsCrouching() const;
-
-
-	/***SETTERS***/
-
-	void SetVisibility(bool bIsVisible);
+	UFUNCTION(BlueprintCallable) bool IsCrouching() const;	
 
 
 	/***CROUCHING***/
@@ -165,14 +160,21 @@ private:
 
 	/***NOISE SYSTEM***/
 
-	UPROPERTY(EditAnywhere, Category = "Noise")
-	float CrouchingLoudness = 30.f;
+	UPROPERTY(EditAnywhere, Category = "Noise") float CrouchingLoudness = 30.f;
 
-	UPROPERTY(EditAnywhere, Category = "Noise")
-	float WalkingLoudness = 150.f;
+	UPROPERTY(EditAnywhere, Category = "Noise") float WalkingLoudness = 150.f;
 
-	UPROPERTY(EditAnywhere, Category = "Noise")
-	float RunningLoudness = 300.f;
+	UPROPERTY(EditAnywhere, Category = "Noise") float RunningLoudness = 300.f;
 
 	void ProduceNoise();
+
+
+	/***HIDING SYSTEM***/
+
+public:
+	void Hide();
+	void Expose();
+
+private:
+	bool bIsHidden = false;
 };
