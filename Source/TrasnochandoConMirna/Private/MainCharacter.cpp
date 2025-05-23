@@ -320,7 +320,7 @@ void AMainCharacter::DrawDebugLineToLocation(const FVector TargetLocation, FColo
 
 void AMainCharacter::ServerInteract_Implementation(AInteractableObject* Object)
 {
-	Object->ServerInteract();
+	Object->ServerInteract(this);
 	MulticastPlayInteractMontage();
 }
 

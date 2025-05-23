@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "MainCharacter.h"
+
 #include "Interactable.generated.h"
 
 // This class does not need to be modified.
@@ -21,9 +23,9 @@ class TRASNOCHANDOCONMIRNA_API IInteractable
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	UFUNCTION(Server, Reliable) virtual void ServerInteract() = 0;
+	virtual void ServerInteract(AMainCharacter* MainCharacter) = 0;
 
-	UFUNCTION(NetMulticast, Reliable) virtual void MulticastInteract() = 0;
+	virtual void MulticastInteract(AMainCharacter* MainCharacter) = 0;
 
 	/***GETTERS***/
 

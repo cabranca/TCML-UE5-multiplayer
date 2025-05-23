@@ -25,9 +25,9 @@ protected:
 public:	
 	/***IINTERACTABLE***/
 
-	UFUNCTION(Server, Reliable) virtual void ServerInteract() override;
+	UFUNCTION(Server, Reliable) virtual void ServerInteract(AMainCharacter* MainCharacter) override;
 
-	UFUNCTION(Server, Reliable) virtual void MulticastInteract() override;
+	UFUNCTION(NetMulticast, Reliable) virtual void MulticastInteract(AMainCharacter* MainCharacter) override;
 
 	virtual bool CanInteract_Implementation() override;
 

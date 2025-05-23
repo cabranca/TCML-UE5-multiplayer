@@ -26,12 +26,12 @@ void AInteractableObject::BeginPlay()
 	
 }
 
-void AInteractableObject::ServerInteract_Implementation()
+void AInteractableObject::ServerInteract_Implementation(AMainCharacter* MainCharacter)
 {
-	MulticastInteract();
+	MulticastInteract(MainCharacter);
 }
 
-void AInteractableObject::MulticastInteract_Implementation()
+void AInteractableObject::MulticastInteract_Implementation(AMainCharacter* MainCharacter)
 {
 	bCanInteract = false;
 	StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);

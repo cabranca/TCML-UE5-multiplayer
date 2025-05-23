@@ -26,7 +26,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void ServerInteract_Implementation() override;
+	void ServerInteract_Implementation(AMainCharacter* MainCharacter) override;
 
 
 	/***ANIMATION***/

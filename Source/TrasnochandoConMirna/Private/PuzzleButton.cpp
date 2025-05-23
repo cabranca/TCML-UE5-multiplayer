@@ -33,7 +33,7 @@ void APuzzleButton::Tick(float DeltaTime)
 	Animate(DeltaTime);
 }
 
-void APuzzleButton::ServerInteract_Implementation()
+void APuzzleButton::ServerInteract_Implementation(AMainCharacter* MainCharacter)
 {
 	if (bCanInteract)
 	{
@@ -42,7 +42,7 @@ void APuzzleButton::ServerInteract_Implementation()
 		if (Puzzle)
 		{
 			Puzzle->ValidateSolution();
-			Super::ServerInteract();
+			Super::ServerInteract_Implementation(MainCharacter);
 		}
 		else
 		{
