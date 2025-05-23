@@ -7,6 +7,7 @@
 #include "Perception/AISense_Sight.h"
 #include "Perception/AISense_Hearing.h"
 #include "Navigation/PathFollowingComponent.h"
+#include "MainCharacter.h"
 
 AMyAIController::AMyAIController()
 {
@@ -46,8 +47,9 @@ void AMyAIController::HandleSightSense(AActor * Origin, FAIStimulus Stimulus)
 		return;
 	}
 
-	// TODO: check whethere the actor is the character
-	if (Stimulus.WasSuccessfullySensed())
+	AMainCharacter* MainCharacter = Cast<AMainCharacter>(Origin);
+
+	if (MainCharacter && !MainCharacter->IsHiddenInObject() && Stimulus.WasSuccessfullySensed())
 	{
 		Blackboard->SetValueAsObject(TEXT("TargetActor"), Origin);
 	}
@@ -64,6 +66,5 @@ void AMyAIController::HandleSoundSense(AActor * Origin, FAIStimulus Stimulus)
 	{
 		return;
 	}
-
 	Blackboard->SetValueAsVector(TEXT("HearingTargetLocation"), Stimulus.StimulusLocation);
 }

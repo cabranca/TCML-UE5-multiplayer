@@ -119,6 +119,11 @@ bool AMainCharacter::IsCrouching() const
 	return bIsCrouched;
 }
 
+bool AMainCharacter::IsHiddenInObject() const
+{
+	return bIsHidden;
+}
+
 void AMainCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
 {
 	if (HalfHeightAdjust == 0.f)

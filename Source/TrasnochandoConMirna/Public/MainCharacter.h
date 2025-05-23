@@ -41,6 +41,7 @@ public:
 
 	UFUNCTION(BlueprintCallable) bool IsCrouching() const;	
 
+	bool IsHiddenInObject() const;
 
 	/***CROUCHING***/
 
