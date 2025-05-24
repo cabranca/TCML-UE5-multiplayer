@@ -25,7 +25,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	UFUNCTION(Server, Reliable) void ValidateSolution() override;
+	UFUNCTION(Server, Reliable) void ValidateSolution(AActor* Sender) override;
 
 private:
 	/***COMPONENTS***/

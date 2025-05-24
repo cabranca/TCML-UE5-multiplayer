@@ -23,7 +23,7 @@ class TRASNOCHANDOCONMIRNA_API IPuzzle
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(Server, Reliable)
-	virtual void ValidateSolution() = 0;
+	virtual void ValidateSolution(AActor* Sender) = 0;
 
 protected:
 	UFUNCTION(NetMulticast, Reliable)

@@ -33,7 +33,7 @@ void APuzzleButton::ServerInteract_Implementation(AMainCharacter* MainCharacter)
 		Animator->PlayForward();
 		if (Puzzle)
 		{
-			Puzzle->ValidateSolution();
+			Puzzle->ValidateSolution(this);
 			Super::ServerInteract_Implementation(MainCharacter);
 		}
 		else

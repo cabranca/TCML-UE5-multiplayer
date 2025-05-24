@@ -6,6 +6,9 @@
 #include "InteractableObject.h"
 #include "Bell.generated.h"
 
+// Forward declarations
+class ABellsPuzzle;
+
 /**
  * 
  */
@@ -23,12 +26,15 @@ private:
 	/***COMPONENTS***/
 
 	UPROPERTY(EditAnywhere) UAudioComponent* SFX;
-
-
-private:
-	UPROPERTY(EditAnywhere) FName Tag;
+	
 
 	/***PUZZLE***/
+
+public:
+	UPROPERTY(EditAnywhere) FName Tag;
+
+private:
+	UPROPERTY(EditAnywhere) ABellsPuzzle* Puzzle;
 
 	UFUNCTION(NetMulticast, Reliable) void MulticastPlaySFX();
 };

@@ -27,7 +27,7 @@ void AButtonsPuzzle::BeginPlay()
 	ClockSFX->OnAudioFinished.AddDynamic(this, &AButtonsPuzzle::OnClockFinished);
 }
 
-void AButtonsPuzzle::ValidateSolution_Implementation()
+void AButtonsPuzzle::ValidateSolution_Implementation(AActor* Sender)
 {
 	MulticastValidateSolution();
 }

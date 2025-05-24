@@ -23,7 +23,7 @@ void AStatuesPuzzle::BeginPlay()
 	ClockSFX->OnAudioFinished.AddDynamic(this, &AStatuesPuzzle::OnClockFinished);
 }
 
-void AStatuesPuzzle::ValidateSolution_Implementation()
+void AStatuesPuzzle::ValidateSolution_Implementation(AActor* Sender)
 {
 	MulticastValidateSolution();
 }

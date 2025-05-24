@@ -1,6 +1,7 @@
 #include "Bell.h"
 
 #include "Components/AudioComponent.h"
+#include "BellsPuzzle.h"
 
 ABell::ABell()
 {
@@ -11,6 +12,14 @@ ABell::ABell()
 void ABell::ServerInteract_Implementation(AMainCharacter* MainCharacter)
 {
 	MulticastPlaySFX();
+	if (Puzzle)
+	{
+		Puzzle->ValidateSolution(this);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PUZZLE NOT SET"));
+	}
 }
 
 void ABell::MulticastPlaySFX_Implementation()

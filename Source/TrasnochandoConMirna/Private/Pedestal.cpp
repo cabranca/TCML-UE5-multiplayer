@@ -54,7 +54,7 @@ void APedestal::PlaceObject(AInteractableObject* Object)
 	Mesh->SetWorldLocation(GhostMesh->GetComponentLocation());
 	if (Puzzle && HasAuthority())
 	{
-		Puzzle->ValidateSolution();
+		Puzzle->ValidateSolution(this);
 	}
 	else if (!Puzzle)
 	{

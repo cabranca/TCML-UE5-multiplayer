@@ -7,7 +7,6 @@
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Statue.h"
 #include "Pedestal.h"
-#include "PuzzleManager.h"
 #include "Blueprint/UserWidget.h"
 #include "Perception/AISense_Hearing.h"
 #include "Components/CapsuleComponent.h"
