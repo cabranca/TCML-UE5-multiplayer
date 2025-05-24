@@ -2,6 +2,8 @@
 
 #include "Components/AudioComponent.h"
 #include "PuzzleButton.h"
+#include "SimpleAnimatedObject.h"
+#include "Earrings.h"
 
 AButtonsPuzzle::AButtonsPuzzle()
 {
@@ -13,6 +15,9 @@ AButtonsPuzzle::AButtonsPuzzle()
 
 	ErrorSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("ErrorSFX"));
 	ErrorSFX->SetIsReplicated(true);
+
+	PedestalSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("PedestalSFX"));
+	PedestalSFX->SetIsReplicated(true);
 }
 
 void AButtonsPuzzle::BeginPlay()
@@ -38,6 +43,9 @@ void AButtonsPuzzle::MulticastValidateSolution_Implementation()
 	{
 		bPuzzleSolved = true;
 		ClockSFX->Stop();
+		PedestalSFX->Play();
+		Pedestal->PlayForward();
+		Earrings->PlayForward();
 	}
 }
 

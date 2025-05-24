@@ -8,6 +8,8 @@
 
 /***FORWARD DECLARATIONS***/
 class APuzzleButton;
+class AEarrings;
+class ASimpleAnimatedObject;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AButtonsPuzzle : public AActor, public IPuzzle
@@ -32,8 +34,15 @@ private:
 
 	UPROPERTY(EditAnywhere) UAudioComponent* ErrorSFX;
 
+	UPROPERTY(EditAnywhere) UAudioComponent* PedestalSFX;
+
 
 	/***PUZZLE RESOLUTION***/
+
+	UPROPERTY(EditAnywhere) AEarrings* Earrings;
+
+	UPROPERTY(EditAnywhere) ASimpleAnimatedObject* Pedestal;
+
 	UPROPERTY(EditAnywhere) TArray<APuzzleButton*> Buttons;
 
 	bool bButtonPressed = false;
