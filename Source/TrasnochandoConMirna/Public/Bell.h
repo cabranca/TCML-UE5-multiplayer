@@ -9,9 +9,7 @@
 // Forward declarations
 class ABellsPuzzle;
 
-/**
- * 
- */
+// Puzzle item that plays a sound and has a tag referencing its tone.
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API ABell : public AInteractableObject
 {
@@ -25,16 +23,16 @@ public:
 private:
 	/***COMPONENTS***/
 
-	UPROPERTY(EditAnywhere) UAudioComponent* SFX;
+	UPROPERTY(EditAnywhere) UAudioComponent* SFX; // Bell SFX to play.
 	
 
 	/***PUZZLE***/
 
 public:
-	UPROPERTY(EditAnywhere) FName Tag;
+	UPROPERTY(EditAnywhere) FName Tag; // Tone of the sound, used by the Puzzle to validate the solution.
 
 private:
-	UPROPERTY(EditAnywhere) ABellsPuzzle* Puzzle;
+	UPROPERTY(EditAnywhere) ABellsPuzzle* Puzzle; // Puzzle that validates the solution.
 
-	UFUNCTION(NetMulticast, Reliable) void MulticastPlaySFX();
+	UFUNCTION(NetMulticast, Reliable) void MulticastPlaySFX(); // Plays the bell SFX in every client.
 };
