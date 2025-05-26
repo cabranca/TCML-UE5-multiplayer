@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Puzzle.h"
+#include "PuzzleBase.h"
 
 #include "BellsPuzzle.generated.h"
 
 UCLASS()
-class TRASNOCHANDOCONMIRNA_API ABellsPuzzle : public AActor, public IPuzzle
+class TRASNOCHANDOCONMIRNA_API ABellsPuzzle : public APuzzleBase
 {
 	GENERATED_BODY()
 	
@@ -22,12 +22,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	UFUNCTION(Server, Reliable) void ValidateSolution(AActor* Sender) override;
+	void ValidateSolution_Implementation(AInteractableObject* Sender) override;
 
 private:
 	TArray<FName> PuzzleSolution;
 	uint8 SolutionIndex;
-	bool bPuzzleSolved;
-
-	UFUNCTION(NetMulticast, Reliable) void MulticastValidateSolution() override;
 };

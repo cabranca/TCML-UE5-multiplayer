@@ -27,45 +27,51 @@ void AButtonsPuzzle::BeginPlay()
 	ClockSFX->OnAudioFinished.AddDynamic(this, &AButtonsPuzzle::OnClockFinished);
 }
 
-void AButtonsPuzzle::ValidateSolution_Implementation(AActor* Sender)
+void AButtonsPuzzle::ValidateSolution_Implementation(AInteractableObject* Trigger)
 {
-	MulticastValidateSolution();
-}
+	if (bPuzzleSolved) return;
 
-void AButtonsPuzzle::MulticastValidateSolution_Implementation()
-{
-	if (!bButtonPressed)
-	{
-		ClockSFX->Play();
-		bButtonPressed = true;
-	}
-	else
+	if (ValidationTrigger && Trigger != ValidationTrigger)
 	{
 		bPuzzleSolved = true;
-		ClockSFX->Stop();
-		PedestalSFX->Play();
 		Pedestal->PlayForward();
 		Earrings->PlayForward();
+		OnPuzzleSolved();
 	}
+	else if (!ValidationTrigger)
+	{
+		ValidationTrigger = Trigger;
+		PlayClock();
+	}
+}
+
+void AButtonsPuzzle::PlayClock_Implementation()
+{
+	ClockSFX->Play();
+}
+
+void AButtonsPuzzle::OnPuzzleFailed_Implementation()
+{
+	ValidationTrigger = nullptr;
+	ErrorSFX->Play();
+	for (auto& Button : Buttons)
+	{
+		Button->Release();
+		IInteractable::Execute_SetCanInteract(Button, true);
+	}
+}
+
+void AButtonsPuzzle::OnPuzzleSolved_Implementation()
+{
+	ClockSFX->Stop();
+	PedestalSFX->Play();
 }
 
 void AButtonsPuzzle::OnClockFinished_Implementation()
 {
-	if (!bPuzzleSolved)
+	if (HasAuthority() && !bPuzzleSolved)
 	{
-		ErrorSFX->Play();
-		bButtonPressed = false;
-	}
-	for (auto& Button : Buttons)
-	{
-		if (HasAuthority())
-		{
-			Button->Release();
-		}
-		if (!bPuzzleSolved)
-		{
-			IInteractable::Execute_SetCanInteract(Button, true);
-		}
+		OnPuzzleFailed();
 	}
 }
 

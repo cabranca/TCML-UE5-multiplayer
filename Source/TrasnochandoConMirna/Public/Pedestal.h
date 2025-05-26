@@ -2,15 +2,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "InteractableObject.h"
 
 #include "Pedestal.generated.h"
 
-class AInteractableObject;
+// Forward declarations
 class USphereComponent;
 class AStatuesPuzzle;
 
 UCLASS()
-class TRASNOCHANDOCONMIRNA_API APedestal : public AActor
+class TRASNOCHANDOCONMIRNA_API APedestal : public AInteractableObject
 {
 	GENERATED_BODY()
 	
@@ -30,10 +31,6 @@ public:
 
 private:
 	/***COMPONENTS***/
-
-	UPROPERTY(EditAnywhere) UStaticMeshComponent* StaticMesh;
-
-	UPROPERTY(EditAnywhere) USphereComponent* SphereCollision;
 
 	UPROPERTY(EditAnywhere) UStaticMeshComponent* GhostMesh;
 

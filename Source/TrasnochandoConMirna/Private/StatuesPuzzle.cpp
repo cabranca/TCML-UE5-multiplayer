@@ -23,38 +23,52 @@ void AStatuesPuzzle::BeginPlay()
 	ClockSFX->OnAudioFinished.AddDynamic(this, &AStatuesPuzzle::OnClockFinished);
 }
 
-void AStatuesPuzzle::ValidateSolution_Implementation(AActor* Sender)
+void AStatuesPuzzle::ValidateSolution_Implementation(AInteractableObject* Trigger)
 {
-	MulticastValidateSolution();
-}
+	if (bPuzzleSolved) return;
 
-void AStatuesPuzzle::MulticastValidateSolution_Implementation()
-{
-	if (!bStatueSet)
-	{
-		ClockSFX->Play();
-		bStatueSet = true;
-	}
-	else
+	if (ValidationTrigger && Trigger != ValidationTrigger)
 	{
 		bPuzzleSolved = true;
-		ClockSFX->Stop();
 		for (auto& Door : Doors)
 		{
 			Door->OpenDoor();
 		}
+		OnPuzzleSolved();
+	}
+	else if (!ValidationTrigger)
+	{
+		ValidationTrigger = Trigger;
+		IInteractable::Execute_SetCanInteract(Trigger, false);
+		PlayClock();
 	}
 }
 
 void AStatuesPuzzle::OnClockFinished_Implementation()
 {
-	if (!bPuzzleSolved)
+	if (HasAuthority() && !bPuzzleSolved)
 	{
-		ErrorSFX->Play();
-		for (auto& Statue : Statues)
-		{
-			IInteractable::Execute_SetCanInteract(Statue, true);
-		}
-		bStatueSet = false;
+		OnPuzzleFailed();
 	}
+}
+
+void AStatuesPuzzle::PlayClock_Implementation()
+{
+	ClockSFX->Play();
+}
+
+void AStatuesPuzzle::OnPuzzleFailed_Implementation()
+{
+	
+	ErrorSFX->Play();
+	if (HasAuthority() && !bPuzzleSolved)
+	{
+		IInteractable::Execute_SetCanInteract(ValidationTrigger, true);
+		ValidationTrigger = nullptr;
+	}
+}
+
+void AStatuesPuzzle::OnPuzzleSolved_Implementation()
+{
+	ClockSFX->Stop();
 }

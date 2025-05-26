@@ -11,8 +11,6 @@
 // Sets default values
 AStatue::AStatue()
 {
-	SetReplicateMovement(true);
-	SphereCollision->SetIsReplicated(true);
 	bCanGrab = true;
 }
 

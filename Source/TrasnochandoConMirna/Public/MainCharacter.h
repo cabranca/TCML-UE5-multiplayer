@@ -128,7 +128,7 @@ private:
 
 	AInteractableObject* TargetActor;
 
-	UStaticMeshComponent* GrabbedMesh;
+	AInteractableObject* GrabbedActor;
 
 	APedestal* HoveredPedestal;
 
@@ -144,7 +144,7 @@ private:
 
 	UFUNCTION(NetMulticast, Reliable) void MulticastPlayInteractMontage();
 
-	UFUNCTION(Server, Reliable) void ServerGrabObject(UStaticMeshComponent* ObjectToGrab);
+	UFUNCTION(Server, Reliable) void ServerGrabObject(AInteractableObject* ObjectToGrab);
 
 	UFUNCTION(NetMulticast, Reliable) void MulticastGrabObject(UStaticMeshComponent* ObjectToGrab);
 

@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "InteractableObject.h"
+
 #include "Puzzle.generated.h"
 
 // This class does not need to be modified.
@@ -22,10 +24,5 @@ class TRASNOCHANDOCONMIRNA_API IPuzzle
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	UFUNCTION(Server, Reliable)
-	virtual void ValidateSolution(AActor* Sender) = 0;
-
-protected:
-	UFUNCTION(NetMulticast, Reliable)
-	virtual void MulticastValidateSolution() = 0;
+	virtual void ValidateSolution(AInteractableObject* Sender) = 0;
 };

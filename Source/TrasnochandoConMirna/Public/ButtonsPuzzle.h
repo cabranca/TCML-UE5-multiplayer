@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Puzzle.h"
+#include "PuzzleBase.h"
 
 #include "ButtonsPuzzle.generated.h"
 
@@ -12,7 +12,7 @@ class AEarrings;
 class ASimpleAnimatedObject;
 
 UCLASS()
-class TRASNOCHANDOCONMIRNA_API AButtonsPuzzle : public AActor, public IPuzzle
+class TRASNOCHANDOCONMIRNA_API AButtonsPuzzle : public APuzzleBase
 {
 	GENERATED_BODY()
 	
@@ -25,7 +25,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	UFUNCTION(Server, Reliable) void ValidateSolution(AActor* Sender) override;
+	void ValidateSolution_Implementation(AInteractableObject* Sender) override;
 
 private:
 	/***COMPONENTS***/
@@ -47,9 +47,11 @@ private:
 
 	bool bButtonPressed = false;
 
-	bool bPuzzleSolved = false;
+	UFUNCTION(NetMulticast, Reliable) void PlayClock();
 
-	UFUNCTION(NetMulticast, Reliable) void MulticastValidateSolution() override;
+	UFUNCTION(NetMulticast, Reliable) void OnPuzzleFailed();
+
+	UFUNCTION(NetMulticast, Reliable) void OnPuzzleSolved();
 
 	UFUNCTION(NetMulticast, Reliable) void OnClockFinished();
 };

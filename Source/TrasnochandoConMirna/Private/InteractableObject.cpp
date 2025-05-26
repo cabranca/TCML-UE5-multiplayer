@@ -5,7 +5,7 @@
 // Sets default values
 AInteractableObject::AInteractableObject()
 {
-	PrimaryActorTick.bCanEverTick = true; //TODO: see if this can be set to false and then a child set to true.
+	PrimaryActorTick.bCanEverTick = false; //TODO: see if this can be set to false and then a child set to true.
 	bReplicates = true;
 
 	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
@@ -17,6 +17,7 @@ AInteractableObject::AInteractableObject()
 
 	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
 	SphereCollision->SetupAttachment(RootComponent);
+	SphereCollision->SetIsReplicated(true);
 }
 
 // Called when the game starts or when spawned
@@ -28,13 +29,13 @@ void AInteractableObject::BeginPlay()
 
 void AInteractableObject::ServerInteract_Implementation(AMainCharacter* MainCharacter)
 {
-	MulticastInteract(MainCharacter);
+	//MulticastInteract(MainCharacter);
 }
 
 void AInteractableObject::MulticastInteract_Implementation(AMainCharacter* MainCharacter)
 {
 	bCanInteract = false;
-	StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+	SphereCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
 	StaticMesh->SetOverlayMaterial(nullptr);
 }
 
@@ -74,7 +75,16 @@ void AInteractableObject::Highlight_Implementation(bool bEnabled)
 
 void AInteractableObject::SetCanInteract_Implementation(bool bEnabled)
 {
-	bCanInteract = true;
-	StaticMesh->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
+	if (HasAuthority())
+	{
+		MulticastSetCanInteract(bEnabled);
+	}
 }
 
+
+void AInteractableObject::MulticastSetCanInteract_Implementation(bool bEnabled)
+{
+	bCanInteract = bEnabled;
+	ECollisionResponse Response = bEnabled ? ECR_Block : ECR_Ignore;
+	SphereCollision->SetCollisionResponseToChannel(ECC_GameTraceChannel1, Response);
+}

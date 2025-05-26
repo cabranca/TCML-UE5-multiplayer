@@ -10,12 +10,6 @@ APedestal::APedestal()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
-	RootComponent = StaticMesh;
-
-	SphereCollision = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollision"));
-	SphereCollision->SetupAttachment(StaticMesh);
-
 	GhostMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StatueGhost"));
 	GhostMesh->SetupAttachment(StaticMesh);
 }
@@ -54,7 +48,7 @@ void APedestal::PlaceObject(AInteractableObject* Object)
 	Mesh->SetWorldLocation(GhostMesh->GetComponentLocation());
 	if (Puzzle && HasAuthority())
 	{
-		Puzzle->ValidateSolution(this);
+		Puzzle->ValidateSolution(Object);
 	}
 	else if (!Puzzle)
 	{

@@ -17,7 +17,7 @@ void ABellsPuzzle::BeginPlay()
 	
 }
 
-void ABellsPuzzle::ValidateSolution_Implementation(AActor* Sender)
+void ABellsPuzzle::ValidateSolution_Implementation(AInteractableObject* Sender)
 {
 	if (bPuzzleSolved) return;
 
@@ -39,9 +39,4 @@ void ABellsPuzzle::ValidateSolution_Implementation(AActor* Sender)
 			UE_LOG(LogTemp, Warning, TEXT("PUZZLE SOLVED"));
 		}
 	}
-}
-
-void ABellsPuzzle::MulticastValidateSolution_Implementation()
-{
-
 }

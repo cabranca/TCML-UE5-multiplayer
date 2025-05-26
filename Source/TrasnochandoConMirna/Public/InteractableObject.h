@@ -57,4 +57,7 @@ protected:
 
 	bool bCanInteract = true;
 	bool bCanGrab = false;
+
+
+	UFUNCTION(NetMulticast, Reliable) void MulticastSetCanInteract(bool bEnabled);
 };

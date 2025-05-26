@@ -75,9 +75,9 @@ void AMainCharacter::Tick(float DeltaTime)
 		ProduceNoise(); //TODO: check if this can be called only on Server
 	}
 
-	if (IsLocallyControlled())
+	if (!HasAuthority() && IsLocallyControlled())
 	{
-		if (GrabbedMesh)
+		if (GrabbedActor)
 		{
 			GetPlaceableHint();
 		}
@@ -216,16 +216,15 @@ void AMainCharacter::EndRun(const FInputActionValue& Value)
 
 void AMainCharacter::Interact(const FInputActionValue& Value)
 {
-	if (!GrabbedMesh)
+	if (!GrabbedActor)
 	{
 		if (TargetActor)
 		{
 			if (IInteractable::Execute_CanGrab(TargetActor))
 			{
 				SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
-				UStaticMeshComponent* HitMesh = IInteractable::Execute_GetMeshToGrab(TargetActor);
-				GrabbedMesh = HitMesh; //TODO: put this line only because the next tick does not have the updated value (set in multicast) so the prompt is set to visible wrongly.
-				ServerGrabObject(HitMesh);
+				ServerGrabObject(TargetActor);
+				GrabbedActor = TargetActor;
 			}
 			ServerInteract(TargetActor);
 		}
@@ -233,7 +232,8 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 	else if (HoveredPedestal)
 	{
 		ServerDropObject(HoveredPedestal, TargetActor);
-		TargetActor = nullptr;
+		GrabbedActor = nullptr;
+		HoveredPedestal = nullptr;
 	}
 }
 
@@ -287,6 +287,10 @@ void AMainCharacter::LookForInteraction()
 	FHitResult Hit;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
+	if (GrabbedActor)
+	{
+		Params.AddIgnoredActor(GrabbedActor);
+	}
 
 	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel1, Params))
 	{
@@ -310,9 +314,9 @@ void AMainCharacter::LookForInteraction()
 	}
 	else if (TargetActor)
 	{
-		SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
-		IInteractable::Execute_Highlight(TargetActor, false);
-		TargetActor = nullptr;
+			SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
+			IInteractable::Execute_Highlight(TargetActor, false);
+			TargetActor = nullptr;
 	}
 }
 
@@ -335,17 +339,11 @@ void AMainCharacter::MulticastPlayInteractMontage_Implementation()
 	}
 }
 
-void AMainCharacter::ServerGrabObject_Implementation(UStaticMeshComponent* ObjectToGrab)
+void AMainCharacter::ServerGrabObject_Implementation(AInteractableObject* ObjectToGrab)
 {
-	MulticastGrabObject(ObjectToGrab);
-}
-
-void AMainCharacter::MulticastGrabObject_Implementation(UStaticMeshComponent* ObjectToGrab)
-{
-	GrabbedMesh = ObjectToGrab;
-
-	GrabbedMesh->SetSimulatePhysics(false);
-	GrabbedMesh->AttachToComponent(GrabPivot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	UStaticMeshComponent* ObjectMesh = IInteractable::Execute_GetMeshToGrab(ObjectToGrab);
+	ObjectMesh->SetSimulatePhysics(false);
+	ObjectMesh->AttachToComponent(GrabPivot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
 
 void AMainCharacter::GetPlaceableHint()
@@ -356,7 +354,6 @@ void AMainCharacter::GetPlaceableHint()
 	FHitResult Hit;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
-	Params.AddIgnoredComponent(GrabbedMesh);
 	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel2, Params))
 	{
 		APedestal* Pedestal = Cast<APedestal>(Hit.GetActor());
@@ -369,7 +366,7 @@ void AMainCharacter::GetPlaceableHint()
 			}
 
 			HoveredPedestal = Pedestal;
-			HoveredPedestal->ShowGhost(GrabbedMesh->GetStaticMesh());
+			HoveredPedestal->ShowGhost(IInteractable::Execute_GetMeshToGrab(GrabbedActor)->GetStaticMesh());
 		}
 		else if (!Pedestal && HoveredPedestal)
 		{
@@ -386,16 +383,15 @@ void AMainCharacter::GetPlaceableHint()
 
 void AMainCharacter::ServerDropObject_Implementation(APedestal* Pedestal, AInteractableObject* Object)
 {
+	UStaticMeshComponent* GrabbedMesh = IInteractable::Execute_GetMeshToGrab(Object);
+	GrabbedMesh->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	GrabbedMesh->SetSimulatePhysics(true);
 	MulticastDropObject(Pedestal, Object);
 }
 
 void AMainCharacter::MulticastDropObject_Implementation(APedestal* Pedestal, AInteractableObject* Object)
 {
-	GrabbedMesh->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-	GrabbedMesh->SetSimulatePhysics(true);
 	Pedestal->PlaceObject(Object);
-	GrabbedMesh = nullptr;
-	HoveredPedestal = nullptr;
 }
 
 void AMainCharacter::SetInteractionPrompt_Implementation()
