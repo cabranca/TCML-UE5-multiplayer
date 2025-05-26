@@ -1,10 +1,20 @@
 #include "BellsPuzzle.h"
 
 #include "Bell.h"
+#include "Components/AudioComponent.h"
+#include "SimpleAnimatedObject.h"
+#include "Earrings.h"
 
 ABellsPuzzle::ABellsPuzzle()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	bReplicates = true;
+
+	PedestalSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("PedestalSFX"));
+	PedestalSFX->SetIsReplicated(true);
+
+	ErrorSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("ErrorSFX"));
+	ErrorSFX->SetIsReplicated(true);
 
 	PuzzleSolution = { "MI", "FA", "SOL", "SOL", "FA", "MI", "RE", "MI", "RE", "DO" };
 	SolutionIndex = 0;
@@ -14,7 +24,6 @@ ABellsPuzzle::ABellsPuzzle()
 void ABellsPuzzle::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void ABellsPuzzle::ValidateSolution_Implementation(AInteractableObject* Sender)
@@ -31,12 +40,25 @@ void ABellsPuzzle::ValidateSolution_Implementation(AInteractableObject* Sender)
 		else
 		{
 			SolutionIndex = 0;
+			OnPuzzleFailed();
 		}
 
 		if (SolutionIndex == PuzzleSolution.Num())
 		{
-			bPuzzleSolved = true;
-			UE_LOG(LogTemp, Warning, TEXT("PUZZLE SOLVED"));
+			Pedestal->PlayForward();
+			Salt->PlayForward();
+			IInteractable::Execute_SetCanInteract(Salt, true);
+			OnPuzzleSolved();
 		}
 	}
+}
+
+void ABellsPuzzle::OnPuzzleFailed_Implementation()
+{
+	
+}
+
+void ABellsPuzzle::OnPuzzleSolved_Implementation()
+{ 
+	PedestalSFX->Play();
 }

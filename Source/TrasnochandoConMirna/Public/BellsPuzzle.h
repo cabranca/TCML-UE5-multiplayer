@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,6 +5,10 @@
 #include "PuzzleBase.h"
 
 #include "BellsPuzzle.generated.h"
+
+// Forward declarations
+class AEarrings;
+class ASimpleAnimatedObject;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API ABellsPuzzle : public APuzzleBase
@@ -25,6 +27,17 @@ public:
 	void ValidateSolution_Implementation(AInteractableObject* Sender) override;
 
 private:
+	/***COMPONENTS***/
+
+	UPROPERTY(EditAnywhere) UAudioComponent* PedestalSFX;
+	UPROPERTY(EditAnywhere) UAudioComponent* ErrorSFX;
+
 	TArray<FName> PuzzleSolution;
 	uint8 SolutionIndex;
+	UPROPERTY(EditAnywhere) AEarrings* Salt;
+	UPROPERTY(EditAnywhere) ASimpleAnimatedObject* Pedestal;
+
+	UFUNCTION(NetMulticast, Reliable) void OnPuzzleFailed();
+
+	UFUNCTION(NetMulticast, Reliable) void OnPuzzleSolved();
 };
