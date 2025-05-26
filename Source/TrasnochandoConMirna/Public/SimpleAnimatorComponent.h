@@ -41,6 +41,8 @@ public:
 	// Duración total de la animación
 	UPROPERTY(EditAnywhere, Category = "Animation") float AnimationDuration = 1.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Animation") bool bBeginsAtStart = true;
+
 
 private:
 	float ElapsedTime = 0.0f;

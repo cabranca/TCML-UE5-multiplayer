@@ -13,7 +13,7 @@ void USimpleAnimatorComponent::BeginPlay()
 
 	if (TargetMesh)
 	{
-		TargetMesh->SetRelativeLocation(StartLocation);
+		TargetMesh->SetRelativeLocation(bBeginsAtStart? StartLocation : EndLocation);
 	}
 }
 
