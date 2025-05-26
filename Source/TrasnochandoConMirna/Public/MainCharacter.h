@@ -146,8 +146,6 @@ private:
 
 	UFUNCTION(Server, Reliable) void ServerGrabObject(AInteractableObject* ObjectToGrab);
 
-	UFUNCTION(NetMulticast, Reliable) void MulticastGrabObject(UStaticMeshComponent* ObjectToGrab);
-
 	void GetPlaceableHint();
 
 	UFUNCTION(Server, Reliable) void ServerDropObject(APedestal* Pedestal, AInteractableObject* Object);
