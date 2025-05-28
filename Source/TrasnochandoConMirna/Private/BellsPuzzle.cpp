@@ -10,6 +10,8 @@ ABellsPuzzle::ABellsPuzzle()
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true;
 
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+
 	PedestalSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("PedestalSFX"));
 	PedestalSFX->SetIsReplicated(true);
 
