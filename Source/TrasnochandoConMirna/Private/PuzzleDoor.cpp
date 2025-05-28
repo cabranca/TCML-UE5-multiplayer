@@ -40,13 +40,16 @@ void APuzzleDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	FScriptDelegate BeginDelegateSubscriber;
-	BeginDelegateSubscriber.BindUFunction(this, "OnDoorCrossingBegin");
-	CollisionBox->OnComponentBeginOverlap.Add(BeginDelegateSubscriber);
+	if (HasAuthority())
+	{
+		FScriptDelegate BeginDelegateSubscriber;
+		BeginDelegateSubscriber.BindUFunction(this, "OnDoorCrossingBegin");
+		CollisionBox->OnComponentBeginOverlap.Add(BeginDelegateSubscriber);
 
-	FScriptDelegate EndDelegateSubscriber;
-	EndDelegateSubscriber.BindUFunction(this, "OnDoorCrossingEnd");
-	CollisionBox->OnComponentEndOverlap.Add(EndDelegateSubscriber);
+		FScriptDelegate EndDelegateSubscriber;
+		EndDelegateSubscriber.BindUFunction(this, "OnDoorCrossingEnd");
+		CollisionBox->OnComponentEndOverlap.Add(EndDelegateSubscriber);
+	}
 }
 
 void APuzzleDoor::Tick(float DeltaTime)
@@ -58,18 +61,21 @@ void APuzzleDoor::OpenDoor_Implementation()
 {
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	Animator->PlayReverse();
-	Audio->Play();
+	PlayAudio();
 }
 
 void APuzzleDoor::CloseDoor_Implementation()
 {
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 	Animator->PlayForward();
-	Audio->Play();
+	bDoorClosed = true;
+	PlayAudio();
 }
 
-void APuzzleDoor::OnDoorCrossingBegin_Implementation(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void APuzzleDoor::OnDoorCrossingBegin(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (bDoorClosed) return;
+
 	AMainCharacter* Character = Cast<AMainCharacter>(OtherActor);
 	if (Character)
 	{
@@ -81,7 +87,7 @@ void APuzzleDoor::OnDoorCrossingBegin_Implementation(UBoxComponent* Component, A
 	}
 }
 
-void APuzzleDoor::OnDoorCrossingEnd_Implementation(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void APuzzleDoor::OnDoorCrossingEnd(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	AMainCharacter* Character = Cast<AMainCharacter>(OtherActor);
 	if (Character)
@@ -98,7 +104,12 @@ void APuzzleDoor::OnDoorCrossingEnd_Implementation(UBoxComponent* Component, AAc
 		bOverlapBegun = false;
 		if (CurrentPassengers == AllowedPassengers)
 		{
-			GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &APuzzleDoor::CloseDoor, 0.5f, false);
+			GetWorld()->GetTimerManager().SetTimer(CloseTimerHandle, this, &APuzzleDoor::CloseDoor, 0.05f, false);
 		}
 	}
+}
+
+void APuzzleDoor::PlayAudio_Implementation()
+{
+	Audio->Play();
 }

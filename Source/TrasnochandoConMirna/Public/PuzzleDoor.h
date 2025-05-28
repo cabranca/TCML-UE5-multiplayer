@@ -29,10 +29,10 @@ public:
 
 	/***ACTIONS***/
 
-	UFUNCTION(NetMulticast, Reliable) void OpenDoor();
+	UFUNCTION(Server, Reliable) void OpenDoor();
 
 private:
-	UFUNCTION(NetMulticast, Reliable) void CloseDoor();
+	UFUNCTION(Server, Reliable) void CloseDoor();
 
 	
 	/***COMPONENTS***/
@@ -58,13 +58,16 @@ private:
 
 	bool bOverlapBegun = false;
 
+	bool bDoorClosed = false;
+
 	// Helper for timing
-	FTimerHandle SpawnTimerHandle;
+	FTimerHandle CloseTimerHandle;
 
-	UFUNCTION(NetMulticast, Reliable) void OnDoorCrossingBegin(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION() void OnDoorCrossingBegin(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	UFUNCTION(NetMulticast, Reliable) void OnDoorCrossingEnd(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UFUNCTION() void OnDoorCrossingEnd(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION(NetMulticast, Reliable) void PlayAudio();
 	/***MISC***/
 
 	friend class PuzzleManager;
