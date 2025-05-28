@@ -4,18 +4,17 @@
 #include "GameFramework/Actor.h"
 #include "AIPatrolPathPoint.generated.h"
 
-// Forward declarations
+// Forward declarations.
 class UArrowComponent;
 
-// Point with a Mesh and Arrow for development to fill the AI patrol path
+// Point with a Mesh and Arrow for development to fill the AI patrol path.
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AAIPatrolPathPoint : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
-	AAIPatrolPathPoint();
+	AAIPatrolPathPoint(); // Sets default values for this component's properties
 
 private:
 	friend class UBTTask_Patrol;

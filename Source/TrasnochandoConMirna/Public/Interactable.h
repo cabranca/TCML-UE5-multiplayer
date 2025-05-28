@@ -13,9 +13,7 @@ class UInteractable : public UInterface
 	GENERATED_BODY()
 };
 
-/**
- * 
- */
+// Interface for the objects that accept an interaction.
 class TRASNOCHANDOCONMIRNA_API IInteractable
 {
 	GENERATED_BODY()

@@ -1,14 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameplayGameMode.generated.h"
 
-/**
- * 
- */
+// Game mode only used on the gameplay phase.
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AGameplayGameMode : public AGameModeBase
 {

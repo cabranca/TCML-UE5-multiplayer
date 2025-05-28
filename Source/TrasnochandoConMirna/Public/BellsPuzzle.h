@@ -6,21 +6,20 @@
 
 #include "BellsPuzzle.generated.h"
 
-// Forward declarations
+// Forward declarations.
 class AEarrings;
 class ASimpleAnimatedObject;
 
+// Class that manages the bells puzzle.
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API ABellsPuzzle : public APuzzleBase
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
-	ABellsPuzzle();
+	ABellsPuzzle(); // Sets default values for this component's properties
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
@@ -29,13 +28,16 @@ public:
 private:
 	/***COMPONENTS***/
 
-	UPROPERTY(EditAnywhere) UAudioComponent* PedestalSFX;
-	UPROPERTY(EditAnywhere) UAudioComponent* ErrorSFX;
+	UPROPERTY(EditAnywhere) UAudioComponent* BookshelfSFX; // SFX for when the bookshelf is moved.
+	UPROPERTY(EditAnywhere) UAudioComponent* ErrorSFX; // SFX for when the puzzle is failed (Not in use for now).
 
-	TArray<FName> PuzzleSolution;
-	uint8 SolutionIndex;
-	UPROPERTY(EditAnywhere) AEarrings* Salt;
-	UPROPERTY(EditAnywhere) ASimpleAnimatedObject* Pedestal;
+
+	/***PUZZLE***/
+
+	TArray<FName> PuzzleSolution; // Sequence of notes that solves the puzzle.
+	uint8 SolutionIndex; // Index to iterate the PuzzleSolution.
+	UPROPERTY(EditAnywhere) AEarrings* Salt; // Reward of the puzzle.
+	UPROPERTY(EditAnywhere) ASimpleAnimatedObject* Bookshelf; // Object that hides the salt and must be moved.
 
 	UFUNCTION(NetMulticast, Reliable) void OnPuzzleFailed();
 

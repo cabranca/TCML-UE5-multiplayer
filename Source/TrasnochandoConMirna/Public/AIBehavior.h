@@ -21,8 +21,7 @@ class TRASNOCHANDOCONMIRNA_API UAIBehavior : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
-	UAIBehavior();
+	UAIBehavior(); // Sets default values for this component's properties
 
 private:
 	friend class UBTTask_Patrol;

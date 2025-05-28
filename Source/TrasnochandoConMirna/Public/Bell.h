@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -16,7 +14,7 @@ class TRASNOCHANDOCONMIRNA_API ABell : public AInteractableObject
 	GENERATED_BODY()
 	
 public:
-	ABell();
+	ABell(); // Sets default values for this component's properties
 
 	void ServerInteract_Implementation(AMainCharacter* MainCharacter) override;
 

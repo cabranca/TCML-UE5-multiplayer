@@ -12,8 +12,8 @@ ABellsPuzzle::ABellsPuzzle()
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 
-	PedestalSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("PedestalSFX"));
-	PedestalSFX->SetIsReplicated(true);
+	BookshelfSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("PedestalSFX"));
+	BookshelfSFX->SetIsReplicated(true);
 
 	ErrorSFX = CreateDefaultSubobject<UAudioComponent>(TEXT("ErrorSFX"));
 	ErrorSFX->SetIsReplicated(true);
@@ -47,7 +47,7 @@ void ABellsPuzzle::ValidateSolution_Implementation(AInteractableObject* Sender)
 
 		if (SolutionIndex == PuzzleSolution.Num())
 		{
-			Pedestal->PlayForward();
+			Bookshelf->PlayForward();
 			Salt->PlayForward();
 			IInteractable::Execute_SetCanInteract(Salt, true);
 			OnPuzzleSolved();
@@ -62,5 +62,5 @@ void ABellsPuzzle::OnPuzzleFailed_Implementation()
 
 void ABellsPuzzle::OnPuzzleSolved_Implementation()
 { 
-	PedestalSFX->Play();
+	BookshelfSFX->Play();
 }
