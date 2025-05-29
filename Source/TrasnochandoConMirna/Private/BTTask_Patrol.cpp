@@ -14,6 +14,7 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 			if (Mirna)
 			{
 				AIController = MirnaController;
+				AIController->ReceiveMoveCompleted.AddDynamic(this, &UBTTask_Patrol::OnMoveCompleted);
 				PatrolType = Mirna->AIBehavior->PatrolType;
 				Points = Mirna->AIBehavior->PatrolPoints;
 			}
@@ -34,8 +35,6 @@ EBTNodeResult::Type UBTTask_Patrol::MoveToNextPoint()
 	AAIPatrolPathPoint* CurrentPoint = Keys[CurrentIndex];
 	const FVector Destination = CurrentPoint->GetActorLocation();
 	EPathFollowingRequestResult::Type Result = AIController->MoveToLocation(Destination, 5.0, false, true);
-	
-	AIController->ReceiveMoveCompleted.AddDynamic(this, &UBTTask_Patrol::OnMoveCompleted);
 	
 	return EBTNodeResult::InProgress;
 }
