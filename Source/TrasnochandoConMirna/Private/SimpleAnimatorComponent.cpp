@@ -29,9 +29,7 @@ void USimpleAnimatorComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
     ElapsedTime += DeltaTime;
     float Alpha = FMath::Clamp(ElapsedTime / AnimationDuration, 0.0f, 1.0f);
 
-    FVector NewLocation = bForward
-        ? FMath::Lerp(StartLocation, EndLocation, Alpha)
-        : FMath::Lerp(EndLocation, StartLocation, Alpha);
+    FVector NewLocation = FMath::Lerp(RuntimeStartLocation, RuntimeEndLocation, Alpha);
 
     TargetMesh->SetRelativeLocation(NewLocation);
 
@@ -45,6 +43,9 @@ void USimpleAnimatorComponent::PlayForward()
 {
     if (TargetMesh && AnimationDuration > 0)
     {
+        RuntimeStartLocation = TargetMesh->GetRelativeLocation();
+        RuntimeEndLocation = EndLocation;
+
         bIsAnimating = true;
         bForward = true;
         ElapsedTime = 0.0f;
@@ -55,6 +56,9 @@ void USimpleAnimatorComponent::PlayReverse()
 {
     if (TargetMesh && AnimationDuration > 0)
     {
+        RuntimeStartLocation = TargetMesh->GetRelativeLocation();
+        RuntimeEndLocation = StartLocation;
+
         bIsAnimating = true;
         bForward = false;
         ElapsedTime = 0.0f;
