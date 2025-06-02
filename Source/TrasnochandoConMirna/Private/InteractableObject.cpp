@@ -54,6 +54,11 @@ UStaticMeshComponent* AInteractableObject::GetMeshToGrab_Implementation()
 	return StaticMesh;
 }
 
+bool AInteractableObject::IsLootable_Implementation()
+{
+	return false;
+}
+
 void AInteractableObject::Highlight_Implementation(bool bEnabled)
 {
 	if (OutlineOverlay)

@@ -14,6 +14,7 @@ class TRASNOCHANDOCONMIRNA_API ALootableObject : public AInteractableObject
 	
 public:
 	void ServerInteract_Implementation(AMainCharacter* MainCharacter) override;
+	virtual bool IsLootable_Implementation() override;
 
 private:
 	UFUNCTION(NetMulticast, Reliable) void MulticastDestroyObject();

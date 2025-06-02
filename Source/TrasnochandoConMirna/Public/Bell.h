@@ -24,11 +24,6 @@ private:
 	UPROPERTY(EditAnywhere) UAudioComponent* SFX; // Bell SFX to play.
 	
 
-	/***PUZZLE***/
-
-public:
-	UPROPERTY(EditAnywhere) FName Tag; // Tone of the sound, used by the Puzzle to validate the solution.
-
 private:
 	UPROPERTY(EditAnywhere) ABellsPuzzle* Puzzle; // Puzzle that validates the solution.
 

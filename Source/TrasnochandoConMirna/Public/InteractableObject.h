@@ -23,6 +23,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	UPROPERTY(EditAnywhere) FName Tag;
+
 	/***IINTERACTABLE***/
 
 	UFUNCTION(Server, Reliable) virtual void ServerInteract(AMainCharacter* MainCharacter) override;
@@ -34,6 +36,8 @@ public:
 	virtual bool CanGrab_Implementation() override;
 
 	virtual UStaticMeshComponent* GetMeshToGrab_Implementation() override;
+
+	virtual bool IsLootable_Implementation() override;
 
 	virtual void Highlight_Implementation(bool bEnabled) override;
 
@@ -52,6 +56,7 @@ protected:
 	/***MATERIALS***/
 
 	UPROPERTY(EditAnywhere) UMaterialInterface* OutlineOverlay;
+
 
 	/***VARIABLES***/
 

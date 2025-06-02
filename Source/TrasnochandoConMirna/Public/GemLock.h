@@ -53,5 +53,4 @@ private:
 
 	TArray<FVector> GemPositions; // The user must indicate bottom and top positions and the middle one will be interpolated.
 	int32 CurrentIndex = 0; // Current index of the gem position.
-	UPROPERTY(EditAnywhere) FName Tag;
 };

@@ -9,3 +9,8 @@ void ALootableObject::MulticastDestroyObject_Implementation()
 {
 	Destroy();
 }
+
+bool ALootableObject::IsLootable_Implementation()
+{
+	return true;
+}

@@ -33,6 +33,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent) UStaticMeshComponent* GetMeshToGrab();
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent) bool IsLootable();
+
 
 	/***SETTERS***/
 
