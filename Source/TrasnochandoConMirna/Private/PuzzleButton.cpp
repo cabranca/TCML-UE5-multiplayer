@@ -10,27 +10,15 @@ APuzzleButton::APuzzleButton()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	Animator = CreateDefaultSubobject<USimpleAnimatorComponent>(TEXT("Animator"));
-	Animator->TargetMesh = StaticMesh;
-}
-
-// Called when the game starts or when spawned
-void APuzzleButton::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-// Called every frame
-void APuzzleButton::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
+	Translator = CreateDefaultSubobject<USimpleAnimatorComponent>(TEXT("Translator"));
+	Translator->TargetMesh = StaticMesh;
 }
 
 void APuzzleButton::ServerInteract_Implementation(AMainCharacter* MainCharacter)
 {
 	if (bCanInteract)
 	{
-		Animator->PlayForward();
+		Translator->PlayForward();
 		if (Puzzle)
 		{
 			Puzzle->ValidateSolution(this);
@@ -45,5 +33,5 @@ void APuzzleButton::ServerInteract_Implementation(AMainCharacter* MainCharacter)
 
 void APuzzleButton::Release()
 {
-	Animator->PlayReverse();
+	Translator->PlayReverse();
 }

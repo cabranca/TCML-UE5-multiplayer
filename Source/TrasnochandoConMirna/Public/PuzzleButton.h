@@ -19,22 +19,15 @@ public:
 	// Sets default values for this actor's properties
 	APuzzleButton();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	void ServerInteract_Implementation(AMainCharacter* MainCharacter) override;
 
+	// Calls the rotator animation.
 	void Release();
 
 private:
 	/***COMPONENTS***/
 
-	UPROPERTY(VisibleAnyWhere) USimpleAnimatorComponent* Animator;
+	UPROPERTY(VisibleAnyWhere) USimpleAnimatorComponent* Translator;
 
 	/***ACTORS***/
 	
