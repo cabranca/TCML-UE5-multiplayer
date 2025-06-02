@@ -136,6 +136,10 @@ private:
 	
 	UUserWidget* InteractionPrompt;
 
+	UPROPERTY(EditAnywhere) TSubclassOf<UUserWidget> DiaryWidget;
+
+	UUserWidget* Diary;
+
 	void LookForInteraction();
 
 	void DrawDebugLineToLocation(const FVector TargetLocation, FColor Color) const;
@@ -152,9 +156,9 @@ private:
 
 	UFUNCTION(NetMulticast, Reliable) void MulticastDropObject(APedestal* Pedestal, AInteractableObject* Object);
 
-	UFUNCTION(Client, Reliable) void SetInteractionPrompt();
+	UFUNCTION(Client, Reliable) void SetInteractionPrompt(UUserWidget* Widget);
 
-	UFUNCTION(Client, Reliable) void SetInteractionPromptVisibility(ESlateVisibility Visibility);
+	UFUNCTION(Client, Reliable) void SetInteractionPromptVisibility(UUserWidget* Widget, ESlateVisibility Visibility, bool bUIFocused);
 
 
 	/***NOISE SYSTEM***/

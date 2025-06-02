@@ -10,6 +10,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Perception/AISense_Hearing.h"
 #include "Components/CapsuleComponent.h"
+#include "Diary.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -50,11 +51,24 @@ void AMainCharacter::BeginPlay()
 			InteractionPrompt = CreateWidget<UUserWidget>(PlayerController, InteractionWidget);
 			if (InteractionPrompt)
 			{
-				SetInteractionPrompt();
+				SetInteractionPrompt(InteractionPrompt);
 			}
 			else
 			{
-				UE_LOG(LogTemp, Error, TEXT("Could not create widget"));
+				UE_LOG(LogTemp, Error, TEXT("Could not create InteractionPrompt"));
+			}
+		}
+
+		if (DiaryWidget)
+		{
+			Diary = CreateWidget<UUserWidget>(PlayerController, DiaryWidget);
+			if (Diary)
+			{
+				SetInteractionPrompt(Diary);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Could not create Diary"));
 			}
 		}
 	}
@@ -222,11 +236,17 @@ void AMainCharacter::Interact(const FInputActionValue& Value)
 		{
 			if (IInteractable::Execute_CanGrab(TargetActor))
 			{
-				SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
+				SetInteractionPromptVisibility(InteractionPrompt, ESlateVisibility::Collapsed, false);
 				ServerGrabObject(TargetActor);
 				GrabbedActor = TargetActor;
 			}
 			ServerInteract(TargetActor);
+
+			// TODO: Find another way to do this.
+			if (Cast<ADiary>(TargetActor))
+			{
+				SetInteractionPromptVisibility(Diary, ESlateVisibility::Visible, true);
+			}
 		}
 	}
 	else if (HoveredPedestal)
@@ -297,7 +317,7 @@ void AMainCharacter::LookForInteraction()
 		AInteractableObject* Interactable = Cast<AInteractableObject>(Hit.GetActor());
 		if (Interactable && Interactable != TargetActor)
 		{
-			SetInteractionPromptVisibility(ESlateVisibility::Visible);
+			SetInteractionPromptVisibility(InteractionPrompt, ESlateVisibility::Visible, false);
 			if (TargetActor)
 			{
 				IInteractable::Execute_Highlight(TargetActor, false);
@@ -307,14 +327,14 @@ void AMainCharacter::LookForInteraction()
 		}
 		else if (!Interactable && TargetActor)
 		{
-			SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
+			SetInteractionPromptVisibility(InteractionPrompt, ESlateVisibility::Collapsed, false);
 			IInteractable::Execute_Highlight(TargetActor, false);
 			TargetActor = nullptr;
 		}
 	}
 	else if (TargetActor)
 	{
-			SetInteractionPromptVisibility(ESlateVisibility::Collapsed);
+			SetInteractionPromptVisibility(InteractionPrompt, ESlateVisibility::Collapsed, false);
 			IInteractable::Execute_Highlight(TargetActor, false);
 			TargetActor = nullptr;
 	}
@@ -394,24 +414,34 @@ void AMainCharacter::MulticastDropObject_Implementation(APedestal* Pedestal, AIn
 	Pedestal->PlaceObject(Object);
 }
 
-void AMainCharacter::SetInteractionPrompt_Implementation()
+void AMainCharacter::SetInteractionPrompt_Implementation(UUserWidget* Widget)
 {
-	if (!InteractionPrompt->AddToPlayerScreen())
+	if (!Widget->AddToPlayerScreen())
 	{
-		UE_LOG(LogTemp, Error, TEXT("Could not add interaction prompt to player screen"));
+		UE_LOG(LogTemp, Error, TEXT("Could not add widget to player screen"));
 	}
-	InteractionPrompt->SetVisibility(ESlateVisibility::Collapsed);
+	Widget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void AMainCharacter::SetInteractionPromptVisibility_Implementation(ESlateVisibility Visibility)
+void AMainCharacter::SetInteractionPromptVisibility_Implementation(UUserWidget* Widget, ESlateVisibility Visibility, bool bUIFocused)
 {
-	if (InteractionPrompt)
+	if (Widget)
 	{
-		InteractionPrompt->SetVisibility(Visibility);
+		Widget->SetVisibility(Visibility);
+		if (bUIFocused)
+		{
+			FInputModeGameAndUI InputMode;
+			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			InputMode.SetHideCursorDuringCapture(false);
+			InputMode.SetWidgetToFocus(Widget->TakeWidget());
+			APlayerController* PlayerController = Cast<APlayerController>(Controller);
+			PlayerController->SetInputMode(InputMode);
+			PlayerController->bShowMouseCursor = true;
+		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Interaction Prompt is null"));
+		UE_LOG(LogTemp, Error, TEXT("Widget is null"));
 	}
 }
 
