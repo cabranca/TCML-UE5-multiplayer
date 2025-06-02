@@ -9,7 +9,7 @@
 class UStaticMeshComponent;
 class UArrowComponent;
 class UBoxComponent;
-class USimpleAnimatorComponent;
+class USimpleRotatorComponent;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API APuzzleDoor : public AActor
@@ -47,7 +47,7 @@ private:
 
 	UPROPERTY(EditAnywhere) UAudioComponent* Audio;
 
-	UPROPERTY(VisibleAnywhere) USimpleAnimatorComponent* Animator;
+	UPROPERTY(VisibleAnywhere) USimpleRotatorComponent* Rotator;
 
 
 	/***OVERLAP***/

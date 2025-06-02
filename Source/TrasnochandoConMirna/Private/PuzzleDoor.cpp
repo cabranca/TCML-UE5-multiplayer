@@ -5,7 +5,7 @@
 #include "Components/AudioComponent.h"
 #include "MainCharacter.h"
 #include "Components/BoxComponent.h"
-#include "SimpleAnimatorComponent.h"
+#include "SimpleRotatorComponent.h"
 
 // Sets default values
 APuzzleDoor::APuzzleDoor()
@@ -31,8 +31,8 @@ APuzzleDoor::APuzzleDoor()
 	Arrow->SetupAttachment(RootComponent);
 	Arrow->SetRelativeLocation(FVector::ZeroVector);
 
-	Animator = CreateDefaultSubobject<USimpleAnimatorComponent>(TEXT("Animator"));
-	Animator->TargetMesh = StaticMesh;
+	Rotator = CreateDefaultSubobject<USimpleRotatorComponent>(TEXT("Rotator"));
+	Rotator->TargetMesh = StaticMesh;
 }
 
 // Called when the game starts or when spawned
@@ -60,14 +60,14 @@ void APuzzleDoor::Tick(float DeltaTime)
 void APuzzleDoor::OpenDoor_Implementation()
 {
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-	Animator->PlayReverse();
+	Rotator->PlayReverse();
 	PlayAudio();
 }
 
 void APuzzleDoor::CloseDoor_Implementation()
 {
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
-	Animator->PlayForward();
+	Rotator->PlayForward();
 	bDoorClosed = true;
 	PlayAudio();
 }
