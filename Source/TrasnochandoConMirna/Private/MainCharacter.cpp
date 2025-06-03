@@ -91,7 +91,7 @@ void AMainCharacter::Tick(float DeltaTime)
 		ProduceNoise(); //TODO: check if this can be called only on Server
 	}
 
-	if (!HasAuthority() && IsLocallyControlled())
+	if (IsLocallyControlled())
 	{
 		if (GrabbedActor)
 		{
