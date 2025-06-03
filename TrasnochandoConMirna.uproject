@@ -23,7 +23,7 @@
 			]
 		},
 		{
-			"Name": "OnlineServicesNull",
+			"Name": "OnlineSubsystemSteam",
 			"Enabled": true
 		}
 	]
