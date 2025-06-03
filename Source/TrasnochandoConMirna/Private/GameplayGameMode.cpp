@@ -11,13 +11,6 @@ void AGameplayGameMode::BeginPlay()
 void AGameplayGameMode::SetLootedObject(FName Tag)
 {
 	LootedObjects[Tag] = true;
-	for (auto& [ObjectTag, Looted] : LootedObjects)
-	{
-		if (!Looted)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("OBJECT NOT LOOTED YET"));
-		}
-	}
 }
 
 bool AGameplayGameMode::PlayerHasWon() const
@@ -26,7 +19,6 @@ bool AGameplayGameMode::PlayerHasWon() const
 	{
 		if (!Looted)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("OBJECT NOT LOOTED YET"));
 			return false;
 		}
 	}
