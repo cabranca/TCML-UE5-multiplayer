@@ -11,6 +11,8 @@
 #include "Perception/AISense_Hearing.h"
 #include "Components/CapsuleComponent.h"
 #include "Diary.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameplayGameMode.h"
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -347,6 +349,14 @@ void AMainCharacter::DrawDebugLineToLocation(const FVector TargetLocation, FColo
 
 void AMainCharacter::ServerInteract_Implementation(AInteractableObject* Object)
 {
+	if (IInteractable::Execute_IsLootable(Object))
+	{
+		AGameplayGameMode* GameMode = Cast<AGameplayGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		if (GameMode)
+		{
+			GameMode->SetLootedObject(Object->Tag);
+		}
+	}
 	Object->ServerInteract(this);
 	MulticastPlayInteractMontage();
 }
