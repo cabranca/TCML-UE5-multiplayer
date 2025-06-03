@@ -12,4 +12,12 @@ class TRASNOCHANDOCONMIRNA_API AGameplayGameMode : public AGameModeBase
 	
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	void SetLootedObject(FName Tag);
+
+	UFUNCTION(BlueprintCallable) bool PlayerHasWon() const;
+
+private:
+	TMap<FName, bool> LootedObjects;
 };
