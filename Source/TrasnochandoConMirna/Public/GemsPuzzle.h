@@ -8,6 +8,8 @@
 
 // Forward declarations.
 class AGemLock;
+class ASimpleAnimatedObject;
+class UAudioComponent;
 
 // Validates the value of the gems positions.
 UCLASS()
@@ -28,11 +30,13 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere) TArray<AGemLock*> GemLocks; //Locks used to solve the puzzle.
+	UPROPERTY(EditAnywhere) ASimpleAnimatedObject* ExitDoor;
+	UPROPERTY(EditAnywhere) UAudioComponent* DoorSFX;
 
 	//TODO: Add exit door.
 
 	TMap<FName, int8> PuzzleSolution;
 	TMap<FName, int8> CurrentGemPositions;
 
-	UFUNCTION(Server, Reliable) void OnPuzzleSolved();
+	UFUNCTION(NetMulticast, Reliable) void OnPuzzleSolved();
 };
