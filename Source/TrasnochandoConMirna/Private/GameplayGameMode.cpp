@@ -5,7 +5,7 @@ void AGameplayGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	LootedObjects = { {"PAINTING", false}, {"SALT", false}, {"EARRINGS", false}, {"DYE", true} };
+	LootedObjects = { {"PAINTING", false}, {"SALT", false}, {"EARRINGS", false}, {"DYE", true}, {"BRACELET_MIRNA", false}, {"BRACELET_GOLDINA", false} };
 }
 
 void AGameplayGameMode::SetLootedObject(FName Tag)
