@@ -14,10 +14,15 @@ class TRASNOCHANDOCONMIRNA_API AMirna : public ACharacter
 
 public:
 	AMirna();
+
+protected:
+	virtual void BeginPlay() override;
 	
 private:
 	friend class UBTTask_Patrol;
 
 	UPROPERTY(EditAnywhere)
 	UAIBehavior* AIBehavior;
+
+	UPROPERTY(EditAnywhere, Category = "Speed") float WalkSpeed = 200.f;
 };

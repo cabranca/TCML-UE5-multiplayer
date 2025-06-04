@@ -38,6 +38,7 @@ void AMainCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+	GetCharacterMovement()->MaxWalkSpeedCrouched = CrouchSpeed;
 
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	if (PlayerController)
@@ -83,7 +84,7 @@ void AMainCharacter::Tick(float DeltaTime)
 
 	UpdateStamina(DeltaTime);
 
-	float CrouchInterpTime = FMath::Min(1.f, CrouchSpeed * DeltaTime);
+	float CrouchInterpTime = FMath::Min(1.f, CrouchActionSpeed * DeltaTime);
 	CrouchEyeOffset = (1.f - CrouchInterpTime) * CrouchEyeOffset;
 
 	if (GetVelocity().Length() > 0)

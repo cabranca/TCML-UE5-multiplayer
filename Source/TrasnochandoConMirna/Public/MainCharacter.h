@@ -53,7 +53,7 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category = "Crouching") FVector CrouchEyeOffset = FVector::ZeroVector;
 
-	UPROPERTY(EditAnywhere, Category = "Crouching") float CrouchSpeed = 200.f;
+	UPROPERTY(EditAnywhere, Category = "Crouching") float CrouchActionSpeed = 200.f;
 
 
 	/***COMPONENTS***/
@@ -92,17 +92,19 @@ private:
 	void Interact(const FInputActionValue& Value);
 
 
-	/***RUNNING***/
+	/***MOVEMENT***/
 
-	UPROPERTY(EditAnywhere, Category = "Running") float RunSpeed = 800.f;
+	UPROPERTY(EditAnywhere, Category = "Movement") float RunSpeed = 600.f;
 
-	UPROPERTY(EditAnywhere, Category = "Running") float WalkSpeed = 500.f;
+	UPROPERTY(EditAnywhere, Category = "Movement") float WalkSpeed = 200.f;
 
-	UPROPERTY(EditAnywhere, Category = "Running") float StaminaLossRate = 1.f;
+	UPROPERTY(EditAnywhere, Category = "Movement") float CrouchSpeed = 150.f;
 
-	UPROPERTY(EditAnywhere, Category = "Running") float StaminaRecoveryRate = 2.f;
+	UPROPERTY(EditAnywhere, Category = "Movement") float StaminaLossRate = 1.f;
 
-	UPROPERTY(EditAnywhere, Category = "Running") float StaminExhaustedRecoveryRate = 1.f;
+	UPROPERTY(EditAnywhere, Category = "Movement") float StaminaRecoveryRate = 2.f;
+
+	UPROPERTY(EditAnywhere, Category = "Movement") float StaminExhaustedRecoveryRate = 1.f;
 
 	float CurrentStamina = 100.f;
 
