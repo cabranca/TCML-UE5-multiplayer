@@ -80,3 +80,4 @@ Export/*
 
 # Other
 *.bak
+/Documentation
