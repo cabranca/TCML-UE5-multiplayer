@@ -2,6 +2,7 @@
 
 #include "AIBehavior.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AMirna::AMirna()
 {
@@ -15,4 +16,17 @@ void AMirna::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+
+void AMirna::PlayFootstepNotify()
+{
+	MulticastPlayFootstepSound(GetActorLocation());
+}
+
+void AMirna::MulticastPlayFootstepSound_Implementation(const FVector& Location)
+{
+	if (FootstepSFX)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, FootstepSFX, Location, 1.f, 1.f, 0.f, FootstepSFXAttenuation);
+	}
 }

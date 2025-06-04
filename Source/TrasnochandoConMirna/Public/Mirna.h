@@ -17,12 +17,20 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	void PlayFootstepNotify();
 	
 private:
 	friend class UBTTask_Patrol;
 
-	UPROPERTY(EditAnywhere)
-	UAIBehavior* AIBehavior;
+	UPROPERTY(EditAnywhere) UAIBehavior* AIBehavior;
 
 	UPROPERTY(EditAnywhere, Category = "Speed") float WalkSpeed = 200.f;
+
+	UPROPERTY(EditAnywhere, Category = "Audio") USoundBase* FootstepSFX;
+
+	UPROPERTY(EditAnywhere, Category = "Audio") USoundAttenuation* FootstepSFXAttenuation;
+
+	UFUNCTION(NetMulticast, Reliable) void MulticastPlayFootstepSound(const FVector& Location);
 };
