@@ -80,4 +80,7 @@ Export/*
 
 # Other
 *.bak
-/Documentation
+
+# Documentation
+*.obsidian*
+Documentation/GameDesignDocument/export/lib*
