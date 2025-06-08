@@ -6,9 +6,11 @@ Como percepción principal, Mirna posee una visión en forma de cono con "n" cm 
 
 Como percepción secundaria, Mirna posee también un oído que registra ruidos de manera radial de acuerdo a la fórmula
 
-							 $y =  100db/cm * x + 10db$
+$$
+y = 100\,\mathrm{dB/cm} \cdot x + 10\,\mathrm{dB}
+$$
 
-donde _y_ es el ruido mínimo que Mirna puede escuchar (medido en db) dado _x_ que es la distancia entre Mirna y el origen del ruido (medida en cm).
+donde _y_ es el ruido mínimo que Mirna puede escuchar (medido en dB) dado _x_ que es la distancia entre Mirna y el origen del ruido (medida en cm).
 
 ## Árbol de comportamiento
 
