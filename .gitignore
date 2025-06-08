@@ -83,3 +83,6 @@ Export/*
 
 # Documentation
 Documentation/GameDesignDocument/export/lib*
+Documentation/GameDesignDocument/.obsidian/workspace.json
+/Documentation/GameDesignDocument/.obsidian/plugins
+Documentation/GameDesignDocument/.obsidian/community-plugins.json
