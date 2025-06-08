@@ -3,7 +3,7 @@
 Movimiento libre en 8 direcciones utilizando los inputs “WASD” del teclado. Velocidad estándar.
 
 ## **Agacharse:**
-Pone en cuclillas al personaje a partir de los inputs “Ctrl” o “C” del teclado. Reduce la altura y colisión del personaje en un 50%. Presionando nuevamente alguno de estos inputs, el personaje se vuelve a parar de forma normal.
+Pone en cuclillas al personaje a partir de los inputs “Ctrl” o “C” del teclado. Reduce la altura y colisión del personaje en un 50%. Presionando nuevamente alguno de estos inputs, el personaje se vuelve a parar de forma normal.a
 
 ## **Caminar agachado:**
 Combina la mecánica de agacharse con la de caminar. Avanzar de esta forma reduce la velocidad en un 50%.
