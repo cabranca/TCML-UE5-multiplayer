@@ -82,5 +82,4 @@ Export/*
 *.bak
 
 # Documentation
-*.obsidian*
 Documentation/GameDesignDocument/export/lib*
