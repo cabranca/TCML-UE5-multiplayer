@@ -1,4 +1,4 @@
-### **¿Por qué Mirtha Legrand?**
+### **¿Por qué Mirtha Legrand?**###
 
 Para el proyecto que debíamos realizar debía incluir una temática Local argentina. 
 
@@ -12,7 +12,7 @@ Es el enemigo constante de este nivel sin correr va a recorrer su [[Mansión Lem
 
 
 ### **Lore**
-Mirna fue una vez la persona más hermosa de la televisión Argentina idolatrada y amada por millones. Sin embargo, conforme pasaban los años, su belleza fue decayendo. Con miedo a perderlo todo y en contra de lo que su querida hermana [[Goldina Lemort]] deseaba para las dos, firmó un pacto con el demonio. A cambio de su alma, obtuvo la capacidad de absorber juventud. Desde entonces el programa Trasnochando con Mirna Lemort es solo una fachada de lo que realmente ocurre dentro de la [[Mansión Lemort]]. 
+Mirna fue una vez la persona más hermosa de la televisión Argentina idolatrada y amada por millones. Sin embargo, conforme pasaban los años, su belleza fue decayendo. Con miedo a perderlo todo y en contra de lo que su querida hermana [[Goldina Lemort]] deseaba para las dos, firmó un pacto con el demonio. A cambio de su alma, obtuvo la capacidad de absorber juventud y de poder borrar la memoria de sus victimas. Desde entonces el programa [[Trasnochando con Mirna]] es solo una fachada de lo que realmente ocurre dentro de la [[Mansión Lemort]]. 
 
 ## [[IA de Mirna|Comportamiento In-Game de Mirna]]
 
@@ -24,7 +24,8 @@ Las habilidades de Mirna Lemort son:
 - Detectar Sonidos y proximidad de sus enemigos.
 - Investigar zona.
 - Perseguir.
-- Matar.
+- Robar Juventud
+- Borrar Memoria
 
 ## **Intención de diseño/estilo Visual:  
 
@@ -37,4 +38,4 @@ La idea conceptual para el personaje de Mirna es que porte un aspecto amenazante
 Imagen Modelo 3D
 La paleta de colores de Mirna se apoya en su carácter vampiresco y sofisticado. Se usa un tono muy pálido para la piel, un amarillo desaturado para el pelo y un vestido rojo carmesí con varios detalles en dorado tanto en el vestido como en sus uñas. Los ojos de Mirna son de un rojo intenso, para enfatizar su mirada penetrante.
 
-**
+
