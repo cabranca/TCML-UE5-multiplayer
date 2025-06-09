@@ -1,4 +1,4 @@
-## Introducción 
+## Introducción##
 
 Este es el documento de diseño de _Trasnochando con Mirna Lemort_. Un videojuego para dos jugadores cooperativo en primera persona, desarrollado en Unreal Engine 5 para Windows PC.
 
