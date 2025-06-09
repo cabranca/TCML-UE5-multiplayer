@@ -1,10 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GemsPuzzle.h"
 
 #include "GemLock.h"
-#include "SimpleAnimatedObject.h"
+#include "ExitDoor.h"
 #include "Components/AudioComponent.h"
 
 AGemsPuzzle::AGemsPuzzle()
@@ -43,7 +40,7 @@ void AGemsPuzzle::ValidateSolution_Implementation(AInteractableObject* Trigger)
 		}
 		if (PuzzleSolved)
 		{
-			ExitDoor->PlayForward();
+			ExitDoor->OpenExitDoor();
 			for (auto& lock : GemLocks)
 			{
 				lock->OpenLock();

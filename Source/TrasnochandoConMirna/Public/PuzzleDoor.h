@@ -39,7 +39,9 @@ private:
 
 	UPROPERTY(EditAnywhere) USceneComponent* SceneComponent;
 
-	UPROPERTY(EditAnywhere) UStaticMeshComponent* StaticMesh;
+	UPROPERTY(EditAnywhere) UStaticMeshComponent* DoorMesh;
+
+	UPROPERTY(EditAnywhere) UStaticMeshComponent* HandleMesh;
 
 	UPROPERTY(EditAnywhere) UBoxComponent* CollisionBox;
 
@@ -47,7 +49,9 @@ private:
 
 	UPROPERTY(EditAnywhere) UAudioComponent* Audio;
 
-	UPROPERTY(VisibleAnywhere) USimpleRotatorComponent* Rotator;
+	UPROPERTY(VisibleAnywhere) USimpleRotatorComponent* DoorRotator;
+
+	UPROPERTY(VisibleAnywhere) USimpleRotatorComponent* HandleRotator;
 
 
 	/***OVERLAP***/

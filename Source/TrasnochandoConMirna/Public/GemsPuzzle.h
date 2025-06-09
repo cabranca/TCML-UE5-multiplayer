@@ -8,7 +8,7 @@
 
 // Forward declarations.
 class AGemLock;
-class ASimpleAnimatedObject;
+class AExitDoor;
 class UAudioComponent;
 
 // Validates the value of the gems positions.
@@ -30,7 +30,7 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere) TArray<AGemLock*> GemLocks; //Locks used to solve the puzzle.
-	UPROPERTY(EditAnywhere) ASimpleAnimatedObject* ExitDoor;
+	UPROPERTY(EditAnywhere) AExitDoor* ExitDoor;
 	UPROPERTY(EditAnywhere) UAudioComponent* DoorSFX;
 
 	//TODO: Add exit door.

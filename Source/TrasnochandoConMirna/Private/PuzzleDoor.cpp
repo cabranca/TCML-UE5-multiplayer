@@ -17,9 +17,13 @@ APuzzleDoor::APuzzleDoor()
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	RootComponent = SceneComponent;
 
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
-	StaticMesh->SetIsReplicated(true);
-	StaticMesh->SetupAttachment(RootComponent);
+	DoorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DoorMesh"));
+	DoorMesh->SetIsReplicated(true);
+	DoorMesh->SetupAttachment(RootComponent);
+
+	HandleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("HandleMesh"));
+	HandleMesh->SetIsReplicated(true);
+	HandleMesh->SetupAttachment(DoorMesh);
 
 	Audio = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio"));
 	Audio->SetupAttachment(RootComponent);
@@ -31,8 +35,11 @@ APuzzleDoor::APuzzleDoor()
 	Arrow->SetupAttachment(RootComponent);
 	Arrow->SetRelativeLocation(FVector::ZeroVector);
 
-	Rotator = CreateDefaultSubobject<USimpleRotatorComponent>(TEXT("Rotator"));
-	Rotator->TargetMesh = StaticMesh;
+	DoorRotator = CreateDefaultSubobject<USimpleRotatorComponent>(TEXT("DoorRotator"));
+	DoorRotator->TargetMesh = DoorMesh;
+
+	HandleRotator = CreateDefaultSubobject<USimpleRotatorComponent>(TEXT("HandleRotator"));
+	HandleRotator->TargetMesh = HandleMesh;
 }
 
 // Called when the game starts or when spawned
@@ -60,14 +67,16 @@ void APuzzleDoor::Tick(float DeltaTime)
 void APuzzleDoor::OpenDoor_Implementation()
 {
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-	Rotator->PlayReverse();
+	DoorRotator->PlayReverse();
+	HandleRotator->PlayReverse();
 	PlayAudio();
 }
 
 void APuzzleDoor::CloseDoor_Implementation()
 {
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
-	Rotator->PlayForward();
+	DoorRotator->PlayForward();
+	HandleRotator->PlayForward();
 	bDoorClosed = true;
 	PlayAudio();
 }
