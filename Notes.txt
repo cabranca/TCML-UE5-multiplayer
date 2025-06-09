@@ -1,0 +1,11 @@
+Bugs conocidos:
+	
+Ideas:
+	
+Optimizaciones:
+	
+FEEDBACK DE TESTING:
+	- Así como está el puzzle de campanas es muy difícil.
+		- Agregar una nota a la solución que la había sacado
+		- Usar wav original
+		- Dar vuelta campanas
