@@ -20,8 +20,8 @@ Mirna fue una vez la persona más hermosa de la televisión Argentina idolatrada
 
 Las habilidades de Mirna Lemort son:
 
-- Patrullar por la mansión caminando.
-- Detectar Sonidos y proximidad de sus enemigos.
+- Patrullar por la [[Mansión Lemort]] caminando.
+- Detectar [[Ruido]] y proximidad de sus enemigos. Ver más en [[IA de Mirna]]
 - Investigar zona.
 - Perseguir.
 - Robar Juventud
