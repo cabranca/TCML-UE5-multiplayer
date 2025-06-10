@@ -18,21 +18,22 @@ Cada mecánica ya mencionada maneja un nivel de ruido dentro del juego:
 	Correr: **+50%** del ruido estándar.
 
 ## **IA de Mirna:**
-Mirna posee un árbol de comportamiento definido por una Inteligencia artificial que sirve como sistema de detección de jugadores en base a estímulos auditivos y/o visuales.
+Mirna posee un árbol de comportamiento definido por una [[IA de Mirna|Inteligencia artificial]] que sirve como sistema de detección de jugadores en base a estímulos auditivos y/o visuales.
 
 ## **Interactuar con Objetos:**
-Con el input “E” del teclado, el jugador podrá interactuar con ciertos objetos del entorno. El efecto de la interacción depende de cada objeto en particular. Algunos se looten, otros cambian de estado (encendido, apagado), y otros tienen un efecto único.
+Con el input “E” del teclado, el jugador podrá [[Objetos Interactuables|interactuar con ciertos objetos]] del entorno. El efecto de la interacción depende de cada objeto en particular. Algunos se lootean, otros se agarran y se sueltan, otros cambian de estado (encendido, apagado), y algunos sirven para esconderse.
 
-	Estatuillas: Al interactuar, el objeto queda en pantalla para que el jugador lo cambie de lugar.
+	Armario: Esconderse dentro.
+	Estatuillas: Agarrar.
 	Pulseras de la amistad: Looteo.
+	Cuadro de Goldina: Looteo.
 	Botón: Cambio de estado (presionado/sin presionar).
 	Aretes de Mirna: Looteo.
-	Cuadro de Goldina: Looteo.
 	Fonógrafo: Cambio de estado (encendido/apagado).
 	Campanas: Cambio de estado (sonido/silencio).
 	Salerito: Looteo.
 	Tintura: Looteo.
-	Cerrojos: Cambio de estado (cerrado, cambio de posición en vertical de cada joya/abierto)
+	Cerrojos: Cambio de estado (cerrado, cambio de posición en vertical de cada joya/abierto).
 
 ## **Esconderse:**
 El jugador puede ocultarse dentro de armarios al estar adyacente a uno y presionando el input “E”.  
