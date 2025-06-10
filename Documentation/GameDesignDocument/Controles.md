@@ -1,17 +1,17 @@
 Los jugadores disponen del siguiente listado de controles para jugar e interactuar con la [[Interfaz de Usuario]].
 
 - **Movimiento**:
-	- **"WASD"** para desplazar al [[Influencer Foodie]]. ![[WASD 4.png]]
+	- **"WASD"** para desplazar al [[Influencer Foodie]]. ![[WASD.png]]
 	
-	- **"Mouse"** para rotar la cámara. ![[Mouse 2.png]]
+	- **"Mouse"** para rotar la cámara. ![[Mouse.png]]
 	
-	- **"Ctrl Izq"** o **"C"** para agacharse. ![[Ctrl 1.png]] / ![[C 1.png]]
+	- **"Ctrl Izq"** o **"C"** para agacharse. ![[Ctrl.png]] / ![[C.png]]
 	
-	- **"Shift Izq"** para correr. ![[Shift 1.png]]
+	- **"Shift Izq"** para correr. ![[Shift.png]]
 
 
 - **Interacción:
-- **"E"** para interactuar con objetos. ![[E 2.png]]
+- **"E"** para interactuar con objetos. ![[E.png]]
 	- Dependiendo del objeto interactuable, este responderá de una forma específica:
 		- Looteo directo al inventario.
 		- Sostener el objeto hasta soltarlo o ubicarlo en otra posición presionando nuevamente la tecla de interacción.
