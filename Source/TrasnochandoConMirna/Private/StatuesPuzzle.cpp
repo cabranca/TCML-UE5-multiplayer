@@ -33,7 +33,10 @@ void AStatuesPuzzle::ValidateSolution_Implementation(AInteractableObject* Trigge
 		for (auto& Door : Doors)
 		{
 			Door->OpenDoor();
+			Door->Deactivate();
 		}
+		SecretDoor->OpenDoor();
+		IInteractable::Execute_SetCanInteract(Trigger, false);
 		OnPuzzleSolved();
 	}
 	else if (!ValidationTrigger)

@@ -31,6 +31,8 @@ public:
 
 	UFUNCTION(Server, Reliable) void OpenDoor();
 
+	UFUNCTION(Server, Reliable) void Deactivate();
+
 private:
 	UFUNCTION(Server, Reliable) void CloseDoor();
 
@@ -63,6 +65,8 @@ private:
 	bool bOverlapBegun = false;
 
 	bool bDoorClosed = false;
+
+	bool bActivated = true;
 
 	// Helper for timing
 	FTimerHandle CloseTimerHandle;

@@ -32,6 +32,8 @@ private:
 
 	UPROPERTY(EditAnywhere) TArray<APuzzleDoor*> Doors;
 
+	UPROPERTY(EditAnywhere) APuzzleDoor* SecretDoor;
+
 	UFUNCTION(NetMulticast, Reliable) void OnClockFinished();
 
 	UFUNCTION(NetMulticast, Reliable) void PlayClock();

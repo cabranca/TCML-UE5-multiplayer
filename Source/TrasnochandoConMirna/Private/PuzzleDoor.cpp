@@ -72,6 +72,11 @@ void APuzzleDoor::OpenDoor_Implementation()
 	PlayAudio();
 }
 
+void APuzzleDoor::Deactivate_Implementation()
+{
+	bActivated = false;
+}
+
 void APuzzleDoor::CloseDoor_Implementation()
 {
 	CollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
@@ -83,7 +88,7 @@ void APuzzleDoor::CloseDoor_Implementation()
 
 void APuzzleDoor::OnDoorCrossingBegin(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (bDoorClosed) return;
+	if (bDoorClosed || !bActivated) return;
 
 	AMainCharacter* Character = Cast<AMainCharacter>(OtherActor);
 	if (Character)
@@ -98,6 +103,8 @@ void APuzzleDoor::OnDoorCrossingBegin(UBoxComponent* Component, AActor* OtherAct
 
 void APuzzleDoor::OnDoorCrossingEnd(UBoxComponent* Component, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (!bActivated) return;
+
 	AMainCharacter* Character = Cast<AMainCharacter>(OtherActor);
 	if (Character)
 	{
