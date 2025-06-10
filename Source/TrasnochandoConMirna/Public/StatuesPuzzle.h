@@ -6,8 +6,10 @@
 
 #include "StatuesPuzzle.generated.h"
 
+// Forward declarations
 class APuzzleDoor;
 class AStatue;
+class ASimpleAnimatedObject;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AStatuesPuzzle : public APuzzleBase
@@ -32,7 +34,7 @@ private:
 
 	UPROPERTY(EditAnywhere) TArray<APuzzleDoor*> Doors;
 
-	UPROPERTY(EditAnywhere) APuzzleDoor* SecretDoor;
+	UPROPERTY(EditAnywhere) ASimpleAnimatedObject* SecretDoor;
 
 	UFUNCTION(NetMulticast, Reliable) void OnClockFinished();
 

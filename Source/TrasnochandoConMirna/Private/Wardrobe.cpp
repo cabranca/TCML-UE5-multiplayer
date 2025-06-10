@@ -1,19 +1,23 @@
 #include "Wardrobe.h"
 
 #include "Camera/CameraComponent.h"
+#include "SimpleRotatorComponent.h"
 
 // Sets default values
 AWardrobe::AWardrobe()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	SetReplicateMovement(true);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(RootComponent);
 
 	DoorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DoorMesh"));
+	DoorMesh->SetIsReplicated(true);
 	DoorMesh->SetupAttachment(RootComponent);
+
+	DoorRotator = CreateDefaultSubobject<USimpleRotatorComponent>(TEXT("DoorRotator"));
+	DoorRotator->TargetMesh = DoorMesh;
 }
 
 // Called when the game starts or when spawned
@@ -43,6 +47,7 @@ void AWardrobe::ServerInteract_Implementation(AMainCharacter* MainCharacter)
 	{
 		HiddenCharacter = nullptr;
 	}
+	DoorRotator->PlayForward();
 	MulticastHidePlayer(MainCharacter);
 }
 

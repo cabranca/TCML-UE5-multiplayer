@@ -11,6 +11,7 @@
 // Forward declarations
 class UCameraComponent;
 class USphereComponent;
+class USimpleRotatorComponent;
 
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AWardrobe : public AInteractableObject
@@ -37,6 +38,8 @@ private:
 	UPROPERTY(EditAnywhere) UStaticMeshComponent* DoorMesh;
 
 	UPROPERTY(EditAnywhere) UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere) USimpleRotatorComponent* DoorRotator;
 
 
 	/***HIDING***/

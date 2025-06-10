@@ -34,6 +34,8 @@ public:
 
     UPROPERTY(EditAnywhere, Category = "Animation") bool bBeginsAtStart = true; // Whether the mesh starts at the StartRotation or EndRotation.
 
+    UPROPERTY(EditAnywhere, Category = "Animation") bool bRestartWhenPlay = false; // Whether the animation always starts from the beggining point.
+
 
     /***METHODS***/
 

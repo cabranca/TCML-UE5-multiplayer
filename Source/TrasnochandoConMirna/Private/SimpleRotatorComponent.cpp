@@ -19,7 +19,7 @@ void USimpleRotatorComponent::PlayForward()
 {
     if (TargetMesh && RotationDuration > 0)
     {
-        RuntimeStartRotation = TargetMesh->GetRelativeRotation();
+        RuntimeStartRotation = bRestartWhenPlay? StartRotation : TargetMesh->GetRelativeRotation();
         RuntimeEndRotation = EndRotation;
 
         bIsRotating = true;
@@ -32,7 +32,7 @@ void USimpleRotatorComponent::PlayReverse()
 {
     if (TargetMesh && RotationDuration > 0)
     {
-        RuntimeStartRotation = TargetMesh->GetRelativeRotation();
+        RuntimeStartRotation = bRestartWhenPlay? EndRotation : TargetMesh->GetRelativeRotation();
         RuntimeEndRotation = StartRotation;
 
         bIsRotating = true;

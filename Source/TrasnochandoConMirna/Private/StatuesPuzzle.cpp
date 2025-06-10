@@ -3,6 +3,7 @@
 #include "Components/AudioComponent.h"
 #include "PuzzleDoor.h"
 #include "Statue.h"
+#include "SimpleAnimatedObject.h"
 
 AStatuesPuzzle::AStatuesPuzzle()
 {
@@ -35,7 +36,7 @@ void AStatuesPuzzle::ValidateSolution_Implementation(AInteractableObject* Trigge
 			Door->OpenDoor();
 			Door->Deactivate();
 		}
-		SecretDoor->OpenDoor();
+		SecretDoor->PlayForward();
 		IInteractable::Execute_SetCanInteract(Trigger, false);
 		OnPuzzleSolved();
 	}
