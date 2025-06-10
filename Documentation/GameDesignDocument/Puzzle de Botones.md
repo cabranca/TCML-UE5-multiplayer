@@ -1,3 +1,3 @@
-Este puzzle transcurre en las [[Mansión Lemort|salas 05, 06 y 07]]. En la sala 05 y 07 hay un botón que el los jugadores pueden pulsar. Sin embargo, el botón de la sala 07 está oculto detrás del cuadro de Goldina y recién al lootearlo se revela. 
+Este puzzle transcurre en las [[Mansión Lemort|salas 05, 06 y 07]]. En la sala 05 y 07 hay un botón que los jugadores pueden pulsar. Sin embargo, el botón de la sala 07 está oculto detrás del cuadro de Goldina y recién al lootearlo se revela.
 
-Al pulsar cualquiera de los botones se inicia el mismo sistema de ventana temporal que con las estatuas con los mismos feedbacks sonoros. En caso de éxito, en la sala 06 deben surgir los aritos de Mirna en un pedestal para que los jugadores puedan tomarlos.
+Al pulsar cualquiera de los botones se inicia el mismo sistema de ventana temporal que con las estatuillas, con los mismos feedbacks sonoros. En caso de tener éxito, en la sala 06 se revela un pedestal con los aritos de Mirna que los jugadores pueden lootear.

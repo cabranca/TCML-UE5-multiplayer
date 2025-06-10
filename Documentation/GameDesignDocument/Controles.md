@@ -23,5 +23,5 @@ Los jugadores disponen del siguiente listado de controles para jugar e interactu
 	- **"Click Izq"** para seleccionar elementos de la interfaz. ![[L_click.png]]
 
 - **Chat in-game**:
-	- **"V"** para activar el chat de voz.
-	- **"Enter"** para activar el chat escrito.
+	- **"V"** para activar el chat de voz. ![[V.png]]
+	- **"Enter"** para activar el chat escrito. ![[Enter.png]]

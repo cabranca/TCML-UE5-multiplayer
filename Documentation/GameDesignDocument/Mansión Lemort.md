@@ -2,3 +2,4 @@ La mansión Lemort es la locación principal del juego donde se encuentran los [
 
 ![[Mansion_Lemort_36x56.png]]
 
+![[Escenario.png]]

@@ -1,0 +1,1 @@
+Acá escribimos sobre el inicio del juego, las instrucciones de goldina y los objetivos a cumplir. Básicamente el contexto previo antes de avanzar con los puzles.
