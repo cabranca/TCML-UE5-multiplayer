@@ -417,6 +417,8 @@ void AMainCharacter::ServerDropObject_Implementation(APedestal* Pedestal, AInter
 	UStaticMeshComponent* GrabbedMesh = IInteractable::Execute_GetMeshToGrab(Object);
 	GrabbedMesh->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 	GrabbedMesh->SetSimulatePhysics(true);
+	GrabbedMesh->SetPhysicsLinearVelocity(FVector::ZeroVector);
+	GrabbedMesh->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 	MulticastDropObject(Pedestal, Object);
 }
 
