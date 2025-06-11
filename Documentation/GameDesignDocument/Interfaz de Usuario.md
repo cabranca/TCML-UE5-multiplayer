@@ -20,27 +20,34 @@ La interfaz de usuario (UI) de *[[Trasnochando con Mirna]] busca mantener un est
 - Contorno del objeto interactuable: aparece un contorno blanco en los objetos interactuables al momento de hacer un hover sobre el.
 
 ### Menú de Pausa###
-IMAGEN
+![[menupausa.jpg]]
 El menú de pausa contiene los siguientes botones:
 
 - Reanudar
-- Reiniciar nivel
-- Opciones
-- Salir al menú principal.
+- Configuración
+- Volver al Menú principal
 
 ### Menú de Inicio###
+
 ![[captura_menu_inicio.png]]
-El menú de pausa contiene los siguientes botones:
+El menú de Inicio contiene los siguientes botones:
 
 - Hostear Partida
-- Buscar Partida
+- Buscar Partidas
 - Configuración
 - Salir
 
 ### Menú Configuración###
-IMAGEN
 
+![[menuconfig.jpg]]
 
+Los jugadores podrán configurar los siguientes parámetros de video y sonido a gusto.
+Tipo de Ventana
+Resolución
+Calidad de Gráficos
+VSync
+Volumen de música
+Volumen de efectos especiales
 
 
 

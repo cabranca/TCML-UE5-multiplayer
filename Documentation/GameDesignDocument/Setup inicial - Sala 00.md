@@ -10,6 +10,8 @@ Su propósito es introducir a los jugadores al mundo del juego, permitirles fami
 - Que los jugadores tengan un espacio seguro para probar los [[Controles]].
 - Que los jugadores puedan setear sus micrófonos, y chequear que funcionen.
 - Mostar el objetivo del juego a través de la carta de [[Goldina Lemort]]
+ ![[Carta Controles.jpg]]
+
 
 ### Carta de Goldina###
 
