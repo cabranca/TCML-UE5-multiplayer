@@ -13,7 +13,7 @@ Al moverse, el jugador hace [[ruido]] pudiendo [[IA de Mirna|alertar a Mirna]] d
 
 ## **Interactuar con Objetos**
 
-Al recibir el input de interacción, el influencer podrá [[Objetos Interactuables|interactuar con ciertos objetos]] del entorno, provocando distintos efectos dependiendo del objeto en cuestión.
+Al recibir el input de interacción, el influencer podrá [[Objetos de Trasnochando con Mirna|interactuar con ciertos objetos]] del entorno, provocando distintos efectos dependiendo del objeto en cuestión.
 
 ### **Esconderse**
 

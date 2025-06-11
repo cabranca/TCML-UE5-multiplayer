@@ -1,4 +1,6 @@
 
+## Objetos Interactuables
+
 | Objeto                           | Imagen                         | Funciones                                                                                                      |
 | -------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------- |
 | Estatuilla de [[Goldina Lemort]] | ![[Asset_estatuilla.png\|200]] | Se agarra y se suelta                                                                                          |
@@ -13,3 +15,10 @@
 | Salero de Mirna                  | ![[Asset_salerito.png\|150]]   | Se lootea                                                                                                      |
 | Gema                             | ![[Asset_gema.png\|100]]       | Se agarra y se suelta                                                                                          |
 | Armario                          | ![[Asset_armario.png\|100]]    | Esconde al jugador                                                                                             |
+
+## Objetos no interactuables
+
+
+| Objeto | Imagen | Función |
+| ------ | ------ | ------- |
+|        |        |         |
