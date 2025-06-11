@@ -1,0 +1,4 @@
+## Descripción General##
+El juego sigiloso es central para la experiencia de [[Trasnochando con Mirna Lemort]] ya que ser descubierto por Mirna significa una [[Condición de victoria y derrota|persecución letal]] si no se encuentra rápidamente un escondite o se logra perderla de vista. Por esto, el sistema de [[Ruido|generación de ruidos]] incentiva una jugabilidad sigilosa para evitar muertes y frustraciones innecesarias.
+
+[[Mirna Lemort]], como antagonista principal, [[Mapa de patrullaje|patrulla la mansión]] atenta a [[IA de Mirna|ruidos y movimientos sospechosos.]] Los jugadores podrán [[Mecánicas del Influencer|transitar]] la mansión [[Interfaz de Usuario|controlando el nivel de ruido]] que hagan desde la UI, [[Mecánicas del Influencer|comunicarse entre sí y ocultarse en armarios]] para evadir a Mirna.

@@ -6,7 +6,7 @@
 
 ## **Ruido**
 
-Al moverse, el jugador hace ruido pudiendo [[IA de Mirna|alertar a Mirna]] de su presencia.
+Al moverse, el jugador hace [[ruido]] pudiendo [[IA de Mirna|alertar a Mirna]] de su presencia.
 - Si se está caminando, emite un ruido de $40\,dB$.
 - Si está agachado, emite un ruido de $16\,dB$ al moverse.
 - Si está corriendo, emite un ruido de $60\,dB$.
