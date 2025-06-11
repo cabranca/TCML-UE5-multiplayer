@@ -1,4 +1,4 @@
-Los jugadores disponen del siguiente listado de controles para jugar e interactuar con la [[Interfaz de Usuario]].
+Los jugadores disponen del siguiente listado de controles tanto para jugar como para interactuar con la [[Interfaz de Usuario]].
 
 - **Movimiento**:
 	- **"WASD"** para desplazar al [[Influencer Foodie]]. ![[WASD.png]]
@@ -12,13 +12,13 @@ Los jugadores disponen del siguiente listado de controles para jugar e interactu
 
 - **Interacción:
 - **"E"** para interactuar con objetos. ![[E.png|75]]
-	- Dependiendo del objeto interactuable, este responderá de una forma específica:
+	- Dependiendo del [[Objetos de Trasnochando con Mirna|objeto interactuable]], este responderá de una forma específica:
 		- Looteo directo al inventario.
 		- Sostener el objeto hasta soltarlo o ubicarlo en otra posición presionando nuevamente la tecla de interacción.
-		- Esconderse dentro del objeto (en caso de interactuar con un armario).
+		- Esconderse dentro del objeto (en caso de interactuar con un [[Objetos de Trasnochando con Mirna|armario]]).
 
 - **Interfaz de Usuario**:
-	- **"Esc"** o **"P"** para abrir y cerrar el menú de pausa. ![[Esc.png|75]] / ![[P.png|75]]
+	- **"Esc"** o **"P"** para abrir y cerrar el [[Interfaz de Usuario|menú de pausa.]] ![[Esc.png|75]] / ![[P.png|75]]
 	
 	- **"Click Izq"** para seleccionar elementos de la interfaz. ![[L_click.png|55]]
 
