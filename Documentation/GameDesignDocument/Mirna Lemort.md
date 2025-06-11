@@ -8,11 +8,10 @@ Lo primero en lo que coincidimos como equipo para unificar esta directiva con la
 
 **Antagonista Principal**
 Mirna es una diva inmortal, elegante y glamorosa de la televisión argentina. La figura central del juego y programa "Trasnochando con Mirna Lemort". 
-Es el enemigo constante de este nivel. Funciona como una entidad que patrulla la [[Mansión Lemort]] en busca de sus invitados desaparecidos. Su presencia obliga a los jugadores a [[Mecánicas|esconderse, correr o realizar estrategias para lograr evadirla o distraerla.|]]
-
+Es el enemigo constante de este nivel. Funciona como una entidad que patrulla la [[Mansión Lemort]] en busca de sus invitados desaparecidos. Su presencia obliga a los jugadores a [[Mecánicas del Influencer|esconderse, correr o realizar estrategias para lograr evadirla o distraerla.|]]
 
 ### **Lore**
-Mirna fue una vez la persona más hermosa de la televisión Argentina, idolatrada y amada por millones. Sin embargo, conforme pasaban los años, su belleza fue decayendo. Con miedo a perderlo todo y en contra de las advertencias de su querida hermana [[Goldina Lemort]], firmó un pacto con el demonio. A cambio de su alma, obtuvo la capacidad de absorber la juventud y borrar la memoria de sus victimas. Desde entonces, el programa [[Trasnochando con Mirna]] es solo una fachada de lo que realmente ocurre dentro de la [[Mansión Lemort]]. 
+Mirna fue una vez la persona más hermosa de la televisión Argentina, idolatrada y amada por millones. Sin embargo, conforme pasaban los años, su belleza fue decayendo. Con miedo a perderlo todo y en contra de las advertencias de su querida hermana [[Goldina Lemort]], firmó un pacto con el demonio. A cambio de su alma, obtuvo la capacidad de absorber la juventud y borrar la memoria de sus victimas. Desde entonces, el programa [[Trasnochando con Mirna Lemort]] es solo una fachada de lo que realmente ocurre dentro de la [[Mansión Lemort]]. 
 
 ## [[IA de Mirna|Comportamiento In-Game de Mirna]]
 
