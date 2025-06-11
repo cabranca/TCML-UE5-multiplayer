@@ -16,7 +16,7 @@ La interfaz de usuario (UI) de *[[Trasnochando con Mirna]] busca mantener un est
   - Amarillo: ruido moderado
   - Rojo: ruido elevado 
 
-- **Iconos de interacción**: aparece un pequeño ícono (mano) cuando el jugador mira un objeto interactuable.
+- **Iconos de interacción**: aparece un pequeño ícono (mano) cuando el jugador mira un objeto interactuable. Si el objeto en cuestión es un armario, que sirve para esconderse, el ícono pasa a ser algo referente a la mecánica (un ojo).
 - Contorno del objeto interactuable: aparece un contorno blanco en los objetos interactuables al momento de hacer un hover sobre el.
 
 ### Menú de Pausa###

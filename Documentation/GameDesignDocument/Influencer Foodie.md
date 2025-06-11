@@ -1,7 +1,7 @@
 ## Rol en el juego
 
 **Protagonista Principal**
-Uno de los dos personajes controlados por los jugadores en [[Trasnochando con Mirna]]. Es un influencer gastronómico argentino con una comunidad muy activa en redes, es famoso por sus reseñas y criticas de famosos lugares de comida argentina.
+Uno de los dos personajes controlados por los jugadores en [[Trasnochando con Mirna Lemort]]. Es un influencer gastronómico argentino con una comunidad muy activa en redes, es famoso por sus reseñas y criticas de famosos lugares de comida argentina.
 
 Es invitado especial a la grabación del programa de [[Mirna Lemort]] creyendo que será una experiencia lujosa y excelente contenido para sus redes.
 
