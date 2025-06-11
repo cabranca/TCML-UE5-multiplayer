@@ -1,0 +1,7 @@
+Este Puzzle transcurre en las [[Mansión Lemort|salas 9, 10 y 11]]. Los jugadores se encuentran en la sala 10 con una palanca que al accionarla (y mantenerla en este estado), revela la sala 11, donde se hayan un [[Objetos Interactuables|fonógrafo y dos discos de vinilo]].   
+
+El jugador en la sala 11 puede utilizar los vinilos, uno para reproducir la melodía que su compañero debe reproducir en las campanas y otro para reproducir la cortina del show de [[Mirna Lemort]] y atraer a Mirna hacia la puerta de la sala 11. Al reproducir la melodía del puzzle (generado de manera aleatoria y compuesto por 6 notas todas presentes en las campanas), también aparecerá en el aire al lado del fonógrafo el nombre de la nota para una ayuda visual.
+
+Por otro lado, en la sala 9 se encuentran una biblioteca y unas campanas que al accionarlas emiten un sonido y tienen escritas la nota que emiten. El jugador debe ver las campanas de izquierda a derecha con las notas Do, Re, Mi, Fa y Sol. Al sonar cualquiera de las campanas, estas emiten un ruido de $100\,dB$ que atrae a Mirna.
+
+Para resolver el puzzle, un jugador deberá mantener la palanca accionada para que su compañero entre a la sala 11. Luego, el jugador en la sala 9 deberá replicar la melodía accionada por el jugador en la sala 11. Cuando esto suceda, la biblioteca de la sala 9 se desplazará para revelar detrás el salero de Mirna, la recompensa de este puzzle.
