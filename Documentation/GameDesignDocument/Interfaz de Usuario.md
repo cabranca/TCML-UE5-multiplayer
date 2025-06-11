@@ -20,6 +20,7 @@ La interfaz de usuario (UI) de *[[Trasnochando con Mirna]] busca mantener un est
 - Contorno del objeto interactuable: aparece un contorno blanco en los objetos interactuables al momento de hacer un hover sobre el.
 
 ### Menú de Pausa###
+IMAGEN
 El menú de pausa contiene los siguientes botones:
 
 - Reanudar
@@ -27,13 +28,29 @@ El menú de pausa contiene los siguientes botones:
 - Opciones
 - Salir al menú principal.
 
+### Menú Principal###
+IMAGEN
+El menú de pausa contiene los siguientes botones:
+
+- Hostear Partida
+- Buscar Partida
+- Configuración
+- Salir
+
+### Menú Configuración###
+IMAGEN
+
+
+
+
+
 ### Indicadores de Estado del Jugador###
 
 - **Estado de detección**: si [[Mirna Lemort]] detecta al jugador, la pantalla tiembla suavemente y aparece un borde rojo pulsante es acompañado también por la [[Sonidos|Música de persecución]]
 - **Estado de agachado o caminata sigilosa**: aparece un pequeño ícono que confirma el modo actual.
 
-Pantalla de Muerte
+### Pantalla de Muerte###
 
-Pantalla de Victoria
+### Pantalla de Victoria###
 
-Créditos
+### Créditos###

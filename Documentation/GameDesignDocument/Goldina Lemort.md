@@ -16,9 +16,3 @@ Aunque no aparece como personaje interactivo, Goldina esta presente en [[Objetos
 - Vestido sencillo celeste y blanco elegante.
 - Expresión cálida y serena.
 
-## Menciones en el juego
-
-[[Objetos Interactuables|Cuadro de Goldina]]
-[[Objetos Interactuables|Pulseras de Amistad]]
-[[Objetos Interactuables|Carta de introducción]]
-
