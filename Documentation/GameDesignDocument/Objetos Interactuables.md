@@ -1,17 +1,15 @@
 
-| Objeto                           | Imagen | Se lootea | Se agarra | Rota | Se traslada | Escondite |
-| -------------------------------- | ------ | --------- | --------- | ---- | ----------- | --------- |
-| Puerta                           |        | No        | No        | Sí   | No          | No        |
-| Estatuilla de [[Goldina Lemort]] |        | No        | Sí        | No   | No          | No        |
-| Pedestal                         |        | No        | No        | No   | No          | No        |
-| Pulsera de la amistad            |        | Sí        | No        | No   | No          | No        |
-| Botón                            |        | No        | No        | No   | Sí          | No        |
-| Aritos de [[Mirna Lemort]]       |        | Sí        | No        | No   | No          | No        |
-| Cuadro de Goldina                |        | Sí        | No        | No   | No          | No        |
-| Diario de Mirna                  |        | No        | No        | No   | No          | No        |
-| Fonógrafo                        |        | No        | No        | No   | No          | No        |
-| Campana                          |        | No        | No        | No   | No          | No        |
-| Salero de Mirna                  |        | Sí        | No        | No   | No          | No        |
-| Tintura de Mirna                 |        | Sí        | No        | No   | No          | No        |
-| Cerradura con Gema               |        | No        | No        | No   | Sí          | No        |
-| Armario                          |        | No        | No        | No   | No          | Sí        |
+| Objeto                           | Imagen                         | Funciones                                                                                                      |
+| -------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Estatuilla de [[Goldina Lemort]] | ![[Asset_estatuilla.png\|200]] | Se agarra y se suelta                                                                                          |
+| Pulsera de la amistad            | ![[Asset_pulsera.png\|150]]    | Se lootea                                                                                                      |
+| Botón                            | ![[Asset_Boton.png\|150]]      | Realiza una animación de pulsación                                                                             |
+| Aritos de [[Mirna Lemort]]       | ![[Asset_aretes.png\|150]]     | Se lootea                                                                                                      |
+| Cuadro de Goldina                | ![[Asset_cuadro.png\|150]]     | Se lootea                                                                                                      |
+| Diario de Mirna                  | ![[Asset_Libro.png\|150]]      | [[Interfaz de Usuario\|Muestra en pantalla]] la pista del [[Puzzle de Joyas\|puzzle de joyas]]                 |
+| Fonógrafo                        | ![[Asset_fonografo.png\|175]]  | Emite un sonido y da feedback visual de acuerdo a lo descrito en el [[Puzzle de Campanas\|puzzle de campanas]] |
+| Disco de vinilo                  | ![[Asset_vinilo.png\|100]]     | Se agarra y se suelta                                                                                          |
+| Campana                          | ![[Asset_campana.png\|150]]    | Emite un sonido de acuerdo a la campana                                                                        |
+| Salero de Mirna                  | ![[Asset_salerito.png\|150]]   | Se lootea                                                                                                      |
+| Gema                             | ![[Asset_gema.png\|100]]       | Se agarra y se suelta                                                                                          |
+| Armario                          | ![[Asset_armario.png\|100]]    | Esconde al jugador                                                                                             |
