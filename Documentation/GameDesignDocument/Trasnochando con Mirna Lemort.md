@@ -23,4 +23,7 @@ El [[Puzzle de Estatuillas|puzzle inicial]] funcionará a modo de tutorial para 
 
 El resto de los puzzles se encontrarán en la zona de la mansión por donde Mirna [[Mapa de patrullaje|transita]] de forma activa. Esta zona presenta un recorrido no lineal donde los jugadores podrán resolver los puzzles restantes a medida que los encuentren.
 
-El [[Puzzle de Joyas|puzzle final]] cuenta con la particularidad de necesitar las recompensas ([[Objetos Interactuables|pulseras de la amistad, cuadro de Goldina, aretes de Mirna, y salero de Mirna]]) de todos los puzzles anteriores para poder activarlo, ya que su resolución da acceso a la puerta de escape que, una vez atravesada, [[Condición de victoria y derrota|el juego finaliza]].
+El [[Puzzle de Joyas|puzzle final]] cuenta con la particularidad de necesitar las recompensas ([[Objetos de Trasnochando con Mirna|pulseras de la amistad, cuadro de Goldina, aretes de Mirna, y salero de Mirna]]) de todos los puzzles anteriores para poder activarlo, ya que su resolución da acceso a la puerta de escape que, una vez atravesada, los jugadores ganan y la partida finaliza.
+
+## Progreso dentro del juego
+El juego plantea un sistema de [[Método de guardado de partida|guardado automático]] y fomenta una [[Dinámica de sigilo]] con el fin de evitar frustraciones y que la progresión no se vea constantemente detenida en caso de [[Condición de victoria y derrota|perder]] reiteradas veces la partida.
