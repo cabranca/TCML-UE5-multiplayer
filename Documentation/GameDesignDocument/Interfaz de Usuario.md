@@ -28,8 +28,8 @@ El menú de pausa contiene los siguientes botones:
 - Opciones
 - Salir al menú principal.
 
-### Menú Principal###
-IMAGEN
+### Menú Inicio###
+![[captura_menu_inicio.png]]
 El menú de pausa contiene los siguientes botones:
 
 - Hostear Partida
@@ -51,6 +51,7 @@ IMAGEN
 
 ### Pantalla de Muerte###
 
-### Pantalla de Victoria###
+![[Death Screen.png]]
 
 ### Créditos###
+![[Creditos Trasnochando con Mirna Lemort.mp4]]
