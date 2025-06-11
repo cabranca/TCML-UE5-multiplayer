@@ -24,8 +24,7 @@ Las habilidades de Mirna Lemort son:
 - Detectar [[Ruido]] y proximidad de sus enemigos. Ver más en [[IA de Mirna]]
 - Investigar zona.
 - Perseguir.
-- Robar Juventud
-- Borrar Memoria
+- Matar.
 
 ## **Intención de diseño/estilo Visual:  
 

@@ -2,6 +2,8 @@
 
 Goldina Lemort es la hermana gemela de Mirna, y representa la contraparte moral de la historia. Aunque no aparece físicamente durante el juego, su presencia es constante a través de [[Objetos Interactuables|pistas, grabaciones, retratos y objetos ocultos|]] en la [[Mansión Lemort]]. Es una figura de referencia que guía sutilmente a los jugadores, ofreciéndoles ayuda para escapar.
 
+Goldina les dará a los jugadores una forma de poder escapar este primer nivel a través de la carta que encontrarán en la [[Setup inicial - Sala 00|Sala Inicial]]
+
 ## Lore##
 Goldina y Mirna fueron inseparables durante su juventud. Juntas iniciaron una carrera artística como dupla carismática de la televisión argentina. Sin embargo, al notar que Mirna estaba obsesionada con su belleza y fama, Goldina se alejó para llevar una vida más sencilla.
 
