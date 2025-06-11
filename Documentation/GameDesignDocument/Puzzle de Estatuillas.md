@@ -1,3 +1,5 @@
+## Puzzle de las Estatuillas ##
+
 ### Descripción General###
 
 Este es el primer puzzle que enfrentan los jugadores y sirve a modo de tutorial de las [[Mecánicas del Influencer|Mecánicas]]Transcurre en las [[Mansión Lemort|salas 0, 1, 2, 3 y 4]].
