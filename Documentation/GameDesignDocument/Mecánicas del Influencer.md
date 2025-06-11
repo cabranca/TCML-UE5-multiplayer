@@ -17,9 +17,9 @@ Al recibir el input de interacción, el influencer podrá [[Objetos de Trasnocha
 
 ### **Esconderse**
 
-En el caso de los armarios, el jugador puede esconderse dentro de ellos al interactuar, volviéndose invisible para Mirna. Además, en caso de que Mirna estuviera previamente persiguiendo al jugador y este se esconda dentro del armario, Mirna dejará de perseguirlo instantáneamente.
+En el caso de los armarios, el jugador puede [[Mecánicas del Influencer|esconderse]] dentro de ellos al interactuar, volviéndose invisible para Mirna. Además, en caso de que Mirna estuviera previamente persiguiendo al jugador y este se esconda dentro del armario, Mirna dejará de perseguirlo instantáneamente y retomará su [[Mapa de patrullaje|ciclo de patrullaje]].
 
-Desde el interior del armario, el jugador podrá ver hacia afuera con una visión reducida. Al volver a interactuar con el armario, el jugador sale del armario volviendo a su posición original. Por último, no pueden estar dos jugadores dentro del mismo armario.
+Desde el interior del armario, el jugador podrá ver hacia afuera con una visión reducida. Al volver a interactuar con el armario, el jugador sale del armario volviendo a su posición original. Por último, no pueden estar dos jugadores dentro del mismo armario al mismo tiempo.
 
 ## **Comunicación**
 
