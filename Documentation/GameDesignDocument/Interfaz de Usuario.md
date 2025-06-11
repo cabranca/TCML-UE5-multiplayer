@@ -11,16 +11,23 @@ La interfaz de usuario (UI) de *[[Trasnochando con Mirna]] busca mantener un est
 ### HUD Principal###
 
 - **Indicador de [[Ruido]]: indica en la parte superior derecha el nivel de ruido que hay en la zona donde se encuentra actualmente el [[Influencer Foodie|jugador]]
-- Un medidor en forma de barra que contiene 3 colores:
-  - Verde: silencio
+![[indicadorderuido.jpg]]
+- Un medidor en forma de barra que contiene 4 colores:
+
+  - Azul: silencio
+  - Verde: ruido bajo
   - Amarillo: ruido moderado
   - Rojo: ruido elevado 
 
 - **Iconos de interacción**: aparece un pequeño ícono (mano) cuando el jugador mira un objeto interactuable. Si el objeto en cuestión es un armario, que sirve para esconderse, el ícono pasa a ser algo referente a la mecánica (un ojo).
+
 - Contorno del objeto interactuable: aparece un contorno blanco en los objetos interactuables al momento de hacer un hover sobre el.
+ ![[hoveritemglow.jpg]]
 
 ### Menú de Pausa###
+
 ![[menupausa.jpg]]
+
 El menú de pausa contiene los siguientes botones:
 
 - Reanudar
@@ -49,12 +56,10 @@ VSync
 Volumen de música
 Volumen de efectos especiales
 
-
-
 ### Indicadores de Estado del Jugador###
 
 - **Estado de detección**: si [[Mirna Lemort]] detecta al jugador, la pantalla tiembla suavemente y aparece un borde rojo pulsante es acompañado también por la [[Sonidos|Música de persecución]]
-- **Estado de agachado o caminata sigilosa**: aparece un pequeño ícono que confirma el modo actual.
+![[borderojopersecucion.jpg]]
 
 ### Pantalla de Muerte###
 
