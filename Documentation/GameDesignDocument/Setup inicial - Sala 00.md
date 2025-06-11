@@ -14,5 +14,5 @@ Su propósito es introducir a los jugadores al mundo del juego, permitirles fami
 
 
 ### Carta de [[Goldina Lemort]]###
-
+Se modifico no se requiere más la tintura de cabello original.
 ![[Carta Goldina.png]]
