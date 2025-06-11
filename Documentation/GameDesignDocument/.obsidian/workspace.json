@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Influencer Foodie.md",
+                "file": "Condición de victoria y derrota.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Influencer Foodie"
+              "title": "Condición de victoria y derrota"
             }
           }
         ],
@@ -213,19 +213,33 @@
   },
   "active": "febdb49837be6593",
   "lastOpenFiles": [
-    "Trasnochando con Mirna.md",
-    "Influencer Foodie.md",
-    "Mansion_Lemort_36x56.png",
-    "Mecánicas.md",
-    "Mansión Lemort.md",
-    "Interfaz de Usuario.md",
-    "Mirna Lemort.md",
-    "IA de Mirna Lemort.md",
-    "Controles.md",
-    "Sistema de sigilo.md",
+    "Ruido.md",
+    "Puzzles.md",
+    "Método de guardado de partida.md",
+    "Puzzle de Estatuillas.md",
+    "Trasnochando con Mirna Lemort.md",
     "Objetos Interactuables.md",
     "Puzzle de Estatuas.md",
-    "Puzzles.md",
-    "Puzzle de Botones.md"
+    "Puzzle de Botones.md",
+    "Condición de victoria y derrota.md",
+    "Interfaz de Usuario.md",
+    "Controles.md",
+    "Dinámica de sigilo.md",
+    "Setup inicial - Sala 00.md",
+    "Mecánicas del Influencer.md",
+    "Goldina Lemort.md",
+    "Influencer Foodie.md",
+    "Mapa de patrullaje.md",
+    "Mansión Lemort.md",
+    "IA de Mirna.md",
+    "Mirna Lemort.md",
+    "Sonidos.md",
+    "Imágenes/captura_menu_inicio.png",
+    "Imágenes/Death Screen.png",
+    "Imágenes/Creditos Trasnochando con Mirna Lemort.mp4",
+    "Imágenes/Carta Goldina.png",
+    "Mecánicas.md",
+    "Mansion_Lemort_36x56.png",
+    "IA de Mirna Lemort.md"
   ]
 }

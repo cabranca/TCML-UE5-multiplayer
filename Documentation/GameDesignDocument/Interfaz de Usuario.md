@@ -28,7 +28,7 @@ El menú de pausa contiene los siguientes botones:
 - Opciones
 - Salir al menú principal.
 
-### Menú Inicio###
+### Menú de Inicio###
 ![[captura_menu_inicio.png]]
 El menú de pausa contiene los siguientes botones:
 

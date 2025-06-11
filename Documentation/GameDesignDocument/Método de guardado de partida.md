@@ -1,0 +1,1 @@
+El juego contrá con una etapa de guardado automática cada vez que se finaliza un [[Puzzles|puzzle]]. De esta forma, en caso de que los jugadores [[Condición de victoria y derrota|pierdan la partida]], tendrán la posibilidad de reanudar la partida desde el último punto de guardado disponible a través de la [[Interfaz de Usuario|pantalla de muerte]].
