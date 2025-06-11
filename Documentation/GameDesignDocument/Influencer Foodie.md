@@ -24,14 +24,17 @@ Pero al verse enfrentado a una situación de vida o muerte, sin armas, con solo 
 
 ## **Intención de diseño/estilo Visual:  
 
- Imagen Moodboard 
+
  
  Elfudi es un influencer Foodie de la red social Instafot y Chipchop. Su apariencia es despreocupada y engreída, se cree más que los demás y tiene 25 años de edad. Inicialmente va al programa como una buena oportunidad para ganar fama, luego su motivación cambia a escapar.
 
- Imagen Moodboard 
+![[Elfudi_moodboard.png]]
   
-
-Imagen Modelo 3D
+![[Influencer_foodie_concept.png]]
+![[Elfudi_paleta.png]]
 Desde lo artístico, se buscó representar gráficamente este juego de opuestos entre Mirna, símbolo de elegancia refinada y majestuosidad, y Elfudi, un influencer medio hipster que “se las sabe todas”, con un vestuario más casual y extravagante. La paleta de colores del personaje apunta a tonos pastel con saturación media/alta que puedan jugar con este contraste desde un punto de vista narrativo, pero también con el fin de aportar legibilidad, para que sea más fácil distinguir entre jugadores y enemigos mientras se transita por el nivel.
+
+![[Influencer_foodie_model.png]]
+
 
 

@@ -13,6 +13,6 @@ Su propósito es introducir a los jugadores al mundo del juego, permitirles fami
  ![[Carta Controles.jpg]]
 
 
-### Carta de Goldina###
+### Carta de [[Goldina Lemort]]###
 
 ![[Carta Goldina.png]]
