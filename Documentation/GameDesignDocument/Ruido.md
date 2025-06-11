@@ -23,7 +23,7 @@ Para leer sobre cómo Mirna detecta el ruido ver [[IA de Mirna]]
 
 El ruido puede ser usado de forma táctica:
 - Un jugador puede hacer ruido para llamar la atención de [[Mirna Lemort]]. Por ejemplo, corriendo para hacer mucho ruido y lograr que [[Mirna Lemort]] lo persiga permitiendo al otro jugador completar un puzzle o escapar.
-- Algunos [[Objetos Interactuables]] (como el fonógrafo) generan mucho ruido y pueden utilizarse para cumplir la función de Distraer a [[Mirna Lemort]].
+- Algunos [[Objetos de Trasnochando con Mirna]] (como el fonógrafo) generan mucho ruido y pueden utilizarse para cumplir la función de Distraer a [[Mirna Lemort]].
 
 ## Medidor de Ruido##
 

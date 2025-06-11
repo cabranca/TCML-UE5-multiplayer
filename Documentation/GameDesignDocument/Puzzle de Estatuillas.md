@@ -1,6 +1,6 @@
 Este puzzle es el desafío inicial que enfrentan los jugadores. Se parte de la [[Mansión Lemort|sala inicial 0]] donde aparecen ambos jugadores y [[Goldina Lemort|Goldina]] les da instrucciones del objetivo a cumplir. Saliendo de esta sala habrá acceso únicamente a las [[Mansión Lemort|salas 1 y 3]], donde, en el momento que uno de los jugadores cruza la entrada de alguna de ellas, una pared deslizante corta el acceso de entrada y salida a dicha habitación hasta que se resuelva el puzzle. El jugador que queda fuera se ve obligado a ir a la sala restante.
 
-Dentro de cada sala se encuentra una [[Objetos Interactuables|estatuilla]] posicionada sobre un pedestal, y un segundo pedestal más alejado que está vacío. Ambos jugadores tendrán que tomar la estatuilla y ponerla en el pedestal vacío de forma simultánea para que el puzle se resuelva y puedan continuar.
+Dentro de cada sala se encuentra una [[Objetos de Trasnochando con Mirna|estatuilla]] posicionada sobre un pedestal, y un segundo pedestal más alejado que está vacío. Ambos jugadores tendrán que tomar la estatuilla y ponerla en el pedestal vacío de forma simultánea para que el puzle se resuelva y puedan continuar.
 
 Dentro de cada sala se encuentra una estatuilla posicionada sobre un pedestal, y un segundo pedestal más alejado que está vacío. Ambos jugadores tendrán que tomar la estatuilla de su respectiva sala y ponerla en el pedestal vacío de forma simultánea para que el puzle se resuelva y puedan continuar.
 

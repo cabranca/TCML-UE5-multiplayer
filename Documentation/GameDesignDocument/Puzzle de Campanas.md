@@ -1,5 +1,4 @@
-
-Este Puzzle transcurre en las [[Mansión Lemort|salas 9, 10 y 11]]. Los jugadores se encuentran en la sala 10 con una palanca que al accionarla (y mantenerla en este estado), revela la sala 11, donde se hayan un [[Objetos Interactuables|fonógrafo y dos discos de vinilo]].   
+Este Puzzle transcurre en las [[Mansión Lemort|salas 9, 10 y 11]]. Los jugadores se encuentran en la sala 10 con una palanca que al accionarla (y mantenerla en este estado), revela la sala 11, donde se hayan un [[Objetos de Trasnochando con Mirna|fonógrafo y dos discos de vinilo]].   
 
 El jugador en la sala 11 puede utilizar los vinilos, uno para reproducir la melodía que su compañero debe reproducir en las campanas y otro para reproducir la cortina del show de [[Mirna Lemort]] y atraer a Mirna hacia la puerta de la sala 11. Al reproducir la melodía del puzzle (generado de manera aleatoria y compuesto por 6 notas todas presentes en las campanas), también aparecerá en el aire al lado del fonógrafo el nombre de la nota para una ayuda visual.
 
