@@ -1,13 +1,12 @@
-## Rol en el juego##
+## Rol en el juego
 
 **Protagonista Principal**
 Uno de los dos personajes controlados por los jugadores en [[Trasnochando con Mirna]]. Es un influencer gastronómico argentino con una comunidad muy activa en redes, es famoso por sus reseñas y criticas de famosos lugares de comida argentina.
 
 Es invitado especial a la grabación del programa de [[Mirna Lemort]] creyendo que será una experiencia lujosa y excelente contenido para sus redes.
 
-Sin embargo, al llegar a la [[Mansión Lemort]], se encuentra con una situación que no es la que lo esperaba. Mirna esta cazandolos a el y a su compañero para robarles su juventud.
-
-## Lore##
+Sin embargo, al llegar a la [[Mansión Lemort]], se encuentra con una situación que no es la que lo esperaba. Mirna esta cazándolos a el y a su compañero para robarles su juventud. Es así que el influencer debe [[Mecánicas del Influencer|explorar la mansión, cooperar con su compañero y esconderse]] de Mirna para escapar de sus garras.
+## Lore
 
 Elfoodie saltó a la fama haciendo reseñas irónicas sobre platos gourmet en restaurantes de alta gama. Su mezcla de humor ácido, carisma y estética cuidada lo convirtió en un referente en la escena foodie de Buenos Aires. 
 
@@ -15,9 +14,6 @@ Elfoodie saltó a la fama haciendo reseñas irónicas sobre platos gourmet en re
 La invitación de Mirna Lemort era vista como una validación de su fama. Además participar del programa de Tv Trasnochando con Mirna seria una excelente fuente de contenido.
 
 Pero al verse enfrentado a una situación de vida o muerte, sin armas, con solo un compañero influencer su fama o sus redes no lo ayudaran y dependerá solo de su ingenio y velocidad para poder escapar.
-
-## [[Mecánicas|Habilidades]]
-
 
 ## Personalidad##
 
