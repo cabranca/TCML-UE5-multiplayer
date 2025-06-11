@@ -12,4 +12,4 @@ El objetivo del juego es que ambos jugadores cooperen para [[Puzzles|resolver pu
 
 ## Programa de TV ##
 
-Trasnochando con Mirna Lemort es también el nombre del programa que protagoniza [[Mirna Lemort]]. En el programa se invitan [[Influencer Foodie|influencers y gente joven]] que van a cenar con Mirna. Cuando la grabación del programa termina, Mirna se transforma y ataca a los invitados para robarles su juventud, luego les borra la memoria y los libera. 
+Trasnochando con Mirna Lemort es también el nombre del programa que protagoniza [[Mirna Lemort]]. En el programa se invitan [[Influencer Foodie|influencers y gente joven]] que van a cenar con Mirna. Cuando la grabación del programa termina, Mirna se transforma y ataca a los invitados para robarles su juventud, luego les borra la memoria y los libera.
