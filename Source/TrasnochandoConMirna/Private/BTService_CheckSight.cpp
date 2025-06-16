@@ -1,7 +1,7 @@
 #include "BTService_CheckSight.h"
+
 #include "BehaviorTree/BlackboardComponent.h"
 #include "AIController.h"
-#include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "MainCharacter.h"
 

@@ -4,9 +4,6 @@
 #include "Animation/AnimNotifies/AnimNotify.h"
 #include "AnimNotify_PlayFootstepMulticast.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API UAnimNotify_PlayFootstepMulticast : public UAnimNotify
 {
