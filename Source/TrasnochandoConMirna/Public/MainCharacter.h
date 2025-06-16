@@ -14,6 +14,23 @@ class UCameraComponent;
 class APedestal;
 class AInteractableObject;
 
+USTRUCT(BlueprintType)
+struct FNoiseData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadWrite)
+    FVector Location = FVector::ZeroVector;
+
+    UPROPERTY(BlueprintReadWrite)
+    float Loudness = 1.f;
+
+    UPROPERTY(BlueprintReadWrite)
+    AActor* Instigator = nullptr;
+};
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnNoiseMade, const FNoiseData&, Noise);
+
 UCLASS()
 class TRASNOCHANDOCONMIRNA_API AMainCharacter : public ACharacter
 {
@@ -41,7 +58,10 @@ public:
 
 	UFUNCTION(BlueprintCallable) bool IsCrouching() const;	
 
-	bool IsHiddenInObject() const;
+	UFUNCTION(BlueprintCallable) bool IsHiddenInObject() const;
+
+
+	UPROPERTY(BlueprintAssignable) FOnNoiseMade OnNoiseMade;
 
 	/***CROUCHING***/
 

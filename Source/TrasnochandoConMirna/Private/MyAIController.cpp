@@ -1,25 +1,25 @@
 #include "MyAIController.h"
 
-#include "Perception/AIPerceptionComponent.h"
-#include "Perception/AIPerceptionTypes.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Perception/AISense_Sight.h"
-#include "Perception/AISense_Hearing.h"
-#include "Navigation/PathFollowingComponent.h"
 #include "MainCharacter.h"
-
-AMyAIController::AMyAIController()
-{
-	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerception"));
-	AddOwnedComponent(PerceptionComponent);
-}
+#include "Kismet/GameplayStatics.h"
 
 void AMyAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetAIPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AMyAIController::OnSensed);
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMainCharacter::StaticClass(), FoundActors);
+	for (AActor* Actor : FoundActors)
+	{
+		AMainCharacter* MC = Cast<AMainCharacter>(Actor);
+		if (MC)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Binding to OnNoiseHeard"));
+			MC->OnNoiseMade.AddDynamic(this, &AMyAIController::OnNoiseHeard);
+		}
+	}
 
 	if (BehaviorTree)
 	{
@@ -34,37 +34,32 @@ void AMyAIController::BeginPlay()
 	}
 }
 
-void AMyAIController::OnSensed(AActor * Origin, FAIStimulus Stimulus)
+void AMyAIController::OnNoiseHeard(const FNoiseData& Noise)
 {
-	HandleSightSense(Origin, Stimulus);
-	HandleSoundSense(Origin, Stimulus);
-}
+	if (!GetBlackboardComponent()) return;
 
-void AMyAIController::HandleSightSense(AActor * Origin, FAIStimulus Stimulus)
-{
-	if (Stimulus.Type != UAISense::GetSenseID<UAISense_Sight>())
-	{
-		return;
-	}
+	AMainCharacter* HeardCharacter = Cast<AMainCharacter>(Noise.Instigator);
+	if (!HeardCharacter) return;
 
-	AMainCharacter* MainCharacter = Cast<AMainCharacter>(Origin);
+	APawn* AIPawn = GetPawn();
+	if (!AIPawn) return;
 
-	if (MainCharacter && !MainCharacter->IsHiddenInObject() && Stimulus.WasSuccessfullySensed())
-	{
-		Blackboard->SetValueAsObject(TEXT("TargetActor"), Origin);
-	}
-	else
-	{
-		Blackboard->SetValueAsObject(TEXT("TargetActor"), nullptr);
-		Blackboard->SetValueAsVector(TEXT("LastKnownLocation"), Stimulus.StimulusLocation);
-	}
-}
+	float DistanceToNoise = FVector::Dist(Noise.Location, AIPawn->GetActorLocation());
 
-void AMyAIController::HandleSoundSense(AActor * Origin, FAIStimulus Stimulus)
-{
-	if (Stimulus.Type != UAISense::GetSenseID<UAISense_Hearing>())
+    if (Noise.Loudness >= DistanceToNoise)
 	{
-		return;
+		#if !(UE_BUILD_SHIPPING)
+		DrawDebugSphere(
+		GetWorld(),
+		Noise.Location,        
+		25.f,               
+		12,               
+		FColor::Red,        
+		false,              
+		2.0f             
+		);
+		#endif
+		
+		GetBlackboardComponent()->SetValueAsVector("NoiseLocation", Noise.Location);
 	}
-	Blackboard->SetValueAsVector(TEXT("HearingTargetLocation"), Stimulus.StimulusLocation);
 }
