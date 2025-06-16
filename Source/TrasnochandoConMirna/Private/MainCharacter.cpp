@@ -8,7 +8,6 @@
 #include "Statue.h"
 #include "Pedestal.h"
 #include "Blueprint/UserWidget.h"
-#include "Perception/AISense_Hearing.h"
 #include "Components/CapsuleComponent.h"
 #include "Diary.h"
 #include "Kismet/GameplayStatics.h"
@@ -476,7 +475,12 @@ void AMainCharacter::ProduceNoise()
 	{
 		Loudness = CrouchingLoudness;
 	}
-	UAISense_Hearing::ReportNoiseEvent(GetWorld(), GetActorLocation(), Loudness, this, 10.f, NAME_None);
+
+	FNoiseData Noise;
+	Noise.Location = GetActorLocation();
+	Noise.Loudness = Loudness;
+	Noise.Instigator = this;
+	OnNoiseMade.Broadcast(Noise);
 }
 
 void AMainCharacter::Hide()
