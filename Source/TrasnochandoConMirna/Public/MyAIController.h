@@ -20,4 +20,6 @@ private:
 	UPROPERTY(EditAnywhere) UBehaviorTree* BehaviorTree;
 
 	UFUNCTION() void OnNoiseHeard(const FNoiseData& Noise);
+
+	UFUNCTION(BlueprintCallable) void RegisterPlayer(AMainCharacter* Player);
 };

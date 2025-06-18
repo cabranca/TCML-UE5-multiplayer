@@ -9,18 +9,6 @@ void AMyAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMainCharacter::StaticClass(), FoundActors);
-	for (AActor* Actor : FoundActors)
-	{
-		AMainCharacter* MC = Cast<AMainCharacter>(Actor);
-		if (MC)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Binding to OnNoiseHeard"));
-			MC->OnNoiseMade.AddDynamic(this, &AMyAIController::OnNoiseHeard);
-		}
-	}
-
 	if (BehaviorTree)
 	{
 		if (!RunBehaviorTree(BehaviorTree))
@@ -62,4 +50,9 @@ void AMyAIController::OnNoiseHeard(const FNoiseData& Noise)
 		
 		GetBlackboardComponent()->SetValueAsVector("NoiseLocation", Noise.Location);
 	}
+}
+
+void AMyAIController::RegisterPlayer(AMainCharacter* Player)
+{
+	Player->OnNoiseMade.AddDynamic(this, &AMyAIController::OnNoiseHeard);
 }
