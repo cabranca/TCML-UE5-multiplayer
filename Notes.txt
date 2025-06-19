@@ -1,11 +1,25 @@
 Bugs conocidos:
-	
+	- Entrar al armario se rompió una vez. Se invirtió lo que hacía el jugador con lo que veía.
+	- Los créditos (al menos en el menú) se reinician al hacer click de una manera arbitraria.
+	- FATAL ERROR?
+	- Aparece el prompt con los aritos bajo tierra.
+	- La pared corrediza no se levanta.
+	- A veces Mirna se clava al lado del armario si estoy adentro (pero no se bloquea de otros estímulos).
 Ideas:
 	
 Optimizaciones:
 	
+	
+Tareas:
+	- Actualizar UI
+	
 FEEDBACK DE TESTING:
-	- Así como está el puzzle de campanas es muy difícil.
-		- Agregar una nota a la solución que la había sacado
-		- Usar wav original
-		- Dar vuelta campanas
+	- Cuadro de Mirna muy chico
+	- Algunos botones no tienen feedback visual
+	- El tamaño de la puerta está desproporcionado
+	- Agregar testers en créditos!!
+	- Colores joyas son distintos en puzzle y carta
+	- No se entiende que es una VENTANA temporal
+	- Habilitar Esc para la carta inicial
+	- Habilitar Esc para la carta con joyas (MUY IMPORTANTE)
+	- Crosshair muy opaco

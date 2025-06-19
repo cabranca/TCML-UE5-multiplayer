@@ -182,6 +182,10 @@ private:
 
 	UFUNCTION(Client, Reliable) void SetInteractionPromptVisibility(UUserWidget* Widget, ESlateVisibility Visibility, bool bUIFocused);
 
+protected:
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable) void UpdateChecklist(FName ObjectName);
+
+private:
 
 	/***NOISE SYSTEM***/
 

@@ -356,6 +356,7 @@ void AMainCharacter::ServerInteract_Implementation(AInteractableObject* Object)
 		{
 			GameMode->SetLootedObject(Object->Tag);
 		}
+		UpdateChecklist(Object->Tag);
 	}
 	Object->ServerInteract(this);
 	MulticastPlayInteractMontage();
