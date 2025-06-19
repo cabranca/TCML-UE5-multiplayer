@@ -198,7 +198,7 @@ private:
 
 public:
 	void Hide();
-	void Expose();
+	UFUNCTION(BlueprintCallable) void Expose();
 
 private:
 	bool bIsHidden = false;
